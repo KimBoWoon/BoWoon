@@ -1,6 +1,6 @@
 import java.io.FileInputStream
+import java.text.SimpleDateFormat
 import java.util.*
-import java.text.*
 
 plugins {
     id(Dependencies.BuildPlugins.application)
@@ -45,28 +45,19 @@ android {
             isDebuggable = true
         }
     }
-//    val flavorList = listOf(Config.ProductFlavors.beta, Config.ProductFlavors.full)
-//    flavorDimensions += Config.ProductFlavors.flavorDimension
+    val flavorList = listOf(Config.ProductFlavors.beta, Config.ProductFlavors.full)
     flavorDimensions.add(Config.ProductFlavors.flavorDimension)
     productFlavors {
-        create(Config.ProductFlavors.beta) {
-            dimension = Config.ProductFlavors.flavorDimension
-            applicationIdSuffix = ".${Config.ProductFlavors.beta}"
+        flavorList.forEach { flavor ->
+            create(flavor) {
+                dimension = Config.ProductFlavors.flavorDimension
+                applicationIdSuffix = ".$flavor"
+
+                if (flavor == Config.ProductFlavors.full) {
+                    signingConfig = signingConfigs.getByName(Config.Sign.Release.name)
+                }
+            }
         }
-        create(Config.ProductFlavors.full) {
-            dimension = Config.ProductFlavors.flavorDimension
-            applicationIdSuffix = ".${Config.ProductFlavors.full}"
-        }
-//        flavorList.forEach { flavor ->
-//            create(flavor) {
-//                dimension = Config.ProductFlavors.flavorDimension
-//                applicationIdSuffix = ".$flavor"
-//
-//                if (flavor == Config.ProductFlavors.full) {
-//                    signingConfig = signingConfigs.getByName(Config.Sign.Release.name)
-//                }
-//            }
-//        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

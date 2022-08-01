@@ -2,6 +2,7 @@ package com.lol.ui
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.data.lol.util.DataStatus
@@ -52,6 +53,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                 when (it) {
                     is DataStatus.Loading -> {
                         Log.d("data loading...")
+                        binding.pbLoading.isVisible = true
                     }
                     is DataStatus.Success<*> -> {
                         Log.d(it.data.toString())
@@ -62,6 +64,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                     }
                     is DataStatus.Failure -> {
                         Log.printStackTrace(it.throwable)
+                        binding.pbLoading.isVisible = false
                     }
                 }
             }
@@ -76,13 +79,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                     is DataStatus.Success<*> -> {
                         Log.d(it.data.toString())
                         (it.data as? ChampionRoot)?.data?.let { championList ->
-                            binding.rvLolChampionList.adapter = ChampionAdapter(championList.getChampionList())
+                            val sortedChampionList = championList.values.sortedBy { item -> item.name }
+                            binding.rvLolChampionList.adapter = ChampionAdapter(sortedChampionList)
                         } ?: run {
                             Log.e("championList is null")
                         }
+                        binding.pbLoading.isVisible = false
                     }
                     is DataStatus.Failure -> {
                         Log.printStackTrace(it.throwable)
+                        binding.pbLoading.isVisible = false
                     }
                 }
             }
