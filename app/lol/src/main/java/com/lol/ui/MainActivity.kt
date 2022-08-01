@@ -3,8 +3,9 @@ package com.lol.ui
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.data.lol.util.Log
+import androidx.recyclerview.widget.GridLayoutManager
 import com.data.lol.util.DataStatus
+import com.data.lol.util.Log
 import com.domain.lol.dto.ChampionRoot
 import com.lol.R
 import com.lol.base.BaseActivity
@@ -33,7 +34,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 
     override fun initBinding() {
         binding.apply {
-
+            rvLolChampionList.apply {
+                if (layoutManager == null) {
+                    layoutManager = GridLayoutManager(this@MainActivity, 3).apply {
+                        spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                            override fun getSpanSize(position: Int): Int = 3
+                        }
+                    }
+                }
+            }
         }
     }
 

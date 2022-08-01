@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import com.data.lol.util.ViewAdapter.DebounceClickValues.MIN_CLICK_INTERVAL
 
 object ViewAdapter {
@@ -18,6 +19,7 @@ object ViewAdapter {
 
         Glide.with(this)
             .load(url)
+            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
             .into(this)
     }
 
