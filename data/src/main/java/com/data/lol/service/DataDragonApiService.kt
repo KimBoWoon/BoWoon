@@ -1,5 +1,6 @@
 package com.data.lol.service
 
+import com.domain.lol.dto.ChampionDetailRoot
 import com.domain.lol.dto.ChampionRoot
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -13,4 +14,11 @@ interface DataDragonApiService {
         @Path("version") version: String,
         @Path("language") language: String
     ): ChampionRoot
+
+    @GET("/cdn/{version}/data/{language}/champion/{name}.json")
+    suspend fun getChampionInfo(
+        @Path("version") version: String,
+        @Path("language") language: String,
+        @Path("name") name: String
+    ): ChampionDetailRoot
 }

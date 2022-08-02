@@ -5,8 +5,10 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.data.lol.util.DataStatus
-import com.data.lol.util.Log
+import com.data.base.util.DataStatus
+import com.data.base.util.Log
+import com.domain.lol.dto.ChampionDetail
+import com.domain.lol.dto.ChampionInfo
 import com.domain.lol.dto.ChampionRoot
 import com.lol.R
 import com.lol.base.BaseActivity
@@ -55,7 +57,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                         Log.d("data loading...")
                         binding.pbLoading.isVisible = true
                     }
-                    is DataStatus.Success<*> -> {
+                    is DataStatus.Success -> {
                         Log.d(it.data.toString())
                         @Suppress("UNCHECKED_CAST")
                         (it.data as? List<String>)?.firstOrNull()?.let { version ->
@@ -76,11 +78,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                     is DataStatus.Loading -> {
                         Log.d("data loading...")
                     }
-                    is DataStatus.Success<*> -> {
+                    is DataStatus.Success -> {
                         Log.d(it.data.toString())
                         (it.data as? ChampionRoot)?.data?.let { championList ->
                             val sortedChampionList = championList.values.sortedBy { item -> item.name }
-                            binding.rvLolChampionList.adapter = ChampionAdapter(sortedChampionList)
+                            binding.rvLolChampionList.adapter = ChampionAdapter(sortedChampionList, ClickHandler())
                         } ?: run {
                             Log.e("championList is null")
                         }
@@ -92,6 +94,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                     }
                 }
             }
+        }
+    }
+
+    inner class ClickHandler {
+        fun showChampionDetail(championInfo: ChampionInfo) {
+            Log.d("showChampionDetail >>>>> $championInfo")
+            viewModel.getChampionInfo(championInfo.version ?: "", championInfo.id ?: "")
         }
     }
 }

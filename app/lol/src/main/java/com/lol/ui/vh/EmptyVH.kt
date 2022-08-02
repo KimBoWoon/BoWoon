@@ -1,6 +1,6 @@
 package com.lol.ui.vh
 
-import com.data.lol.util.Log
+import com.data.base.util.Log
 import com.domain.lol.dto.ChampionInfo
 import com.lol.base.BaseVH
 import com.lol.databinding.VhEmptyBinding

@@ -1,4 +1,4 @@
-package com.data.lol.di
+package com.data.base.di
 
 import com.data.BuildConfig
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor

@@ -1,4 +1,4 @@
-package com.data.lol.util
+package com.data.base.util
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

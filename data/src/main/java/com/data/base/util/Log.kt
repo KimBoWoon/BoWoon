@@ -1,4 +1,4 @@
-package com.data.lol.util
+package com.data.base.util
 
 import android.util.Log
 

@@ -3,22 +3,24 @@ package com.lol.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.data.lol.util.Log
+import com.data.base.util.Log
 import com.domain.lol.dto.ChampionInfo
 import com.lol.R
 import com.lol.databinding.VhChampionBinding
 import com.lol.databinding.VhEmptyBinding
+import com.lol.ui.MainActivity
 import com.lol.ui.vh.ChampionVH
 import com.lol.ui.vh.EmptyVH
 
 class ChampionAdapter(
-    private val items: List<ChampionInfo?>? = null
+    private val items: List<ChampionInfo?>? = null,
+    private val handler: MainActivity.ClickHandler? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val NONE = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.vh_champion -> ChampionVH(VhChampionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.vh_champion -> ChampionVH(VhChampionBinding.inflate(LayoutInflater.from(parent.context), parent, false), handler)
             else -> {
                 Log.e("viewholder not found")
                 EmptyVH(VhEmptyBinding.inflate(LayoutInflater.from(parent.context), parent, false))
