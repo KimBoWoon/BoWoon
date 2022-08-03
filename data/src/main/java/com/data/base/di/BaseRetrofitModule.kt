@@ -1,6 +1,7 @@
 package com.data.base.di
 
 import com.data.BuildConfig
+import com.data.base.util.NetworkLogInterceptor
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
 import dagger.Module
 import dagger.Provides
@@ -22,6 +23,7 @@ object BaseRetrofitModule {
         addNetworkInterceptor(interceptor)
         if (BuildConfig.DEBUG) {
             addInterceptor(OkHttpProfilerInterceptor())
+            addInterceptor(NetworkLogInterceptor())
         }
     }.build()
 
@@ -36,6 +38,6 @@ object BaseRetrofitModule {
 
     @Provides
     fun provideInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+        level = HttpLoggingInterceptor.Level.NONE
     }
 }

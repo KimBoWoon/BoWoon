@@ -5,12 +5,20 @@ import android.util.Log
 object Log {
     private const val showLog = true
 
+    fun i(tag: String, msg: String) {
+        if (showLog) Log.i(tag, msg)
+    }
+
     fun i(msg: String) {
         if (showLog) Log.i(tag(), msg)
     }
 
     fun i(msg: String, tr: Throwable?) {
         if (showLog) Log.i(tag(), msg, tr)
+    }
+
+    fun v(tag: String, msg: String) {
+        if (showLog) Log.v(tag, msg)
     }
 
     fun v(msg: String) {
@@ -21,6 +29,10 @@ object Log {
         if (showLog) Log.v(tag(), msg, tr)
     }
 
+    fun d(tag: String, msg: String) {
+        if (showLog) Log.d(tag, msg)
+    }
+
     fun d(msg: String) {
         if (showLog) Log.d(tag(), msg)
     }
@@ -29,12 +41,20 @@ object Log {
         if (showLog) Log.d(tag(), msg, tr)
     }
 
+    fun w(tag: String, msg: String) {
+        if (showLog) Log.d(tag, msg)
+    }
+
     fun w(msg: String) {
         if (showLog) Log.w(tag(), msg)
     }
 
     fun w(msg: String, tr: Throwable?) {
         if (showLog) Log.w(tag(), msg, tr)
+    }
+
+    fun e(tag: String, msg: String) {
+        if (showLog) Log.d(tag, msg)
     }
 
     fun e(msg: String) {
