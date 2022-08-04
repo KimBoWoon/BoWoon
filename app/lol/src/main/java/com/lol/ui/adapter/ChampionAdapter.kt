@@ -8,13 +8,13 @@ import com.domain.lol.dto.ChampionInfo
 import com.lol.R
 import com.lol.databinding.VhChampionBinding
 import com.lol.databinding.VhEmptyBinding
-import com.lol.ui.MainActivity
+import com.lol.ui.ChampionListFragment
 import com.lol.ui.vh.ChampionVH
 import com.lol.ui.vh.EmptyVH
 
 class ChampionAdapter(
     private val items: List<ChampionInfo?>? = null,
-    private val handler: MainActivity.ClickHandler? = null
+    private val handler: ChampionListFragment.ClickHandler? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val NONE = -1
 

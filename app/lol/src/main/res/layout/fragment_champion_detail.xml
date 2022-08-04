@@ -6,18 +6,13 @@
     <data>
 
         <variable
-            name="vh"
-            type="com.lol.ui.vh.ChampionVH" />
-
-        <variable
             name="champion"
-            type="com.domain.lol.dto.ChampionInfo" />
+            type="com.domain.lol.dto.ChampionDetail" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:onDebounceClickListener="@{() -> vh.onClick(champion)}">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_champion"
@@ -25,8 +20,8 @@
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             app:layout_constraintTop_toTopOf="parent"
-            app:loadImage="@{champion.image.getChampionSquareImage(champion.version)}"
             tools:background="@tools:sample/avatars" />
+        <!--        app:loadImage="@{champion.image.getChampionSquareImage(champion)}"-->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_champion_name"

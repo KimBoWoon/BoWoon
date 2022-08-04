@@ -4,11 +4,11 @@ import com.data.base.util.Log
 import com.domain.lol.dto.ChampionInfo
 import com.lol.base.BaseVH
 import com.lol.databinding.VhChampionBinding
-import com.lol.ui.MainActivity
+import com.lol.ui.ChampionListFragment
 
 class ChampionVH(
     override val binding: VhChampionBinding,
-    private val handler: MainActivity.ClickHandler? = null
+    private val handler: ChampionListFragment.ClickHandler? = null
 ) : BaseVH<VhChampionBinding, ChampionInfo>(binding) {
     override fun bind(item: ChampionInfo?) {
         runCatching {

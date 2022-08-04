@@ -93,6 +93,8 @@ dependencies {
         Dependencies.Jetpack.liveData,
         Dependencies.Jetpack.activity,
         Dependencies.Jetpack.fragment,
+        Dependencies.Jetpack.navigationKtx,
+        Dependencies.Jetpack.navigationUiKtx,
         Dependencies.Hilt.hiltAndroid,
         Dependencies.Glide.glide,
         project(Dependencies.InnerModules.data),

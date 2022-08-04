@@ -105,7 +105,7 @@ data class Spell(
     @SerialName("description")
     val description: String? = null,
     @SerialName("effect")
-    val effect: List<List<Int?>?>? = null,
+    val effect: List<List<Float?>?>? = null,
     @SerialName("effectBurn")
     val effectBurn: List<String?>? = null,
     @SerialName("id")
