@@ -8,32 +8,87 @@
         <variable
             name="champion"
             type="com.domain.lol.dto.ChampionDetail" />
+
+        <variable
+            name="version"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_champion"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:adjustViewBounds="true"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:loadImage="@{champion.image.getChampionSquareImage(version)}"
             tools:background="@tools:sample/avatars" />
-        <!--        app:loadImage="@{champion.image.getChampionSquareImage(champion)}"-->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_champion_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="5dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{champion.name}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_champion"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="champion name" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_champion_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{champion.title}"
+            app:layout_constraintStart_toEndOf="@id/iv_champion"
+            app:layout_constraintTop_toBottomOf="@id/tv_champion_name"
+            tools:text="champion title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_champion_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{champion.tags.toString()}"
+            app:layout_constraintStart_toEndOf="@id/iv_champion"
+            app:layout_constraintTop_toBottomOf="@id/tv_champion_title"
+            tools:text="champion tag" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_champion_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="@{champion.getReplaceLore()}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_champion"
-            tools:text="champion name" />
+            tools:text="champion description" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_champion_description">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llc_champion_skin_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

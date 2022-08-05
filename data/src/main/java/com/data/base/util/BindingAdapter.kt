@@ -11,9 +11,13 @@ import com.data.base.util.ViewAdapter.DebounceClickValues.MIN_CLICK_INTERVAL
 object ViewAdapter {
     @JvmStatic
     @BindingAdapter("loadImage")
-    fun ImageView?.loadImage(url: String) {
+    fun ImageView?.loadImage(url: String?) {
         this ?: run {
             Log.e("ImageView is null")
+            return
+        }
+        url ?: run {
+            Log.e("url is null")
             return
         }
 

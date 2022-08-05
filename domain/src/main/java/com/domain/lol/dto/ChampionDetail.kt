@@ -58,7 +58,13 @@ data class ChampionDetail(
     val tags: List<String?>? = null,
     @SerialName("title")
     val title: String? = null
-) : Parcelable
+) : Parcelable {
+    fun getReplaceLore(): String = lore?.replace(" ", "\u00A0") ?: ""
+    fun getChampionSkinImageUrlList(): List<String> =
+        skins?.map { skin ->
+            "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${id}_${skin?.num}.jpg"
+        } ?: emptyList()
+}
 
 @Keep
 @Serializable
