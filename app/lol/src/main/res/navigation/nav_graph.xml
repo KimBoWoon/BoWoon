@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/championListFragment"
-        android:name="com.lol.ui.ChampionListFragment"
+        android:name="com.lol.ui.fragments.ChampionListFragment"
         android:label="ChampionListFragment"
         tools:layout="@layout/fragment_champion_list">
         <action
@@ -17,7 +17,13 @@
 
     <fragment
         android:id="@+id/championDetailFragment"
-        android:name="com.lol.ui.ChampionDetailFragment"
+        android:name="com.lol.ui.fragments.ChampionDetailFragment"
         android:label="ChampionDetailFragment"
         tools:layout="@layout/fragment_champion_detail" />
+
+    <fragment
+        android:id="@+id/gameItemListFragment"
+        android:name="com.lol.ui.fragments.GameItemListFragment"
+        android:label="GameItemListFragment"
+        tools:layout="@layout/fragment_game_item" />
 </navigation>

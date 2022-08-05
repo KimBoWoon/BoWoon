@@ -1,4 +1,4 @@
-package com.lol.ui.vm
+package com.lol.ui.fragments.vm
 
 import androidx.lifecycle.viewModelScope
 import com.data.base.util.DataStatus

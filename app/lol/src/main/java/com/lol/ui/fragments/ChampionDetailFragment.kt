@@ -1,4 +1,4 @@
-package com.lol.ui
+package com.lol.ui.fragments
 
 import android.os.Bundle
 import android.view.View
@@ -8,13 +8,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.data.base.util.DataStatus
 import com.data.base.util.Log
-import com.data.base.util.ScreenUtils.dp
 import com.data.base.util.ViewAdapter.loadImage
 import com.domain.lol.dto.ChampionInfo
 import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentChampionDetailBinding
-import com.lol.ui.vm.ChampionDetailVM
+import com.lol.ui.fragments.vm.ChampionDetailVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

@@ -25,8 +25,14 @@ data class Image(
     @SerialName("y")
     val y: Int? = null
 ) : Parcelable {
+    private fun getImageUrl(version: String? = null): String =
+        "https://ddragon.leagueoflegends.com/cdn/$version/img"
+
     fun getChampionSquareImage(version: String? = null): String =
-        "https://ddragon.leagueoflegends.com/cdn/$version/img/champion/$full"
+        "${getImageUrl(version)}/champion/$full"
+
+    fun getGameItemImage(version: String? = null): String =
+        "${getImageUrl(version)}/item/$full"
 }
 
 @Keep
@@ -46,7 +52,7 @@ data class Info(
 @Keep
 @Serializable
 @Parcelize
-data class Stats(
+data class ChampionStats(
     @SerialName("armor")
     val armor: Float? = null,
     @SerialName("armorperlevel")

@@ -1,8 +1,9 @@
-package com.lol.ui.vm
+package com.lol.ui.activities.vm
 
 import androidx.lifecycle.viewModelScope
 import com.data.base.util.DataStatus
 import com.domain.lol.dto.ChampionRoot
+import com.domain.lol.dto.GameItemRoot
 import com.domain.lol.usecase.DataDragonApiUseCase
 import com.lol.base.BaseVM
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,11 +12,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ChampionListVM @Inject constructor(
+class MainVM @Inject constructor(
     private val dataDragonApiUseCase: DataDragonApiUseCase
 ) : BaseVM() {
     val lolVersion = MutableStateFlow<DataStatus<List<String>>>(DataStatus.Loading)
     val allChampion = MutableStateFlow<DataStatus<ChampionRoot>>(DataStatus.Loading)
+    val allGameItem = MutableStateFlow<DataStatus<GameItemRoot>>(DataStatus.Loading)
 
     init {
         viewModelScope.launch {
@@ -37,6 +39,18 @@ class ChampionListVM @Inject constructor(
                 allChampion.value = DataStatus.Success(champion)
             }.onFailure { e ->
                 allChampion.value = DataStatus.Failure(e)
+            }
+        }
+    }
+
+    fun getAllGameItem(version: String, language: String = "ko_KR") {
+        viewModelScope.launch {
+            runCatching {
+                dataDragonApiUseCase.getAllGameItem(version, language)
+            }.onSuccess { gameItem ->
+                allGameItem.value = DataStatus.Success(gameItem)
+            }.onFailure { e ->
+                allGameItem.value = DataStatus.Failure(e)
             }
         }
     }

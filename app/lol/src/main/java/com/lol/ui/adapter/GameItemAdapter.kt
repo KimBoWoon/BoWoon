@@ -4,23 +4,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.data.base.util.Log
-import com.domain.lol.dto.ChampionInfo
+import com.domain.lol.dto.GameItemInfo
 import com.lol.R
-import com.lol.databinding.VhChampionBinding
 import com.lol.databinding.VhEmptyBinding
-import com.lol.ui.fragments.ChampionListFragment
-import com.lol.ui.vh.ChampionVH
+import com.lol.databinding.VhGameItemBinding
 import com.lol.ui.vh.EmptyVH
+import com.lol.ui.vh.GameItemVH
 
-class ChampionAdapter(
-    private val items: List<ChampionInfo?>? = null,
-    private val handler: ChampionListFragment.ClickHandler? = null
+class GameItemAdapter(
+    private val items: List<GameItemInfo>? = null,
+    private val version: String? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val NONE = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.vh_champion -> ChampionVH(VhChampionBinding.inflate(LayoutInflater.from(parent.context), parent, false), handler)
+            R.layout.vh_game_item -> GameItemVH(VhGameItemBinding.inflate(LayoutInflater.from(parent.context), parent, false), version)
             else -> {
                 Log.e("viewholder not found")
                 EmptyVH(VhEmptyBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -28,12 +27,10 @@ class ChampionAdapter(
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is ChampionVH -> {
-                holder.bind(items?.get(position))
-            }
-            is EmptyVH -> {
-                holder.bind(items?.get(position))
+        items?.get(position)?.let {
+            when (holder) {
+                is GameItemVH -> holder.bind(it)
+                is EmptyVH -> holder.bind(it)
             }
         }
     }
@@ -41,9 +38,9 @@ class ChampionAdapter(
     override fun getItemCount(): Int = items?.size ?: 0
 
     override fun getItemViewType(position: Int): Int {
-        items?.let { championInfoList ->
-            return when (championInfoList[position]) {
-                is ChampionInfo -> R.layout.vh_champion
+        items?.let { gameItemInfo ->
+            return when (gameItemInfo[position]) {
+                is GameItemInfo -> R.layout.vh_game_item
                 else -> NONE
             }
         } ?: run {

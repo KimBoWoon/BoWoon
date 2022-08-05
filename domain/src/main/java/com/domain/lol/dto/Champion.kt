@@ -39,7 +39,7 @@ data class ChampionInfo(
     @SerialName("partype")
     val partype: String? = null,
     @SerialName("stats")
-    val stats: Stats? = null,
+    val stats: ChampionStats? = null,
     @SerialName("tags")
     val tags: List<String?>? = null,
     @SerialName("title")

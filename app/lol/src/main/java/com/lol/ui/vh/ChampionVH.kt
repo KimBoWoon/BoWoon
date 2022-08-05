@@ -4,7 +4,7 @@ import com.data.base.util.Log
 import com.domain.lol.dto.ChampionInfo
 import com.lol.base.BaseVH
 import com.lol.databinding.VhChampionBinding
-import com.lol.ui.ChampionListFragment
+import com.lol.ui.fragments.ChampionListFragment
 
 class ChampionVH(
     override val binding: VhChampionBinding,

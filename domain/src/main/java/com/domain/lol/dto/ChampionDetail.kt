@@ -53,7 +53,7 @@ data class ChampionDetail(
     @SerialName("spells")
     val spells: List<Spell?>? = null,
     @SerialName("stats")
-    val stats: Stats? = null,
+    val stats: ChampionStats? = null,
     @SerialName("tags")
     val tags: List<String?>? = null,
     @SerialName("title")

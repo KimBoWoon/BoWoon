@@ -7,15 +7,15 @@ import com.lol.databinding.VhEmptyBinding
 
 class EmptyVH(
     override val binding: VhEmptyBinding
-) : BaseVH<VhEmptyBinding, ChampionInfo>(binding) {
-    override fun bind(item: ChampionInfo?) {
+) : BaseVH<VhEmptyBinding, Any>(binding) {
+    override fun bind(item: Any?) {
         runCatching {
             item ?: run {
                 Log.e("EmptyVH item is null")
                 return
             }
-        }.onSuccess { champion ->
-            Log.d("create EmptyVH >>>>> ${champion.name}")
+        }.onSuccess {
+            Log.d("create EmptyVH")
         }.onFailure { e ->
             Log.d("error EmptyVH >>>>> ${e.message}")
         }

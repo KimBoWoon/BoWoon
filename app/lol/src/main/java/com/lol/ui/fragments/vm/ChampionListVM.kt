@@ -1,12 +1,10 @@
-package com.lol.ui.vm
+package com.lol.ui.fragments.vm
 
 import com.lol.base.BaseVM
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MainVM @Inject constructor(
-
+class ChampionListVM @Inject constructor(
 ) : BaseVM() {
-
 }

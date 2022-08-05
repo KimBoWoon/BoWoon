@@ -3,6 +3,7 @@ package com.data.lol.repository
 import com.data.lol.service.DataDragonApiService
 import com.domain.lol.dto.ChampionDetailRoot
 import com.domain.lol.dto.ChampionRoot
+import com.domain.lol.dto.GameItemRoot
 import com.domain.lol.repository.DataDragonApiRepository
 
 class DataDragonApiRepositoryImpl(
@@ -13,4 +14,6 @@ class DataDragonApiRepositoryImpl(
         dataDragonApiService.getAllChampion(version, language)
     override suspend fun getChampionInfo(version: String, language: String, name: String): ChampionDetailRoot =
         dataDragonApiService.getChampionInfo(version, language, name)
+    override suspend fun getAllGameItem(version: String, language: String): GameItemRoot =
+        dataDragonApiService.getAllGameItem(version, language)
 }
