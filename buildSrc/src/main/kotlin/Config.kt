@@ -32,19 +32,22 @@ object Config {
     }
 
     object ProductFlavors {
-        const val flavorDimension = "environment"
-        const val beta = "beta"
-        const val full = "full"
+        object MainModuleFlavors {
+            const val flavorDimension = "environment"
+            const val beta = "beta"
+            const val full = "full"
+        }
+
+        object SubModuleFlavors {
+            const val flavorDimension = "product"
+            const val main = "main"
+            const val lol = "lol"
+        }
     }
 
     object Lol {
         const val versionCode = 1
         const val versionName = "1.0.0"
         const val applicationIdSuffix = ".lol"
-    }
-
-    object MavenAddress {
-        const val gradlePlugin = "https://plugins.gradle.org/m2/"
-        const val jitpack = "https://jitpack.io"
     }
 }

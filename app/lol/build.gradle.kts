@@ -45,15 +45,15 @@ android {
             isDebuggable = true
         }
     }
-    val flavorList = listOf(Config.ProductFlavors.beta, Config.ProductFlavors.full)
-    flavorDimensions.add(Config.ProductFlavors.flavorDimension)
+    val flavorList = listOf(Config.ProductFlavors.MainModuleFlavors.beta, Config.ProductFlavors.MainModuleFlavors.full)
+    flavorDimensions.add(Config.ProductFlavors.MainModuleFlavors.flavorDimension)
     productFlavors {
         flavorList.forEach { flavor ->
             create(flavor) {
-                dimension = Config.ProductFlavors.flavorDimension
+                dimension = Config.ProductFlavors.MainModuleFlavors.flavorDimension
                 applicationIdSuffix = ".$flavor"
 
-                if (flavor == Config.ProductFlavors.full) {
+                if (flavor == Config.ProductFlavors.MainModuleFlavors.full) {
                     signingConfig = signingConfigs.getByName(Config.Sign.Release.name)
                 }
             }

@@ -28,15 +28,12 @@ android {
             isMinifyEnabled = false
         }
     }
-//    flavorDimensions += Config.ProductFlavors.flavorDimension
-//    productFlavors {
-//        create(Config.ProductFlavors.beta) {
-//            dimension = Config.ProductFlavors.flavorDimension
-//        }
-//        create(Config.ProductFlavors.full) {
-//            dimension = Config.ProductFlavors.flavorDimension
-//        }
-//    }
+    flavorDimensions += Config.ProductFlavors.SubModuleFlavors.flavorDimension
+    productFlavors {
+        create(Config.ProductFlavors.SubModuleFlavors.lol) {
+            dimension = Config.ProductFlavors.SubModuleFlavors.flavorDimension
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -51,6 +48,16 @@ android {
         resources.excludes.add("META-INF/LICENSE.txt")
         resources.excludes.add("META-INF/NOTICE.txt")
         resources.excludes.add("META-INF/LICENSE")
+    }
+    sourceSets {
+        getByName(Config.ProductFlavors.SubModuleFlavors.main) {
+            manifest.srcFile("src/main/AndroidManifest.xml")
+            java.setSrcDirs(listOf("src/main/java"))
+        }
+        getByName(Config.ProductFlavors.SubModuleFlavors.lol) {
+            manifest.srcFile("src/lol/AndroidManifest.xml")
+            java.setSrcDirs(listOf("src/lol/java"))
+        }
     }
 }
 

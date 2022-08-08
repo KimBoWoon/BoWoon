@@ -1,6 +1,8 @@
 package com.lol.ui.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -19,6 +21,7 @@ import com.lol.ui.activities.vm.MainVM
 import com.lol.ui.adapter.ChampionAdapter
 import com.lol.ui.fragments.vm.ChampionListVM
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -59,26 +62,26 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
 //                    }
 //                }
 //            }
-//            etSearchChampion.addTextChangedListener(object : TextWatcher {
-//                override fun beforeTextChanged(text: CharSequence?, start: Int, count: Int, after: Int) {}
-//
-//                override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-//                    text?.let {
-//                        Log.d("changedText >>>>> $it")
-//
-//                        val sortedChampionList = (viewModel.allChampion.value as? DataStatus.Success)?.data?.data?.values
-//                            ?.filter { champion ->
-//                                champion.name?.contains("$it", true) == true
-//                            }?.toList()?.sortedBy { it.name }
-//
-//                        Log.d(sortedChampionList.toString())
-//
-//                        binding?.rvLolChampionList?.adapter = ChampionAdapter(sortedChampionList, ClickHandler())
-//                    }
-//                }
-//
-//                override fun afterTextChanged(text: Editable?) {}
-//            })
+            etSearchChampion.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(text: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
+                    text?.let {
+                        Log.d("changedText >>>>> $it")
+
+                        val sortedChampionList = (activityVM.allChampion.value as? DataStatus.Success)?.data?.data?.values
+                            ?.filter { champion ->
+                                champion.name?.contains("$it", true) == true
+                            }?.toList()?.sortedBy { it.name }
+
+                        Log.d(sortedChampionList.toString())
+
+                        binding?.rvLolChampionList?.adapter = ChampionAdapter(sortedChampionList, ClickHandler())
+                    }
+                }
+
+                override fun afterTextChanged(text: Editable?) {}
+            })
         }
     }
 
