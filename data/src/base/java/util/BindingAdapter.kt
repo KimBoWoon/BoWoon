@@ -1,8 +1,10 @@
 package util
 
 import android.os.SystemClock
+import android.text.Html
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
@@ -25,6 +27,30 @@ object ViewAdapter {
             .load(url)
             .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
             .into(this)
+    }
+
+    @JvmStatic
+    @BindingAdapter("htmlText")
+    fun TextView?.htmlText(text: String?) {
+        this ?: run {
+            Log.e("textview is null!")
+            return
+        }
+        text ?: run {
+            Log.e("htmlText text is null!")
+            return
+        }
+
+        this.text?.let {
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
+                this.text = Html.fromHtml(text)
+            } else {
+                this.text = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
+            }
+        } ?: run {
+            Log.e("textview.text is null!")
+            return
+        }
     }
 
     @JvmStatic

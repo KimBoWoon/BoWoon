@@ -37,7 +37,7 @@
             android:id="@+id/tv_spell_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{spell.description}"
+            app:htmlText="@{spell.description}"
             app:layout_constraintTop_toBottomOf="@id/iv_champion_spell_image"
             tools:text="spell description" />
     </androidx.constraintlayout.widget.ConstraintLayout>
