@@ -1,7 +1,6 @@
-package com.data.base.di
+package di
 
 import com.data.BuildConfig
-import com.data.base.util.NetworkLogInterceptor
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
 import dagger.Module
 import dagger.Provides
@@ -12,6 +11,7 @@ import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import util.NetworkLogInterceptor
 
 @Module
 @InstallIn(SingletonComponent::class)

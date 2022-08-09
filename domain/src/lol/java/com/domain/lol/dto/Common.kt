@@ -33,6 +33,9 @@ data class Image(
 
     fun getGameItemImage(version: String? = null): String =
         "${getImageUrl(version)}/item/$full"
+
+    fun getChampionSpellImage(): String =
+        "https://ddragon.leagueoflegends.com/cdn/12.14.1/img/spell/${full}"
 }
 
 @Keep

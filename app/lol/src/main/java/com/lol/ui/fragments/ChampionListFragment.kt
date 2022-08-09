@@ -10,19 +10,18 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.data.base.util.DataStatus
-import com.data.base.util.Log
 import com.domain.lol.dto.ChampionInfo
 import com.domain.lol.dto.ChampionRoot
 import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentChampionListBinding
 import com.lol.ui.activities.vm.MainVM
-import com.lol.ui.adapter.ChampionAdapter
+import com.lol.ui.adapter.LolAdapter
 import com.lol.ui.fragments.vm.ChampionListVM
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.launch
+import util.DataStatus
+import util.Log
 
 @AndroidEntryPoint
 class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
@@ -54,6 +53,7 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
                     }
                 }
             }
+            // TODO 해당 코드 작동 안함 이유를 모르겠음 찾아봐야함
 //            etSearchChampion.apply {
 //                addTextChangedListener { editable ->
 //                    editable?.let {
@@ -76,7 +76,7 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
 
                         Log.d(sortedChampionList.toString())
 
-                        binding?.rvLolChampionList?.adapter = ChampionAdapter(sortedChampionList, ClickHandler())
+                        binding?.rvLolChampionList?.adapter = LolAdapter(sortedChampionList, ClickHandler())
                     }
                 }
 
@@ -96,7 +96,7 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
                         Log.d(it.data.toString())
                         (it.data as? ChampionRoot)?.data?.let { championList ->
                             val sortedChampionList = championList.values.sortedBy { item -> item.name }
-                            binding?.rvLolChampionList?.adapter = ChampionAdapter(sortedChampionList, ClickHandler())
+                            binding?.rvLolChampionList?.adapter = LolAdapter(sortedChampionList, ClickHandler())
                         } ?: run {
                             Log.e("championList is null")
                         }

@@ -1,4 +1,4 @@
-package com.data.base.util
+package util
 
 import android.os.SystemClock
 import android.view.View
@@ -6,7 +6,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
-import com.data.base.util.ViewAdapter.DebounceClickValues.MIN_CLICK_INTERVAL
+import util.ViewAdapter.DebounceClickValues.MIN_CLICK_INTERVAL
 
 object ViewAdapter {
     @JvmStatic

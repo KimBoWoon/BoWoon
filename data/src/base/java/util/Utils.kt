@@ -1,4 +1,4 @@
-package com.data.base.util
+package util
 
 import android.content.res.Resources
 import kotlin.math.roundToInt

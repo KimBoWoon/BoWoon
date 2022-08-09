@@ -1,4 +1,4 @@
-package com.data.base.util
+package util
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

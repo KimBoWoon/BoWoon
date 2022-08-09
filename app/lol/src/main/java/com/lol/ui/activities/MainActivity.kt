@@ -5,14 +5,14 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import com.data.base.util.DataStatus
-import com.data.base.util.Log
 import com.lol.R
 import com.lol.base.BaseActivity
 import com.lol.databinding.ActivityMainBinding
 import com.lol.ui.activities.vm.MainVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import util.DataStatus
+import util.Log
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(

@@ -1,4 +1,4 @@
-package com.data.base.util
+package util
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

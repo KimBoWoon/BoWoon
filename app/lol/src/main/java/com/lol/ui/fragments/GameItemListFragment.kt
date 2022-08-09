@@ -6,17 +6,17 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.data.base.util.DataStatus
-import com.data.base.util.Log
 import com.domain.lol.dto.GameItemRoot
 import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentGameItemBinding
 import com.lol.ui.activities.vm.MainVM
-import com.lol.ui.adapter.GameItemAdapter
+import com.lol.ui.adapter.LolAdapter
 import com.lol.ui.fragments.vm.GameItemVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import util.DataStatus
+import util.Log
 
 @AndroidEntryPoint
 class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
@@ -56,7 +56,7 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
                         (it.data as? GameItemRoot)?.data?.let { gameItemList ->
                             val sortedGameItemList = gameItemList.values.sortedBy { item -> item.name }
                             val version = it.data.version
-                            binding?.rvGameItemList?.adapter = GameItemAdapter(sortedGameItemList, version)
+                            binding?.rvGameItemList?.adapter = LolAdapter(sortedGameItemList, version = version)
                         } ?: run {
                             Log.e("championList is null")
                         }

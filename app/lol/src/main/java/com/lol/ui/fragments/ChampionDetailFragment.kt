@@ -2,20 +2,18 @@ package com.lol.ui.fragments
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.data.base.util.DataStatus
-import com.data.base.util.Log
-import com.data.base.util.ViewAdapter.loadImage
 import com.domain.lol.dto.ChampionInfo
 import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentChampionDetailBinding
+import com.lol.ui.adapter.LolAdapter
 import com.lol.ui.fragments.vm.ChampionDetailVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import util.DataStatus
+import util.Log
 
 @AndroidEntryPoint
 class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
@@ -56,18 +54,16 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                     }
                     is DataStatus.Success -> {
                         it.data.data?.keys?.firstOrNull()?.let { key ->
-                            binding?.champion = it.data.data?.get(key)
+                            val champion = it.data.data?.get(key)
+                            binding?.champion = champion
                             binding?.version = it.data.version
-                            it.data.data?.get(key)?.getChampionSkinImageUrlList()?.forEach { url ->
-                                binding?.llcChampionSkinGroup?.addView(
-                                    AppCompatImageView(requireContext()).apply {
-                                        layoutParams = ViewGroup.LayoutParams(
-                                            ViewGroup.LayoutParams.MATCH_PARENT,
-                                            ViewGroup.LayoutParams.MATCH_PARENT
-                                        )
-                                        loadImage(url)
-                                    }
-                                )
+                            binding?.vpChampionSkins?.apply {
+                                offscreenPageLimit = champion?.skins?.size ?: 1
+                                adapter = LolAdapter(champion?.skins, championName = key)
+                            }
+                            binding?.vpChampionSpells?.apply {
+                                offscreenPageLimit = champion?.skins?.size ?: 1
+                                adapter = LolAdapter(champion?.spells)
                             }
                             binding?.executePendingBindings()
                         } ?: run {
