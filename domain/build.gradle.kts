@@ -64,6 +64,7 @@ android {
 dependencies {
     arrayOf(
         Dependencies.Jetpack.core,
+//        Dependencies.Jetpack.datastore,
         Dependencies.Serialization.kotlin,
         Dependencies.Serialization.converter,
         Dependencies.Hilt.hiltAndroid,

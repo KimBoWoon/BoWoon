@@ -26,4 +26,10 @@
         android:name="com.lol.ui.fragments.GameItemListFragment"
         android:label="GameItemListFragment"
         tools:layout="@layout/fragment_game_item" />
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.lol.ui.fragments.SettingFragment"
+        android:label="SettingFragment"
+        tools:layout="@layout/fragment_setting" />
 </navigation>

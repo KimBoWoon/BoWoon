@@ -45,7 +45,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                     is DataStatus.Success -> {
                         Log.d(it.data.toString())
                         @Suppress("UNCHECKED_CAST")
-                        (it.data as? List<String>)?.firstOrNull()?.let { version ->
+                        it.data?.let { version ->
                             viewModel.getAllChampion(version)
                             viewModel.getAllGameItem(version)
                         } ?: Log.e("version is null!")

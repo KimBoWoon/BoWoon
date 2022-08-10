@@ -12,6 +12,7 @@ object Versions {
         const val activity = "1.4.0"
         const val fragment = "1.4.1"
         const val navigation = "2.5.0"
+        const val datastore = "1.0.0"
     }
 
     object Gradle {

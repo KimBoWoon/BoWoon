@@ -7,7 +7,8 @@ import util.Log
 
 class ChampionSkinVH(
     override val binding: VhChampionSkinBinding,
-    private val championName: String? = null
+    private val championName: String? = null,
+    private val version: String? = null
 ) : BaseVH<VhChampionSkinBinding, Skin>(binding){
     override fun bind(item: Skin?) {
         runCatching {

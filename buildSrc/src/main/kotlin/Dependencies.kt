@@ -25,6 +25,8 @@ object Dependencies {
         const val fragment = "androidx.fragment:fragment-ktx:${Versions.Jetpack.fragment}"
         const val navigationKtx = "androidx.navigation:navigation-fragment-ktx:${Versions.Jetpack.navigation}"
         const val navigationUiKtx = "androidx.navigation:navigation-ui-ktx:${Versions.Jetpack.navigation}"
+        const val datastore = "androidx.datastore:datastore-preferences:${Versions.Jetpack.datastore}"
+        const val datastoreCore = "androidx.datastore:datastore-preferences-core:${Versions.Jetpack.datastore}"
     }
 
     object Layout {

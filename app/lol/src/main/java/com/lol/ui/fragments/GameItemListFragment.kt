@@ -37,6 +37,12 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
         initFlow()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        activityVM.changeVersion()
+    }
+
     override fun initBinding() {
         binding?.apply {
             rvGameItemList.apply {

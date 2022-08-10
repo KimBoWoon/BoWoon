@@ -1,6 +1,7 @@
 package com.lol.ui.activities.vm
 
 import androidx.lifecycle.viewModelScope
+import com.data.lol.repository.LocalDatastore
 import com.domain.lol.dto.ChampionRoot
 import com.domain.lol.dto.GameItemRoot
 import com.domain.lol.usecase.DataDragonApiUseCase
@@ -13,9 +14,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainVM @Inject constructor(
-    private val dataDragonApiUseCase: DataDragonApiUseCase
+    private val dataDragonApiUseCase: DataDragonApiUseCase,
+    private val localDatastore: LocalDatastore
 ) : BaseVM() {
-    val lolVersion = MutableStateFlow<DataStatus<List<String>>>(DataStatus.Loading)
+    val lolVersion = MutableStateFlow<DataStatus<String?>>(DataStatus.Loading)
+    val lolVersionList = MutableStateFlow<DataStatus<List<String>>>(DataStatus.Loading)
     val allChampion = MutableStateFlow<DataStatus<ChampionRoot>>(DataStatus.Loading)
     val allGameItem = MutableStateFlow<DataStatus<GameItemRoot>>(DataStatus.Loading)
 
@@ -23,8 +26,16 @@ class MainVM @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 dataDragonApiUseCase.getVersion()
-            }.onSuccess { lolVersionList ->
-                lolVersion.value = DataStatus.Success(lolVersionList)
+            }.onSuccess { versionList ->
+                var version: String? = ""
+
+                localDatastore.get(LocalDatastore.Keys.LOL_VERSION)?.let {
+                    version = it
+                } ?: run {
+                    version = versionList.firstOrNull()
+                }
+                lolVersionList.value = DataStatus.Success(versionList)
+                lolVersion.value = DataStatus.Success(version)
             }.onFailure { e ->
                 lolVersion.value = DataStatus.Failure(e)
             }
@@ -51,6 +62,15 @@ class MainVM @Inject constructor(
                 allGameItem.value = DataStatus.Success(gameItem)
             }.onFailure { e ->
                 allGameItem.value = DataStatus.Failure(e)
+            }
+        }
+    }
+
+    fun changeVersion() {
+        viewModelScope.launch {
+            val version = localDatastore.get(LocalDatastore.Keys.LOL_VERSION)
+            if ((lolVersion.value as? DataStatus.Success<String>)?.data != version) {
+                lolVersion.value = DataStatus.Success(version)
             }
         }
     }

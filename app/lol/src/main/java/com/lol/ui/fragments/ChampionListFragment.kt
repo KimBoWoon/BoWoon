@@ -42,6 +42,12 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
         initFlow()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        activityVM.changeVersion()
+    }
+
     override fun initBinding() {
         binding?.apply {
             rvLolChampionList.apply {

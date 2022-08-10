@@ -6,7 +6,8 @@ import com.lol.databinding.VhChampionPassiveBinding
 import util.Log
 
 class ChampionPassiveVH(
-    override val binding: VhChampionPassiveBinding
+    override val binding: VhChampionPassiveBinding,
+    private val lolVersion: String? = null
 ) : BaseVH<VhChampionPassiveBinding, Passive>(binding) {
     override fun bind(item: Passive?) {
         runCatching {
@@ -17,6 +18,7 @@ class ChampionPassiveVH(
         }.onSuccess { passiveInfo ->
             binding.apply {
                 passive = passiveInfo
+                version = lolVersion
             }
         }.onFailure { e ->
             Log.printStackTrace(e)

@@ -95,6 +95,7 @@ dependencies {
         Dependencies.Jetpack.fragment,
         Dependencies.Jetpack.navigationKtx,
         Dependencies.Jetpack.navigationUiKtx,
+        Dependencies.Jetpack.datastore,
         Dependencies.Hilt.hiltAndroid,
         Dependencies.Glide.glide,
         project(Dependencies.InnerModules.data),

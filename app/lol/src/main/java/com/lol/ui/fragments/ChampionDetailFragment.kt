@@ -2,6 +2,7 @@ package com.lol.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.domain.lol.dto.ChampionInfo
@@ -52,6 +53,7 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                 when (it) {
                     is DataStatus.Loading -> {
                         Log.d("data loading...")
+                        binding?.pbChampionDetailLoading?.isVisible = true
                     }
                     is DataStatus.Success -> {
                         it.data.data?.keys?.firstOrNull()?.let { key ->
@@ -70,10 +72,11 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                                             }
                                         }.apply {
                                             offscreenPageLimit = size ?: 1
-                                            adapter = LolAdapter(this)
+                                            adapter = LolAdapter(this, version = it.data.version)
                                         }
                                     }
                                 }
+                                binding?.pbChampionDetailLoading?.isVisible = false
                                 binding?.executePendingBindings()
                             }
                         } ?: run {
@@ -82,6 +85,7 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                     }
                     is DataStatus.Failure -> {
                         Log.printStackTrace(it.throwable)
+                        binding?.pbChampionDetailLoading?.isVisible = false
                     }
                 }
             }
