@@ -83,16 +83,16 @@
                 tools:text="champion description" />
 
             <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/vp_champion_skins"
+                android:id="@+id/vp_champion_spells"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_champion_description" />
 
             <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/vp_champion_spells"
+                android:id="@+id/vp_champion_skins"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/vp_champion_skins" />
+                app:layout_constraintTop_toBottomOf="@id/vp_champion_spells" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

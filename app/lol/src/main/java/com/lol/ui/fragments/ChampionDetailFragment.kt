@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import util.DataStatus
 import util.Log
+import util.ifNotNull
 
 @AndroidEntryPoint
 class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
@@ -54,18 +55,27 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                     }
                     is DataStatus.Success -> {
                         it.data.data?.keys?.firstOrNull()?.let { key ->
-                            val champion = it.data.data?.get(key)
-                            binding?.champion = champion
-                            binding?.version = it.data.version
-                            binding?.vpChampionSkins?.apply {
-                                offscreenPageLimit = champion?.skins?.size ?: 1
-                                adapter = LolAdapter(champion?.skins, championName = key)
+                            it.data.data?.get(key)?.let { championDetail ->
+                                binding?.champion = championDetail
+                                binding?.version = it.data.version
+                                binding?.vpChampionSkins?.apply {
+                                    offscreenPageLimit = championDetail.skins?.size ?: 1
+                                    adapter = LolAdapter(championDetail.skins, championName = key)
+                                }
+                                binding?.vpChampionSpells?.apply {
+                                    ifNotNull(championDetail.passive, championDetail.spells) { passive, spells ->
+                                        mutableListOf<Any>(passive).apply {
+                                            spells.forEach { spell ->
+                                                spell?.let { add(spell) }
+                                            }
+                                        }.apply {
+                                            offscreenPageLimit = size ?: 1
+                                            adapter = LolAdapter(this)
+                                        }
+                                    }
+                                }
+                                binding?.executePendingBindings()
                             }
-                            binding?.vpChampionSpells?.apply {
-                                offscreenPageLimit = champion?.skins?.size ?: 1
-                                adapter = LolAdapter(champion?.spells)
-                            }
-                            binding?.executePendingBindings()
                         } ?: run {
                             Log.e("champion not found")
                         }
