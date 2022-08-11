@@ -6,11 +6,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.domain.lol.dto.ChampionInfo
+import com.domain.lol.dto.Skin
 import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentChampionDetailBinding
 import com.lol.ui.adapter.LolAdapter
 import com.lol.ui.fragments.vm.ChampionDetailVM
+import com.lol.util.ViewPagerUtils.infiniteViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import util.DataStatus
@@ -58,21 +60,28 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                     is DataStatus.Success -> {
                         it.data.data?.keys?.firstOrNull()?.let { key ->
                             it.data.data?.get(key)?.let { championDetail ->
+                                championDetail.image?.version = championDetail.version
                                 binding?.champion = championDetail
-                                binding?.version = it.data.version
                                 binding?.vpChampionSkins?.apply {
+                                    championDetail.skins?.forEach { skin ->
+                                        skin?.championName = key
+                                    }
                                     offscreenPageLimit = championDetail.skins?.size ?: 1
-                                    adapter = LolAdapter(championDetail.skins, championName = key)
+                                    infiniteViewPager2(championDetail.skins)
                                 }
                                 binding?.vpChampionSpells?.apply {
                                     ifNotNull(championDetail.passive, championDetail.spells) { passive, spells ->
+                                        passive.image?.version = championDetail.version
                                         mutableListOf<Any>(passive).apply {
                                             spells.forEach { spell ->
-                                                spell?.let { add(spell) }
+                                                spell?.let {
+                                                    spell.image?.version = championDetail.version
+                                                    add(spell)
+                                                }
                                             }
                                         }.apply {
                                             offscreenPageLimit = size ?: 1
-                                            adapter = LolAdapter(this, version = it.data.version)
+                                            adapter = LolAdapter(this)
                                         }
                                     }
                                 }

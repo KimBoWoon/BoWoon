@@ -1,42 +1,87 @@
 package util
 
 import okhttp3.Interceptor
+import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
+import okio.Buffer
+import java.io.IOException
 
+/**
+ * Network Log Message 출력
+ */
 class NetworkLogInterceptor : Interceptor {
+    private val TAG = javaClass.simpleName
+
     companion object {
-        private const val STRING_DIVIDER_CNT = 1000
+        private var STRING_DIVIDER_CNT = 1000
+        private const val NETWORK_LOG_BODY = " \n" +
+                "----------------------------------------------------------------------------------\n" +
+                "ReqMethod : %s\n" +
+                "ReqUrl : %s\n" +
+                "ReqBody : %s\n" +
+                "ReqHeader : \n%s\n" +
+                "----------------------------------------------------------------------------------\n" +
+                "ResHeader : %s" +
+                "ResBody : %s\n" +
+                "----------------------------------------------------------------------------------\n "
     }
 
-    val LOG_BODY = "requestHeaders >>>>>\n%s\n" +
-            "requestBody >>>>>\n%s\n" +
-            "responseHeaders >>>>>\n%s\n" +
-            "responseBody >>>>>\n%s"
-
+    @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request().newBuilder().build()
+        val original = chain.request()
+        val request = original.newBuilder().build()
         val response = chain.proceed(request)
-        val requestHeaders = request.headers.toString()
-        val requestBody = request.body?.toString() ?: ""
-        val responseHeaders = response.headers.toString()
-        val responseBody = response.body?.string() ?: ""
-        var logBody = String.format(LOG_BODY, requestHeaders, requestBody, responseHeaders, responseBody)
+        val resHeader = response.headers.toString()
+        val bodyString = response.body?.string() ?: ""
+        var networkLog = String.format(
+            NETWORK_LOG_BODY,
+            request.method,
+            request.url,
+            bodyToString(request),
+            request.headers.toString(),
+            resHeader,
+            bodyString
+        )
 
-        try {
-            while (logBody.isNotEmpty()) {
-                if (logBody.length > STRING_DIVIDER_CNT) {
-                    Log.d("", logBody.substring(0, STRING_DIVIDER_CNT))
-                    logBody = logBody.substring(STRING_DIVIDER_CNT)
+        //Log 중간에 짤리지 않도록 함.
+        runCatching {
+            while (networkLog.isNotEmpty()) {
+                if (networkLog.length > STRING_DIVIDER_CNT) {
+                    Log.d("", networkLog.substring(0, STRING_DIVIDER_CNT))
+                    networkLog = networkLog.substring(STRING_DIVIDER_CNT)
                 } else {
-                    Log.d("", logBody)
+                    Log.d("", networkLog)
                     break
                 }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        }.onFailure { e ->
+            Log.printStackTrace(e)
         }
 
-        return response.newBuilder().body(responseBody.toResponseBody(response.body?.contentType())).build()
+        return response.newBuilder().body(bodyString.toResponseBody(response.body?.contentType())).build()
     }
+
+    /**
+     * 리스폰스바디의 값 가져오기
+     *
+     * @param request 가져와야할 리퀘스트
+     * @return 바디 값
+     */
+    private fun bodyToString(request: Request): String? =
+        runCatching {
+            val copy = request.newBuilder().build()
+            val buffer = Buffer()
+            copy.body?.writeTo(buffer)
+            buffer.readUtf8()
+        }.onSuccess {
+            return it
+        }.onFailure { e ->
+            (e as? IOException)?.run {
+                return "did not work"
+            }
+            (e as? NullPointerException)?.run {
+                return "did not have body"
+            }
+        }.getOrNull()
 }

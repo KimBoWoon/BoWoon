@@ -27,15 +27,12 @@ class MainVM @Inject constructor(
             runCatching {
                 dataDragonApiUseCase.getVersion()
             }.onSuccess { versionList ->
-                var version: String? = ""
-
-                localDatastore.get(LocalDatastore.Keys.LOL_VERSION)?.let {
-                    version = it
+                lolVersion.value = localDatastore.get(LocalDatastore.Keys.LOL_VERSION)?.let {
+                    DataStatus.Success(it)
                 } ?: run {
-                    version = versionList.firstOrNull()
+                    DataStatus.Success(versionList.firstOrNull())
                 }
                 lolVersionList.value = DataStatus.Success(versionList)
-                lolVersion.value = DataStatus.Success(version)
             }.onFailure { e ->
                 lolVersion.value = DataStatus.Failure(e)
             }

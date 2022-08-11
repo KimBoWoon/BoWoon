@@ -61,8 +61,10 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
                         Log.d(it.data.toString())
                         (it.data as? GameItemRoot)?.data?.let { gameItemList ->
                             val sortedGameItemList = gameItemList.values.sortedBy { item -> item.name }
-                            val version = it.data.version
-                            binding?.rvGameItemList?.adapter = LolAdapter(sortedGameItemList, version = version)
+                            gameItemList.values.forEach { item ->
+                                item.image?.version = it.data.version ?: ""
+                            }
+                            binding?.rvGameItemList?.adapter = LolAdapter(sortedGameItemList)
                         } ?: run {
                             Log.e("championList is null")
                         }

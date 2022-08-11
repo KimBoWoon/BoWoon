@@ -46,4 +46,8 @@ data class ChampionInfo(
     val title: String? = null,
     @SerialName("version")
     val version: String? = null
-) : Parcelable
+) : Parcelable {
+    init {
+        image?.version = version ?: ""
+    }
+}

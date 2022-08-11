@@ -8,10 +8,6 @@
         <variable
             name="champion"
             type="com.domain.lol.dto.ChampionDetail" />
-
-        <variable
-            name="version"
-            type="String" />
     </data>
 
     <ScrollView
@@ -29,7 +25,7 @@
                 android:adjustViewBounds="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:loadImage="@{champion.image.getChampionSquareImage(version)}"
+                app:loadImage="@{champion.image.getChampionSquareImage()}"
                 tools:background="@tools:sample/avatars" />
 
             <androidx.appcompat.widget.AppCompatTextView

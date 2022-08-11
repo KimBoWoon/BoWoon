@@ -6,8 +6,7 @@ import com.lol.databinding.VhGameItemBinding
 import util.Log
 
 class GameItemVH(
-    override val binding: VhGameItemBinding,
-    private val version: String? = null
+    override val binding: VhGameItemBinding
 ) : BaseVH<VhGameItemBinding, GameItemInfo>(binding) {
     override fun bind(item: GameItemInfo?) {
         runCatching {
@@ -15,13 +14,7 @@ class GameItemVH(
                 Log.e("GameItemVH item is null!")
                 return
             }
-            version ?: run {
-                Log.e("GameItemVH version is null!")
-                return
-            }
-            Pair(item, version)
-        }.onSuccess { (gameItemInfo, version) ->
-            binding.version = version
+        }.onSuccess { gameItemInfo ->
             binding.gameItem = gameItemInfo
         }.onFailure { e ->
             Log.printStackTrace(e)

@@ -76,6 +76,10 @@ object Dependencies {
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.Coroutine.core}"
     }
 
+    object ViewPager2 {
+        const val core = "androidx.viewpager2:viewpager2:${Versions.ViewPager2.core}"
+    }
+
     object Test {
         const val junit = "junit:junit:${Versions.Test.junit}"
         const val junitExt = "androidx.test.ext:junit:${Versions.Test.junitExt}"

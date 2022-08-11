@@ -25,17 +25,22 @@ data class Image(
     @SerialName("y")
     val y: Int? = null
 ) : Parcelable {
-    private fun getImageUrl(version: String? = null): String =
+    var version = ""
+
+    private fun getImageUrl(): String =
         "https://ddragon.leagueoflegends.com/cdn/$version/img"
 
-    fun getChampionSquareImage(version: String? = null): String =
-        "${getImageUrl(version)}/champion/$full"
+    fun getChampionSquareImage(): String =
+        "${getImageUrl()}/champion/$full"
 
-    fun getGameItemImage(version: String? = null): String =
-        "${getImageUrl(version)}/item/$full"
+    fun getGameItemImage(): String =
+        "${getImageUrl()}/item/$full"
 
     fun getChampionSpellImage(): String =
-        "https://ddragon.leagueoflegends.com/cdn/12.14.1/img/spell/${full}"
+        "${getImageUrl()}/spell/${full}"
+
+    fun getChampionPassiveImage(): String =
+        "${getImageUrl()}/passive/${full}"
 }
 
 @Keep

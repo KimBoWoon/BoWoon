@@ -6,10 +6,6 @@
     <data>
 
         <variable
-            name="version"
-            type="String" />
-
-        <variable
             name="gameItem"
             type="com.domain.lol.dto.GameItemInfo" />
     </data>
@@ -24,7 +20,7 @@
             android:layout_height="100dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:loadImage="@{gameItem.image.getGameItemImage(version)}"
+            app:loadImage="@{gameItem.image.getGameItemImage()}"
             tools:background="@tools:sample/avatars" />
 
         <androidx.appcompat.widget.AppCompatTextView

@@ -70,7 +70,6 @@ dependencies {
     arrayOf(
         Dependencies.Jetpack.core,
         Dependencies.Jetpack.datastore,
-//        Dependencies.Jetpack.datastoreCore,
         Dependencies.Retrofit2.retrofit2,
         Dependencies.OkHttp.bom,
         Dependencies.OkHttp.okhttp,

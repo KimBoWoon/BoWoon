@@ -46,6 +46,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                         Log.d(it.data.toString())
                         @Suppress("UNCHECKED_CAST")
                         it.data?.let { version ->
+                            supportActionBar?.title = "LOL(${version})"
                             viewModel.getAllChampion(version)
                             viewModel.getAllGameItem(version)
                         } ?: Log.e("version is null!")

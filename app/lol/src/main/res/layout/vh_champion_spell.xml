@@ -8,10 +8,6 @@
         <variable
             name="spell"
             type="com.domain.lol.dto.Spell" />
-
-        <variable
-            name="version"
-            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +20,7 @@
             android:layout_height="100dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:loadImage="@{spell.image.getChampionSpellImage(version)}"
+            app:loadImage="@{spell.image.getChampionSpellImage()}"
             tools:background="@tools:sample/avatars" />
 
         <androidx.appcompat.widget.AppCompatTextView

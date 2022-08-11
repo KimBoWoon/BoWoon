@@ -18,7 +18,13 @@ data class ChampionDetailRoot(
     val type: String? = null,
     @SerialName("version")
     val version: String? = null
-) : Parcelable
+) : Parcelable {
+    init {
+        data?.values?.forEach { championDetail ->
+            championDetail.version = version ?: ""
+        }
+    }
+}
 
 @Keep
 @Serializable
@@ -59,6 +65,7 @@ data class ChampionDetail(
     @SerialName("title")
     val title: String? = null
 ) : Parcelable {
+    var version = ""
     fun getReplaceLore(): String = lore?.replace(" ", "\u00A0") ?: ""
 }
 
@@ -87,8 +94,10 @@ data class Skin(
     @SerialName("num")
     val num: Int? = null
 ) : Parcelable {
-    fun getChampionSkinImageUrlList(name: String): String =
-        "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${name}_${num}.jpg"
+    var championName = ""
+
+    fun getChampionSkinImageUrl(): String =
+        "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${championName}_${num}.jpg"
 }
 
 @Keep

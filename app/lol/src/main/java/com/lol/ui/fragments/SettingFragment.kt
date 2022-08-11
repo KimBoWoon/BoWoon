@@ -3,7 +3,6 @@ package com.lol.ui.fragments
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -11,6 +10,7 @@ import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentSettingBinding
 import com.lol.ui.activities.vm.MainVM
+import com.lol.ui.adapter.VersionAdapter
 import com.lol.ui.fragments.vm.SettingVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -47,14 +47,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
                     }
                     is DataStatus.Success -> {
                         binding?.spinnerVersion?.apply {
-                            lifecycleScope.launch {
-                                val version = viewModel.getVersion()
-                                val versionIndex = it.data.indexOf(version)
-                                if (versionIndex != -1) {
-                                    binding?.spinnerVersion?.setSelection(versionIndex)
-                                }
-                            }
-                            adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, it.data)
+                            adapter = VersionAdapter(requireContext(), R.layout.spinner_item, it.data)
                             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                                 override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
                                     Log.d("data >>>>> ${it.data[position]}, position >>>>> $position")
@@ -64,6 +57,12 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
                                 }
 
                                 override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+                            }
+
+                            val version = viewModel.getVersion()
+                            val versionIndex = it.data.indexOf(version)
+                            if (versionIndex != -1) {
+                                setSelection(versionIndex)
                             }
                         }
                     }

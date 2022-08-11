@@ -13,18 +13,16 @@ import util.Log
 class LolAdapter(
     private val items: List<Any?>? = null,
     private val handler: ChampionListFragment.ClickHandler? = null,
-    private val version: String? = null,
-    private val championName: String? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val NONE = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
             R.layout.vh_champion -> ChampionVH(VhChampionBinding.inflate(LayoutInflater.from(parent.context), parent, false), handler)
-            R.layout.vh_game_item -> GameItemVH(VhGameItemBinding.inflate(LayoutInflater.from(parent.context), parent, false), version)
-            R.layout.vh_champion_skin -> ChampionSkinVH(VhChampionSkinBinding.inflate(LayoutInflater.from(parent.context), parent, false), championName)
-            R.layout.vh_champion_spell -> ChampionSpellVH(VhChampionSpellBinding.inflate(LayoutInflater.from(parent.context), parent, false), version)
-            R.layout.vh_champion_passive -> ChampionPassiveVH(VhChampionPassiveBinding.inflate(LayoutInflater.from(parent.context), parent, false), version)
+            R.layout.vh_game_item -> GameItemVH(VhGameItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.vh_champion_skin -> ChampionSkinVH(VhChampionSkinBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.vh_champion_spell -> ChampionSpellVH(VhChampionSpellBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.vh_champion_passive -> ChampionPassiveVH(VhChampionPassiveBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> {
                 Log.e("viewholder not found")
                 EmptyVH(VhEmptyBinding.inflate(LayoutInflater.from(parent.context), parent, false))

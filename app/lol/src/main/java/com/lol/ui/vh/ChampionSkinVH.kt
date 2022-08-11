@@ -6,9 +6,7 @@ import com.lol.databinding.VhChampionSkinBinding
 import util.Log
 
 class ChampionSkinVH(
-    override val binding: VhChampionSkinBinding,
-    private val championName: String? = null,
-    private val version: String? = null
+    override val binding: VhChampionSkinBinding
 ) : BaseVH<VhChampionSkinBinding, Skin>(binding){
     override fun bind(item: Skin?) {
         runCatching {
@@ -19,7 +17,6 @@ class ChampionSkinVH(
         }.onSuccess { skinInfo ->
             binding.apply {
                 skin = skinInfo
-                name = championName
             }
         }.onFailure { e ->
             Log.printStackTrace(e)

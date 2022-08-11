@@ -56,6 +56,10 @@ object Versions {
         const val core = "1.6.4"
     }
 
+    object ViewPager2 {
+        const val core = "1.0.0"
+    }
+
     object Test {
         const val junit = "4.13.2"
         const val junitExt = "1.1.3"

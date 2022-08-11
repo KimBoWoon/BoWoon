@@ -6,8 +6,7 @@ import com.lol.databinding.VhChampionSpellBinding
 import util.Log
 
 class ChampionSpellVH(
-    override val binding: VhChampionSpellBinding,
-    private val lolVersion: String? = null
+    override val binding: VhChampionSpellBinding
 ) : BaseVH<VhChampionSpellBinding, Spell>(binding) {
     override fun bind(item: Spell?) {
         runCatching {
@@ -18,7 +17,6 @@ class ChampionSpellVH(
         }.onSuccess { spellInfo ->
             binding.apply {
                 spell = spellInfo
-                version = lolVersion
             }
         }.onFailure { e ->
             Log.printStackTrace(e)
