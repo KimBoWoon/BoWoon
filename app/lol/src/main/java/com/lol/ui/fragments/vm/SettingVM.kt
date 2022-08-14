@@ -1,7 +1,8 @@
 package com.lol.ui.fragments.vm
 
 import androidx.lifecycle.viewModelScope
-import com.data.lol.repository.LocalDatastore
+import com.data.lol.local.LocalDatastore
+import com.domain.lol.usecase.DataStoreUseCase
 import com.lol.base.BaseVM
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -10,16 +11,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingVM @Inject constructor(
-    private val localDatastore: LocalDatastore
+    private val dataStoreUseCase: DataStoreUseCase
 ) : BaseVM() {
     suspend fun setVersion(version: String) {
         viewModelScope.launch {
-            localDatastore.set(LocalDatastore.Keys.LOL_VERSION, version)
+            dataStoreUseCase.set(LocalDatastore.Keys.LOL_VERSION, version)
         }
     }
 
     suspend fun getVersion(): String? =
         withContext(viewModelScope.coroutineContext) {
-            localDatastore.get(LocalDatastore.Keys.LOL_VERSION)
+            dataStoreUseCase.get(LocalDatastore.Keys.LOL_VERSION)
         }
 }

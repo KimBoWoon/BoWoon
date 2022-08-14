@@ -1,8 +1,10 @@
 package com.lol.di
 
 import com.domain.lol.repository.DataDragonApiRepository
+import com.domain.lol.repository.DataStoreRepository
 import com.domain.lol.repository.RiotApiRepository
 import com.domain.lol.usecase.DataDragonApiUseCase
+import com.domain.lol.usecase.DataStoreUseCase
 import com.domain.lol.usecase.RiotApiUseCase
 import dagger.Module
 import dagger.Provides
@@ -21,4 +23,9 @@ object UseCaseModule {
     fun provideDataDragonApiUseCase(
         dataDragonApiRepository: DataDragonApiRepository
     ): DataDragonApiUseCase = DataDragonApiUseCase(dataDragonApiRepository)
+
+    @Provides
+    fun provideDataStoreUseCase(
+        dataStoreRepository: DataStoreRepository
+    ): DataStoreUseCase = DataStoreUseCase(dataStoreRepository)
 }

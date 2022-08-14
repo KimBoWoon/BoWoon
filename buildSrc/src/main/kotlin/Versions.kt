@@ -60,6 +60,10 @@ object Versions {
         const val core = "1.0.0"
     }
 
+    object ThreeTenABP {
+        const val core = "1.4.0"
+    }
+
     object Test {
         const val junit = "4.13.2"
         const val junitExt = "1.1.3"

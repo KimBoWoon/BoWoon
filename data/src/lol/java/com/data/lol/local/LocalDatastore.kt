@@ -1,4 +1,4 @@
-package com.data.lol.repository
+package com.data.lol.local
 
 import android.content.Context
 import androidx.datastore.preferences.core.Preferences
@@ -7,10 +7,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 private val Context.datastore by preferencesDataStore(name = "lol.datastore")
 
-class LocalDatastore(
+class LocalDatastore @Inject constructor(
     private val context: Context
 ) {
     object Keys {

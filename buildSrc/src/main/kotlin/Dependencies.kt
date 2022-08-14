@@ -80,6 +80,10 @@ object Dependencies {
         const val core = "androidx.viewpager2:viewpager2:${Versions.ViewPager2.core}"
     }
 
+    object ThreeTenABP {
+        const val core = "com.jakewharton.threetenabp:threetenabp:${Versions.ThreeTenABP.core}"
+    }
+
     object Test {
         const val junit = "junit:junit:${Versions.Test.junit}"
         const val junitExt = "androidx.test.ext:junit:${Versions.Test.junitExt}"
