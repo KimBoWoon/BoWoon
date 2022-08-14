@@ -31,18 +31,30 @@ object Config {
         const val debug = "debug"
     }
 
-    object ProductFlavors {
-        object MainModuleFlavors {
-            const val flavorDimension = "environment"
-            const val beta = "beta"
-            const val full = "full"
-        }
+    object Variant {
+        const val beta = "beta"
+        const val full = "full"
+    }
+    
+    object SourceSet {
+        const val main = "main"
+        const val debug = "debug"
+    }
 
-        object SubModuleFlavors {
-            const val flavorDimension = "product"
-            const val main = "main"
-            const val lol = "lol"
-        }
+    object Flavors {
+        const val environmentDimension = "environment"
+        const val productDimension = "product"
+    }
+
+    object SubModuleName {
+        const val lol = "lol"
+        const val practice = "practice"
+    }
+
+    object Practice {
+        const val versionCode = 1
+        const val versionName = "1.0.0"
+        const val applicationIdSuffix = ".practice"
     }
 
     object Lol {

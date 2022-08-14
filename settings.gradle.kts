@@ -1,5 +1,6 @@
 rootProject.name = "BoWoon"
 include(":app")
-include(":app:lol")
 include(":data")
 include(":domain")
+include(":app:lol")
+include(":app:practice")

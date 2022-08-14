@@ -28,11 +28,14 @@ android {
             isMinifyEnabled = false
         }
     }
-    flavorDimensions += Config.ProductFlavors.SubModuleFlavors.flavorDimension
+    flavorDimensions += Config.Flavors.productDimension
     productFlavors {
-        create(Config.ProductFlavors.SubModuleFlavors.lol) {
-            dimension = Config.ProductFlavors.SubModuleFlavors.flavorDimension
+        create(Config.SubModuleName.lol) {
+            dimension = Config.Flavors.productDimension
         }
+//        create(Config.SubModuleName.practice) {
+//            dimension = Config.Flavors.productDimension
+//        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -50,13 +53,25 @@ android {
         resources.excludes.add("META-INF/LICENSE")
     }
     sourceSets {
-        getByName(Config.ProductFlavors.SubModuleFlavors.main) {
-            manifest.srcFile("src/main/AndroidManifest.xml")
-            java.setSrcDirs(listOf("src/main/java"))
+        getByName(Config.SourceSet.main) {
+            getByName(Config.SubModuleName.lol) {
+                manifest.srcFile("src/lol/AndroidManifest.xml")
+                java.setSrcDirs(listOf("src/lol/java"))
+            }
+//            getByName(Config.SubModuleName.practice) {
+//                manifest.srcFile("src/practice/AndroidManifest.xml")
+//                java.setSrcDirs(listOf("src/base/java", "src/practice/java"))
+//            }
         }
-        getByName(Config.ProductFlavors.SubModuleFlavors.lol) {
-            manifest.srcFile("src/lol/AndroidManifest.xml")
-            java.setSrcDirs(listOf("src/lol/java"))
+        getByName(Config.SourceSet.debug) {
+            getByName(Config.SubModuleName.lol) {
+                manifest.srcFile("src/lol/AndroidManifest.xml")
+                java.setSrcDirs(listOf("src/lol/java"))
+            }
+//            getByName(Config.SubModuleName.practice) {
+//                manifest.srcFile("src/practice/AndroidManifest.xml")
+//                java.setSrcDirs(listOf("src/base/java", "src/practice/java"))
+//            }
         }
     }
 }

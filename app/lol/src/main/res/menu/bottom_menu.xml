@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/championListFragment"
+        android:id="@+id/nav_champion"
         android:enabled="true"
         android:icon="@drawable/icon_person"
         android:title="챔피언" />
 
     <item
-        android:id="@+id/gameItemListFragment"
+        android:id="@+id/nav_game_item"
         android:enabled="true"
         android:icon="@drawable/icon_weapon"
         android:title="아이템" />
 
     <item
-        android:id="@+id/settingFragment"
+        android:id="@+id/nav_setting"
         android:enabled="true"
         android:icon="@drawable/icon_setting"
         android:title="셋팅" />

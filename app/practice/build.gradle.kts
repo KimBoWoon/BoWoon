@@ -13,18 +13,18 @@ android {
     compileSdk = Config.Application.compileSdk
 
     defaultConfig {
-        applicationId = Config.Application.applicationId + Config.Lol.applicationIdSuffix
+        applicationId = Config.Application.applicationId + Config.Practice.applicationIdSuffix
         minSdk = Config.Application.minSdk
         targetSdk = Config.Application.targetSdk
-        versionCode = Config.Lol.versionCode
-        versionName = Config.Lol.versionName
+        versionCode = Config.Practice.versionCode
+        versionName = Config.Practice.versionName
 
         testInstrumentationRunner = Config.Application.testInstrumentationRunner
     }
 
     val format = SimpleDateFormat(Config.Application.dateFormat)
     val buildTime = format.format(System.currentTimeMillis())
-    setProperty("archivesBaseName", "${Config.Application.appBundleName}${Config.Lol.versionName}-$buildTime")
+    setProperty("archivesBaseName", "${Config.Application.appBundleName}${Config.Practice.versionName}-$buildTime")
 
     signingConfigs {
         create(Config.Sign.Release.name) {
@@ -85,19 +85,11 @@ android {
 
 dependencies {
     arrayOf(
-        Dependencies.Layout.constraint,
-        Dependencies.Jetpack.core,
-        Dependencies.Jetpack.appcompat,
-        Dependencies.Jetpack.material,
-        Dependencies.Jetpack.viewModel,
-        Dependencies.Jetpack.liveData,
-        Dependencies.Jetpack.activity,
-        Dependencies.Jetpack.fragment,
-        Dependencies.Jetpack.navigationKtx,
-        Dependencies.Jetpack.navigationUiKtx,
-        Dependencies.Jetpack.datastore,
+        "androidx.core:core-ktx:1.8.0",
+        "androidx.appcompat:appcompat:1.5.0",
+        "com.google.android.material:material:1.6.1",
+        "androidx.constraintlayout:constraintlayout:2.1.4",
         Dependencies.Hilt.hiltAndroid,
-        Dependencies.Glide.glide,
         project(Dependencies.InnerModules.data),
         project(Dependencies.InnerModules.domain)
     ).forEach {
@@ -106,21 +98,20 @@ dependencies {
 
     arrayOf(
         Dependencies.Hilt.hiltAndroidCompiler,
-        Dependencies.Hilt.hiltCompiler,
-        Dependencies.Glide.glideCompiler
+        Dependencies.Hilt.hiltCompiler
     ).forEach {
         kapt(it)
     }
 
     arrayOf(
-        Dependencies.Test.junit
+        "junit:junit:4.13.2"
     ).forEach {
         testImplementation(it)
     }
 
     arrayOf(
-        Dependencies.Test.junitExt,
-        Dependencies.Test.espresso,
+        "androidx.test.ext:junit:1.1.3",
+        "androidx.test.espresso:espresso-core:3.4.0"
     ).forEach {
         androidTestImplementation(it)
     }
