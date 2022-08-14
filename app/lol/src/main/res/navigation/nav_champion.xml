@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_champion"
+    app:startDestination="@+id/championListFragment">
+
+    <fragment
+        android:id="@+id/championListFragment"
+        android:name="com.lol.ui.fragments.ChampionListFragment"
+        android:label="ChampionListFragment"
+        tools:layout="@layout/fragment_champion_list">
+        <action
+            android:id="@+id/action_championListFragment_to_championDetailFragment"
+            app:destination="@id/championDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/championDetailFragment"
+        android:name="com.lol.ui.fragments.ChampionDetailFragment"
+        android:label="ChampionDetailFragment"
+        tools:layout="@layout/fragment_champion_detail" />
+</navigation>

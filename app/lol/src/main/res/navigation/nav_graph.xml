@@ -1,35 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/championListFragment">
+    app:startDestination="@+id/nav_champion">
 
-    <fragment
-        android:id="@+id/championListFragment"
-        android:name="com.lol.ui.fragments.ChampionListFragment"
-        android:label="ChampionListFragment"
-        tools:layout="@layout/fragment_champion_list">
-        <action
-            android:id="@+id/action_championListFragment_to_championDetailFragment"
-            app:destination="@id/championDetailFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/championDetailFragment"
-        android:name="com.lol.ui.fragments.ChampionDetailFragment"
-        android:label="ChampionDetailFragment"
-        tools:layout="@layout/fragment_champion_detail" />
-
-    <fragment
-        android:id="@+id/gameItemListFragment"
-        android:name="com.lol.ui.fragments.GameItemListFragment"
-        android:label="GameItemListFragment"
-        tools:layout="@layout/fragment_game_item" />
-
-    <fragment
-        android:id="@+id/settingFragment"
-        android:name="com.lol.ui.fragments.SettingFragment"
-        android:label="SettingFragment"
-        tools:layout="@layout/fragment_setting" />
+    <include app:graph="@navigation/nav_champion" />
+    <include app:graph="@navigation/nav_game_item" />
+    <include app:graph="@navigation/nav_setting" />
 </navigation>
