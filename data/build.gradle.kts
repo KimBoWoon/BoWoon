@@ -30,14 +30,14 @@ android {
             isMinifyEnabled = false
         }
     }
-    flavorDimensions += Config.Flavors.productDimension
+    flavorDimensions.addAll(listOf(Config.Dimensions.mode))
     productFlavors {
-        create(Config.SubModuleName.lol) {
-            dimension = Config.Flavors.productDimension
+        create(Config.Flavors.lol) {
+            dimension = Config.Dimensions.mode
         }
-//        create(Config.SubModuleName.practice) {
-//            dimension = Config.Flavors.productDimension
-//        }
+        create(Config.Flavors.practice) {
+            dimension = Config.Dimensions.mode
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -59,24 +59,24 @@ android {
     }
     sourceSets {
         getByName(Config.SourceSet.main) {
-            getByName(Config.SubModuleName.lol) {
+            getByName(Config.Flavors.lol) {
                 manifest.srcFile("src/lol/AndroidManifest.xml")
                 java.setSrcDirs(listOf("src/base/java", "src/lol/java"))
             }
-//            getByName(Config.SubModuleName.practice) {
-//                manifest.srcFile("src/practice/AndroidManifest.xml")
-//                java.setSrcDirs(listOf("src/base/java", "src/practice/java"))
-//            }
+            getByName(Config.Flavors.practice) {
+                manifest.srcFile("src/practice/AndroidManifest.xml")
+                java.setSrcDirs(listOf("src/base/java", "src/practice/java"))
+            }
         }
         getByName(Config.SourceSet.debug) {
-            getByName(Config.SubModuleName.lol) {
+            getByName(Config.Flavors.lol) {
                 manifest.srcFile("src/lol/AndroidManifest.xml")
                 java.setSrcDirs(listOf("src/base/java", "src/lol/java"))
             }
-//            getByName(Config.SubModuleName.practice) {
-//                manifest.srcFile("src/practice/AndroidManifest.xml")
-//                java.setSrcDirs(listOf("src/base/java", "src/practice/java"))
-//            }
+            getByName(Config.Flavors.practice) {
+                manifest.srcFile("src/practice/AndroidManifest.xml")
+                java.setSrcDirs(listOf("src/base/java", "src/practice/java"))
+            }
         }
     }
 }

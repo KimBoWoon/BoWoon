@@ -31,9 +31,8 @@ object Config {
         const val debug = "debug"
     }
 
-    object Variant {
-        const val beta = "beta"
-        const val full = "full"
+    object Dimensions {
+        const val mode = "mode"
     }
     
     object SourceSet {
@@ -42,11 +41,6 @@ object Config {
     }
 
     object Flavors {
-        const val environmentDimension = "environment"
-        const val productDimension = "product"
-    }
-
-    object SubModuleName {
         const val lol = "lol"
         const val practice = "practice"
     }

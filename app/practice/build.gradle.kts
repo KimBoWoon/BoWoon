@@ -39,24 +39,17 @@ android {
             isMinifyEnabled = true
             isDebuggable = false
             proguardFiles(getDefaultProguardFile(Config.Application.defaultProguardFile), Config.Application.proguardFile)
+            signingConfig = signingConfigs.getByName(Config.Sign.Release.name)
         }
         getByName(Config.BuildType.debug) {
             isMinifyEnabled = false
             isDebuggable = true
         }
     }
-    val flavorList = listOf(Config.Variant.beta, Config.Variant.full)
-    flavorDimensions += Config.Flavors.environmentDimension
+    flavorDimensions.addAll(listOf(Config.Dimensions.mode))
     productFlavors {
-        flavorList.forEach { flavor ->
-            create(flavor) {
-                dimension = Config.Flavors.environmentDimension
-                applicationIdSuffix = ".$flavor"
-
-                if (flavor == Config.Variant.full) {
-                    signingConfig = signingConfigs.getByName(Config.Sign.Release.name)
-                }
-            }
+        create(Config.Flavors.practice) {
+            dimension = Config.Dimensions.mode
         }
     }
     compileOptions {
