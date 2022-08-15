@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="kotlin.random.Random" />
+
+        <variable
+            name="vm"
+            type="com.practice.ui.fragments.vm.PokemonDetailVM" />
+
+        <variable
+            name="dto"
+            type="com.domain.practice.dto.PokemonModel.Pokemon" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_pokemon_image"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:loadImage="@{dto.imageUrl}"
+            tools:background="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tv_pokemon_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{dto.name}"
+            android:textColor="@color/black"
+            android:textSize="40dp"
+            app:layout_constraintTop_toBottomOf="@id/iv_pokemon_image"
+            tools:text="Hello, World!" />
+
+        <LinearLayout
+            android:id="@+id/ll_pokemon_hp_group"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_pokemon_name">
+
+            <TextView
+                android:id="@+id/tv_pokemon_hp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="HP"
+                android:textColor="@color/black" />
+
+            <ProgressBar
+                android:id="@+id/pb_hp_progress"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="300" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_pokemon_atk_group"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_pokemon_hp_group">
+
+            <TextView
+                android:id="@+id/tv_pokemon_atk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="ATK"
+                android:textColor="@color/black" />
+
+            <ProgressBar
+                android:id="@+id/pb_atk_progress"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="300" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_pokemon_def_group"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_pokemon_atk_group">
+
+            <TextView
+                android:id="@+id/tv_pokemon_def"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="DEF"
+                android:textColor="@color/black" />
+
+            <ProgressBar
+                android:id="@+id/pb_def_progress"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="300" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_pokemon_spd_group"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_pokemon_def_group">
+
+            <TextView
+                android:id="@+id/tv_pokemon_spd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="SPD"
+                android:textColor="@color/black" />
+
+            <ProgressBar
+                android:id="@+id/pb_spd_progress"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="300" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/b_register_wish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="위시 등록"
+            app:layout_constraintTop_toBottomOf="@id/ll_pokemon_spd_group" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

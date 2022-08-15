@@ -13,11 +13,17 @@ object Versions {
         const val fragment = "1.4.1"
         const val navigation = "2.5.0"
         const val datastore = "1.0.0"
+        const val paging = "3.1.1"
+        const val room = "2.4.3"
     }
 
     object Gradle {
         const val gradle = "7.2.1"
         const val plugin = "1.6.0"
+    }
+
+    object Plugins {
+        const val safeArgs = "2.5.1"
     }
 
     object Layout {

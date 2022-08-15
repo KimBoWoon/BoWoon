@@ -7,6 +7,7 @@ plugins {
     kotlin(Dependencies.BuildPlugins.android)
     kotlin(Dependencies.BuildPlugins.kapt)
     id(Dependencies.BuildPlugins.hilt)
+    id(Dependencies.BuildPlugins.safeArgs)
 }
 
 android {
@@ -78,10 +79,14 @@ android {
 
 dependencies {
     arrayOf(
-        "androidx.core:core-ktx:1.8.0",
-        "androidx.appcompat:appcompat:1.5.0",
-        "com.google.android.material:material:1.6.1",
-        "androidx.constraintlayout:constraintlayout:2.1.4",
+        Dependencies.Jetpack.core,
+        Dependencies.Jetpack.appcompat,
+        Dependencies.Jetpack.material,
+        Dependencies.Jetpack.paging,
+        Dependencies.Jetpack.roomKtx,
+        Dependencies.Jetpack.navigationKtx,
+        Dependencies.Jetpack.navigationUiKtx,
+        Dependencies.Layout.constraint,
         Dependencies.Hilt.hiltAndroid,
         project(Dependencies.InnerModules.data),
         project(Dependencies.InnerModules.domain)
@@ -91,20 +96,21 @@ dependencies {
 
     arrayOf(
         Dependencies.Hilt.hiltAndroidCompiler,
-        Dependencies.Hilt.hiltCompiler
+        Dependencies.Hilt.hiltCompiler,
+        Dependencies.Jetpack.roomCompiler
     ).forEach {
         kapt(it)
     }
 
     arrayOf(
-        "junit:junit:4.13.2"
+        Dependencies.Test.junit
     ).forEach {
         testImplementation(it)
     }
 
     arrayOf(
-        "androidx.test.ext:junit:1.1.3",
-        "androidx.test.espresso:espresso-core:3.4.0"
+        Dependencies.Test.junitExt,
+        Dependencies.Test.espresso
     ).forEach {
         androidTestImplementation(it)
     }

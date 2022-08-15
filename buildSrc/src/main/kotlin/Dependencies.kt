@@ -8,11 +8,16 @@ object Dependencies {
         const val kapt = "kapt"
         const val jvm = "jvm"
         const val serialization = "plugin.serialization"
+        const val safeArgs = "androidx.navigation.safeargs.kotlin"
     }
 
     object Gradle {
         const val gradle = "com.android.tools.build:gradle:${Versions.Gradle.gradle}"
         const val plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin.kotlin}"
+    }
+
+    object Plugins {
+        const val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.Plugins.safeArgs}"
     }
 
     object Jetpack {
@@ -27,6 +32,10 @@ object Dependencies {
         const val navigationUiKtx = "androidx.navigation:navigation-ui-ktx:${Versions.Jetpack.navigation}"
         const val datastore = "androidx.datastore:datastore-preferences:${Versions.Jetpack.datastore}"
         const val datastoreCore = "androidx.datastore:datastore-preferences-core:${Versions.Jetpack.datastore}"
+        const val paging = "androidx.paging:paging-runtime:${Versions.Jetpack.paging}"
+        const val room = "androidx.room:room-runtime:${Versions.Jetpack.room}"
+        const val roomKtx = "androidx.room:room-ktx:${Versions.Jetpack.room}"
+        const val roomCompiler = "androidx.room:room-compiler:${Versions.Jetpack.room}"
     }
 
     object Layout {

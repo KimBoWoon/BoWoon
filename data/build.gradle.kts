@@ -5,6 +5,7 @@ plugins {
     id(Dependencies.BuildPlugins.library)
     kotlin(Dependencies.BuildPlugins.android)
     kotlin(Dependencies.BuildPlugins.kapt)
+    id(Dependencies.BuildPlugins.parcelize)
     id(Dependencies.BuildPlugins.hilt)
 }
 
@@ -85,6 +86,8 @@ dependencies {
     arrayOf(
         Dependencies.Jetpack.core,
         Dependencies.Jetpack.datastore,
+        Dependencies.Jetpack.paging,
+        Dependencies.Jetpack.roomKtx,
         Dependencies.Retrofit2.retrofit2,
         Dependencies.OkHttp.bom,
         Dependencies.OkHttp.okhttp,
@@ -103,7 +106,8 @@ dependencies {
     arrayOf(
         Dependencies.Hilt.hiltAndroidCompiler,
         Dependencies.Hilt.hiltCompiler,
-        Dependencies.Glide.glideCompiler
+        Dependencies.Glide.glideCompiler,
+        Dependencies.Jetpack.roomCompiler
     ).forEach {
         kapt(it)
     }

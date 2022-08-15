@@ -10,6 +10,7 @@ buildscript {
         classpath(Dependencies.Gradle.plugin)
         classpath(Dependencies.Serialization.kotlinPlugin)
         classpath(Dependencies.Hilt.plugin)
+        classpath(Dependencies.Plugins.safeArgs)
     }
 }
 
