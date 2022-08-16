@@ -1,11 +1,11 @@
-package com.practice.paging.adapters
+package com.practice.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import com.practice.databinding.ViewholderLoadBinding
-import com.practice.paging.vh.LoadStateVH
+import com.practice.ui.vh.LoadStateVH
 
 class PokemonLoadPagingAdapter(
     private val retry: (() -> Unit)? = null

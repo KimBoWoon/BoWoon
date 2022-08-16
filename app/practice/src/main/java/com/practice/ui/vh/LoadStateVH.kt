@@ -1,4 +1,4 @@
-package com.practice.paging.vh
+package com.practice.ui.vh
 
 import androidx.core.view.isVisible
 import androidx.paging.LoadState

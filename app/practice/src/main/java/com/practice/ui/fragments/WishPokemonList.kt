@@ -15,8 +15,8 @@ import com.domain.practice.dto.PokemonModel
 import com.practice.R
 import com.practice.base.BaseFragment
 import com.practice.databinding.FragmentWishPokemonBinding
-import com.practice.paging.adapters.PokemonLoadPagingAdapter
-import com.practice.paging.adapters.WishPokemonPagingAdapter
+import com.practice.ui.adapters.PokemonLoadPagingAdapter
+import com.practice.ui.adapters.WishPokemonPagingAdapter
 import com.practice.ui.activities.vm.MainVM
 import com.practice.ui.fragments.vm.WishPokemonListVM
 import dagger.hilt.android.AndroidEntryPoint

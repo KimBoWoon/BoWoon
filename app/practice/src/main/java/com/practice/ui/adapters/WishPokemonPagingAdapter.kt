@@ -1,4 +1,4 @@
-package com.practice.paging.adapters
+package com.practice.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

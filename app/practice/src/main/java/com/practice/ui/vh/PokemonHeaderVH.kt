@@ -1,16 +1,16 @@
-package com.practice.paging.vh
+package com.practice.ui.vh
 
 import com.practice.base.BaseVH
-import com.practice.databinding.ViewholderPokemonFooterBinding
+import com.practice.databinding.ViewholderPokemonHeaderBinding
 import util.Log
 
-class PokemonFooterVH(
-    override val binding: ViewholderPokemonFooterBinding,
-) : BaseVH<ViewholderPokemonFooterBinding, String>(binding) {
+class PokemonHeaderVH(
+    override val binding: ViewholderPokemonHeaderBinding,
+) : BaseVH<ViewholderPokemonHeaderBinding, String>(binding) {
     override fun bind(item: String?) {
         runCatching {
             item ?: run {
-                Log.e("PokemonFooterVH item is null!")
+                Log.e("PokemonHeaderViewHolder item is null!")
                 return
             }
         }.onSuccess {

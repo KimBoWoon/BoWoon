@@ -1,4 +1,4 @@
-package com.practice.paging.adapters
+package com.practice.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,8 +10,8 @@ import com.practice.R
 import com.practice.databinding.ViewholderPokemonBinding
 import com.practice.databinding.ViewholderPokemonFooterBinding
 import com.practice.databinding.ViewholderPokemonHeaderBinding
-import com.practice.paging.vh.PokemonFooterVH
-import com.practice.paging.vh.PokemonHeaderVH
+import com.practice.ui.vh.PokemonFooterVH
+import com.practice.ui.vh.PokemonHeaderVH
 import com.practice.ui.fragments.PokemonListFragment
 import com.practice.ui.vh.PokemonVH
 
