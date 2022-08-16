@@ -11,7 +11,7 @@
 
         <variable
             name="dto"
-            type="com.data.practice.room.WishPokemon" />
+            type="com.domain.practice.dto.PokemonModel.Pokemon" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

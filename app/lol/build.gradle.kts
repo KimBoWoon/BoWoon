@@ -51,6 +51,9 @@ android {
         create(Config.Flavors.lol) {
             dimension = Config.Dimensions.mode
         }
+        create(Config.Flavors.practice) {
+            dimension = Config.Dimensions.mode
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

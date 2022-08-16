@@ -6,5 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface RoomRepository {
     suspend fun insert(value: PokemonModel.Pokemon)
     suspend fun findPokemon(name: String): PokemonModel.Pokemon?
-//    suspend fun getAllWishPokemon(): PagingSource<Int, WishPokemon>
+    suspend fun deleteAll(): Int
+    suspend fun getAllWishPokemon(limit: Int): Flow<List<PokemonModel.Pokemon>>
 }

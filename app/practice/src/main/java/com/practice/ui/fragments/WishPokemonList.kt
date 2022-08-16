@@ -18,6 +18,7 @@ import com.practice.paging.adapters.PokemonLoadPagingAdapter
 import com.practice.paging.adapters.WishPokemonPagingAdapter
 import com.practice.ui.fragments.vm.WishPokemonListVM
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import util.ScreenUtils.dp
 
@@ -118,13 +119,13 @@ class WishPokemonList : BaseFragment<FragmentWishPokemonBinding>(
     }
 
     override fun initFlow() {
-//        lifecycleScope.launch {
-//            viewModel.pager.collectLatest { pagingData ->
-//                pokemonAdapter.submitData(pagingData)
-//                binding.pbLoading.isVisible = false
-//                binding.tvEmpty.isVisible = false
-//            }
-//        }
+        lifecycleScope.launch {
+            viewModel.pager.collectLatest { pagingData ->
+                pokemonAdapter.submitData(pagingData)
+                binding?.pbLoading?.isVisible = false
+                binding?.tvEmpty?.isVisible = false
+            }
+        }
 //        viewModel.goToDetail.observe(viewLifecycleOwner) { (type, pokemon) ->
 //            findNavController().navigate(WishPokemonListDirections.actionWishToDetail(WishPokemon(name = pokemon.name, url = pokemon.url), type))
 //        }

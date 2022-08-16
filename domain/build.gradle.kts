@@ -80,9 +80,10 @@ dependencies {
     arrayOf(
         Dependencies.Jetpack.core,
         Dependencies.Jetpack.datastore,
+        Dependencies.Jetpack.pagingCommon,
         Dependencies.Serialization.kotlin,
         Dependencies.Serialization.converter,
-        Dependencies.Hilt.hiltAndroid,
+        Dependencies.Hilt.hiltAndroid
     ).forEach {
         implementation(it)
     }

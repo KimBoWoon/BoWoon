@@ -4,7 +4,6 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -12,13 +11,13 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.domain.practice.dto.PokemonModel
-import com.practice.ui.activities.vm.MainVM
 import com.practice.R
 import com.practice.base.BaseFragment
 import com.practice.databinding.FragmentPokemonListBinding
-import com.practice.ui.fragments.vm.PokemonListVM
 import com.practice.paging.adapters.PokemonLoadPagingAdapter
 import com.practice.paging.adapters.PokemonPagingAdapter
+import com.practice.ui.dialog.PokemonDialog
+import com.practice.ui.fragments.vm.PokemonListVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -36,13 +35,13 @@ class PokemonListFragment : BaseFragment<FragmentPokemonListBinding>(
                     binding?.tvEmpty?.text = (it.source.refresh as? LoadState.Error)?.error?.message
                     binding?.tvEmpty?.isVisible = true
                     binding?.pbLoading?.isVisible = false
-//                    PokemonDialog(
-//                        "네트워크에 문제가 있는거 같습니다.\n다시 연결하시겠습니까?",
-//                        "예",
-//                        { retry() },
-//                        "아니오",
-//                        {}
-//                    ).show(childFragmentManager, PokemonListFragment::class.java.simpleName)
+                    PokemonDialog(
+                        "네트워크에 문제가 있는거 같습니다.\n다시 연결하시겠습니까?",
+                        "예",
+                        { retry() },
+                        "아니오",
+                        {}
+                    ).show(childFragmentManager, PokemonListFragment::class.java.simpleName)
                 } else if (it.source.refresh is LoadState.NotLoading && it.append.endOfPaginationReached && (binding?.rvPokemonList?.adapter?.itemCount ?: 0) < 1) {
                     binding?.rvPokemonList?.isVisible = false
                     binding?.tvEmpty?.isVisible = true

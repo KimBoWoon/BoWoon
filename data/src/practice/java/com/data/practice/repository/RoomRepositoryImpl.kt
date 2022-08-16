@@ -1,11 +1,10 @@
 package com.data.practice.repository
 
-import androidx.paging.PagingSource
 import com.data.practice.room.Pokemon
 import com.data.practice.room.RoomHelper
-import com.data.practice.room.WishPokemon
 import com.domain.practice.dto.PokemonModel
 import com.domain.practice.repository.RoomRepository
+import kotlinx.coroutines.flow.Flow
 
 class RoomRepositoryImpl(
     private val roomHelper: RoomHelper
@@ -21,6 +20,9 @@ class RoomRepositoryImpl(
         return null
     }
 
-    //    override suspend fun getAllWishPokemon(): PagingSource<Int, WishPokemon> =
-//        roomHelper.roomPokemonDao().getAllWishPokemon()
+    override suspend fun deleteAll(): Int =
+        roomHelper.roomPokemonDao().deleteAll()
+
+    override suspend fun getAllWishPokemon(limit: Int): Flow<List<PokemonModel.Pokemon>> =
+        roomHelper.roomPokemonDao().getAllWishPokemon(limit)
 }

@@ -13,5 +13,9 @@ class RoomUseCase(
     suspend fun findPokemon(name: String): PokemonModel.Pokemon? =
         roomRepository.findPokemon(name)
 
-//    suspend fun getAllWishPokemon(): Flow<PokemonModel.Pokemon> = roomRepository.getAllWishPokemon()
+    suspend fun deleteAll(): Int =
+        roomRepository.deleteAll()
+
+    suspend fun getAllWishPokemon(limit: Int): Flow<List<PokemonModel.Pokemon>> =
+        roomRepository.getAllWishPokemon(limit)
 }

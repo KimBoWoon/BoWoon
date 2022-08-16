@@ -49,6 +49,9 @@ android {
     }
     flavorDimensions.addAll(listOf(Config.Dimensions.mode))
     productFlavors {
+        create(Config.Flavors.lol) {
+            dimension = Config.Dimensions.mode
+        }
         create(Config.Flavors.practice) {
             dimension = Config.Dimensions.mode
         }

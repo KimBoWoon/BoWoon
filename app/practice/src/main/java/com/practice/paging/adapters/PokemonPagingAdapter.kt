@@ -54,7 +54,7 @@ class PokemonPagingAdapter(
     }
 }
 
-class WishPokemonPagingAdapter() : PagingDataAdapter<WishPokemon, WishPokemonVH>(WishPokemonComparator) {
+class WishPokemonPagingAdapter() : PagingDataAdapter<PokemonModel, WishPokemonVH>(WishPokemonComparator) {
     override fun onBindViewHolder(holder: WishPokemonVH, position: Int) {
         getItem(position)?.let {
             holder.bind(it)
@@ -83,12 +83,12 @@ object PokemonComparator : DiffUtil.ItemCallback<PokemonModel>() {
     }
 }
 
-object WishPokemonComparator : DiffUtil.ItemCallback<WishPokemon>() {
-    override fun areItemsTheSame(oldItem: WishPokemon, newItem: WishPokemon): Boolean {
+object WishPokemonComparator : DiffUtil.ItemCallback<PokemonModel>() {
+    override fun areItemsTheSame(oldItem: PokemonModel, newItem: PokemonModel): Boolean {
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: WishPokemon, newItem: WishPokemon): Boolean {
-        return oldItem.name == newItem.name
+    override fun areContentsTheSame(oldItem: PokemonModel, newItem: PokemonModel): Boolean {
+        return (oldItem as? PokemonModel.Pokemon)?.name == (newItem as? PokemonModel.Pokemon)?.name
     }
 }

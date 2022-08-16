@@ -4,19 +4,55 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.domain.practice.dto.PokemonModel
 import com.domain.practice.usecase.PokemonApiUseCase
+import com.domain.practice.usecase.RoomUseCase
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
+import util.Log
 
 class PokemonSource(
     private val pokemonApiUseCase: PokemonApiUseCase
-//    private val pokemonApiService: PokemonApiService
 ) : PagingSource<Int, PokemonModel>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonModel> {
-//        delay(5000) for test
         runCatching {
-            val response = pokemonApiUseCase.getAllPokemon(params.loadSize, params.key ?: 0)
+            pokemonApiUseCase.getAllPokemon(params.loadSize, params.key ?: 0)
+        }.onSuccess{ response ->
             return LoadResult.Page(
-                data = response.results?.toList() ?: listOf(),
+                data = response.results ?: listOf(),
                 prevKey = null, // Only paging forward.
                 nextKey = params.loadSize + (params.key ?: 0)
+            )
+        }.onFailure { e ->
+            e.printStackTrace()
+            return LoadResult.Error(e)
+        }
+
+        return LoadResult.Error(Throwable("Paging error"))
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, PokemonModel>): Int? {
+        // prevKet == null -> 첫 번째 페이지
+        // nextKey == null -> 마지막 페이지
+        // prevKey == null && nextKey == null -> 최초 페이지
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+        }
+    }
+}
+
+class RoomPokemonSource(
+    private val roomUseCase: RoomUseCase
+) : PagingSource<Int, PokemonModel>() {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonModel> {
+        runCatching {
+            roomUseCase.getAllWishPokemon(params.loadSize)
+        }.onSuccess{ response ->
+            return LoadResult.Page(
+                data = response.first(),
+                prevKey = null, // Only paging forward.
+                nextKey = if (params.loadSize == response.first().size) (params.key ?: 0) else null
             )
         }.onFailure { e ->
             e.printStackTrace()

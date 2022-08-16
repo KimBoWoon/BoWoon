@@ -33,6 +33,7 @@ object Dependencies {
         const val datastore = "androidx.datastore:datastore-preferences:${Versions.Jetpack.datastore}"
         const val datastoreCore = "androidx.datastore:datastore-preferences-core:${Versions.Jetpack.datastore}"
         const val paging = "androidx.paging:paging-runtime:${Versions.Jetpack.paging}"
+        const val pagingCommon = "androidx.paging:paging-common:${Versions.Jetpack.paging}"
         const val room = "androidx.room:room-runtime:${Versions.Jetpack.room}"
         const val roomKtx = "androidx.room:room-ktx:${Versions.Jetpack.room}"
         const val roomCompiler = "androidx.room:room-compiler:${Versions.Jetpack.room}"
