@@ -7,9 +7,12 @@ import androidx.recyclerview.widget.DiffUtil
 import com.domain.practice.dto.PokemonModel
 import com.practice.R
 import com.practice.databinding.ViewholderWishPokemonBinding
+import com.practice.ui.fragments.WishPokemonList
 import com.practice.ui.vh.WishPokemonVH
 
-class WishPokemonPagingAdapter : PagingDataAdapter<PokemonModel, WishPokemonVH>(WishPokemonComparator) {
+class WishPokemonPagingAdapter(
+    private val clickHandler: WishPokemonList.ClickHandler? = null
+) : PagingDataAdapter<PokemonModel, WishPokemonVH>(WishPokemonComparator) {
     override fun onBindViewHolder(holder: WishPokemonVH, position: Int) {
         getItem(position)?.let {
             holder.bind(it)
@@ -17,7 +20,7 @@ class WishPokemonPagingAdapter : PagingDataAdapter<PokemonModel, WishPokemonVH>(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WishPokemonVH {
-        return WishPokemonVH(ViewholderWishPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return WishPokemonVH(ViewholderWishPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false), clickHandler)
     }
 
     override fun getItemViewType(position: Int): Int =

@@ -88,19 +88,16 @@ class PokemonDetailFragment : BaseFragment<FragmentPokemonDetailBinding>(
             }
         }
 
-//        viewModel.removeWish.observe(viewLifecycleOwner) { pokemon ->
-//            lifecycleScope.launch(Dispatchers.IO) {
-//                val toastMessage = roomHelper.roomPokemonDao().findPokemon(pokemon.name)?.let {
-//                    roomHelper.roomPokemonDao().delete(it)
-//                    "성공적 으로 제거 했습니다."
-//                } ?: kotlin.run {
-//                    "알 수 없는 오류로 인해 제거하지 못했습니다."
-//                }
-//                withContext(Dispatchers.Main) {
-//                    Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
-//                    findNavController().popBackStack()
-//                }
-//            }
-//        }
+        lifecycleScope.launch {
+            viewModel.removeWish.collect { pokemon ->
+                pokemon?.let {
+                    val toastMessage = viewModel.removeWish(pokemon)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+                        findNavController().popBackStack()
+                    }
+                }
+            }
+        }
     }
 }

@@ -7,15 +7,17 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.practice.ui.activities.vm.MainVM
+import com.domain.practice.dto.PokemonModel
 import com.practice.R
 import com.practice.base.BaseFragment
 import com.practice.databinding.FragmentWishPokemonBinding
 import com.practice.paging.adapters.PokemonLoadPagingAdapter
 import com.practice.paging.adapters.WishPokemonPagingAdapter
+import com.practice.ui.activities.vm.MainVM
 import com.practice.ui.fragments.vm.WishPokemonListVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -27,7 +29,7 @@ class WishPokemonList : BaseFragment<FragmentWishPokemonBinding>(
     R.layout.fragment_wish_pokemon,
 ) {
     private val pokemonAdapter by lazy {
-        WishPokemonPagingAdapter().apply {
+        WishPokemonPagingAdapter(ClickHandler()).apply {
             addLoadStateListener {
                 if (it.source.refresh is LoadState.NotLoading && it.append.endOfPaginationReached && (binding?.rvWishPokemonList?.adapter?.itemCount ?: 0) < 1) {
                     binding?.rvWishPokemonList?.isVisible = false
@@ -78,6 +80,11 @@ class WishPokemonList : BaseFragment<FragmentWishPokemonBinding>(
         initFlow()
     }
 
+    override fun onResume() {
+        super.onResume()
+        pokemonAdapter.refresh()
+    }
+
     override fun initBinding() {
         binding?.rvWishPokemonList?.apply {
             adapter = pokemonAdapter.withLoadStateHeaderAndFooter(
@@ -126,8 +133,14 @@ class WishPokemonList : BaseFragment<FragmentWishPokemonBinding>(
                 binding?.tvEmpty?.isVisible = false
             }
         }
-//        viewModel.goToDetail.observe(viewLifecycleOwner) { (type, pokemon) ->
-//            findNavController().navigate(WishPokemonListDirections.actionWishToDetail(WishPokemon(name = pokemon.name, url = pokemon.url), type))
-//        }
+    }
+
+    inner class ClickHandler {
+        fun goToDetail(type: Int, pokemon: PokemonModel.Pokemon) {
+            findNavController().navigate(R.id.action_wish_to_detail, Bundle().apply {
+                putParcelable("pokemon", PokemonModel.Pokemon(pokemon.name, pokemon.url))
+                putInt("type", type)
+            })
+        }
     }
 }

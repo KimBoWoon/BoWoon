@@ -13,6 +13,9 @@ class RoomUseCase(
     suspend fun findPokemon(name: String): PokemonModel.Pokemon? =
         roomRepository.findPokemon(name)
 
+    suspend fun delete(pokemon: PokemonModel.Pokemon): Int =
+        roomRepository.delete(pokemon)
+
     suspend fun deleteAll(): Int =
         roomRepository.deleteAll()
 

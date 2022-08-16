@@ -3,10 +3,12 @@ package com.practice.ui.vh
 import com.domain.practice.dto.PokemonModel
 import com.practice.base.BaseVH
 import com.practice.databinding.ViewholderWishPokemonBinding
+import com.practice.ui.fragments.WishPokemonList
 import util.Log
 
 class WishPokemonVH(
     override val binding: ViewholderWishPokemonBinding,
+    private val clickHandler: WishPokemonList.ClickHandler? = null
 ) : BaseVH<ViewholderWishPokemonBinding, PokemonModel>(binding) {
     override fun bind(item: PokemonModel?) {
         runCatching {
@@ -24,7 +26,7 @@ class WishPokemonVH(
         }
     }
 
-    fun goToDetail(pokemon: PokemonModel) {
-//        fragmentVM?.goToDetail?.value = Pair(WISH_POKEMON_DETAIL, pokemon)
+    fun goToDetail(pokemon: PokemonModel.Pokemon) {
+        clickHandler?.goToDetail(1, pokemon)
     }
 }

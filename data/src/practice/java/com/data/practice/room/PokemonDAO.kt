@@ -1,9 +1,6 @@
 package com.data.practice.room
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.data.practice.dto.Pokemon
 import com.domain.practice.dto.PokemonModel
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +12,9 @@ interface PokemonDAO {
 
     @Query("SELECT * FROM pokemon LIMIT :limit")
     fun getAllWishPokemon(limit: Int): Flow<List<PokemonModel.Pokemon>>
+
+    @Delete
+    suspend fun delete(pokemon: Pokemon): Int
 
     @Query("DELETE FROM pokemon")
     suspend fun deleteAll(): Int

@@ -25,4 +25,13 @@ class PokemonDetailVM @Inject constructor(
                 "등록됐습니다."
             }
         }.await()
+
+    suspend fun removeWish(pokemon: PokemonModel.Pokemon): String =
+        viewModelScope.async {
+            if (roomUseCase.delete(pokemon) > 0) {
+                "제거했습니다."
+            } else {
+                "데이터베이스에 저장되지 않았습니다."
+            }
+        }.await()
 }

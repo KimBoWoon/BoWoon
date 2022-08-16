@@ -21,6 +21,14 @@ class RoomRepositoryImpl(
         }
     }
 
+    override suspend fun delete(pokemon: PokemonModel.Pokemon): Int {
+        roomDataBase.roomPokemonDao().findPokemon(pokemon.name ?: "")?.let {
+            return roomDataBase.roomPokemonDao().delete(it)
+        } ?: run {
+            return 0
+        }
+    }
+
     override suspend fun deleteAll(): Int =
         roomDataBase.roomPokemonDao().deleteAll()
 
