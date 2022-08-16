@@ -4,7 +4,7 @@ import com.data.practice.local.LocalDatastore
 import com.data.practice.repository.DataStoreRepositoryImpl
 import com.data.practice.repository.PokemonApiRepositoryImpl
 import com.data.practice.repository.RoomRepositoryImpl
-import com.data.practice.room.RoomHelper
+import com.data.practice.room.RoomDataBase
 import com.data.practice.service.PokemonApiService
 import com.domain.practice.repository.DataStoreRepository
 import com.domain.practice.repository.PokemonApiRepository
@@ -24,8 +24,8 @@ object RepositoryModule {
 
     @Provides
     fun provideRoomRepository(
-        roomHelper: RoomHelper
-    ): RoomRepository = RoomRepositoryImpl(roomHelper)
+        roomDataBase: RoomDataBase
+    ): RoomRepository = RoomRepositoryImpl(roomDataBase)
 
     @Provides
     fun provideDatastore(

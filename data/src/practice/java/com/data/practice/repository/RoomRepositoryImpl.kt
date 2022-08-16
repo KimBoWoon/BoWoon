@@ -1,28 +1,29 @@
 package com.data.practice.repository
 
-import com.data.practice.room.Pokemon
-import com.data.practice.room.RoomHelper
+import com.data.practice.dto.Pokemon
+import com.data.practice.room.RoomDataBase
 import com.domain.practice.dto.PokemonModel
 import com.domain.practice.repository.RoomRepository
 import kotlinx.coroutines.flow.Flow
 
 class RoomRepositoryImpl(
-    private val roomHelper: RoomHelper
+    private val roomDataBase: RoomDataBase
 ) : RoomRepository {
     override suspend fun insert(value: PokemonModel.Pokemon) {
-        roomHelper.roomPokemonDao().insert(Pokemon(name = value.name ?: "", url = value.url ?: ""))
+        roomDataBase.roomPokemonDao().insert(Pokemon(name = value.name ?: "", url = value.url ?: ""))
     }
 
     override suspend fun findPokemon(name: String): PokemonModel.Pokemon? {
-        roomHelper.roomPokemonDao().findPokemon(name)?.let { pokemon ->
+        roomDataBase.roomPokemonDao().findPokemon(name)?.let { pokemon ->
             return PokemonModel.Pokemon(pokemon.name, pokemon.url)
+        } ?: run {
+            return null
         }
-        return null
     }
 
     override suspend fun deleteAll(): Int =
-        roomHelper.roomPokemonDao().deleteAll()
+        roomDataBase.roomPokemonDao().deleteAll()
 
     override suspend fun getAllWishPokemon(limit: Int): Flow<List<PokemonModel.Pokemon>> =
-        roomHelper.roomPokemonDao().getAllWishPokemon(limit)
+        roomDataBase.roomPokemonDao().getAllWishPokemon(limit)
 }

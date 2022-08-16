@@ -5,7 +5,7 @@ import com.data.practice.local.LocalDatastore
 import com.domain.practice.repository.DataStoreRepository
 
 class DataStoreRepositoryImpl(
-    val datastore: LocalDatastore,
+    private val datastore: LocalDatastore,
 ) : DataStoreRepository {
     override suspend fun <T> setDatastore(key: Preferences.Key<T>, value: T) {
         datastore.set(key, value)

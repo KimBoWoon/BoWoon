@@ -6,17 +6,14 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.domain.practice.dto.PokemonModel
-import com.data.practice.room.WishPokemon
 import com.practice.R
 import com.practice.databinding.ViewholderPokemonBinding
 import com.practice.databinding.ViewholderPokemonFooterBinding
 import com.practice.databinding.ViewholderPokemonHeaderBinding
-import com.practice.databinding.ViewholderWishPokemonBinding
-import com.practice.ui.fragments.PokemonListFragment
-import com.practice.ui.vh.PokemonVH
-import com.practice.ui.vh.WishPokemonVH
 import com.practice.paging.vh.PokemonFooterVH
 import com.practice.paging.vh.PokemonHeaderVH
+import com.practice.ui.fragments.PokemonListFragment
+import com.practice.ui.vh.PokemonVH
 
 class PokemonPagingAdapter(
     private val clickHandler: PokemonListFragment.ClickHandler
@@ -52,43 +49,14 @@ class PokemonPagingAdapter(
 
         return R.layout.viewholder_load
     }
-}
 
-class WishPokemonPagingAdapter() : PagingDataAdapter<PokemonModel, WishPokemonVH>(WishPokemonComparator) {
-    override fun onBindViewHolder(holder: WishPokemonVH, position: Int) {
-        getItem(position)?.let {
-            holder.bind(it)
+    object PokemonComparator : DiffUtil.ItemCallback<PokemonModel>() {
+        override fun areItemsTheSame(oldItem: PokemonModel, newItem: PokemonModel): Boolean {
+            return oldItem == newItem
         }
-    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WishPokemonVH {
-        return WishPokemonVH(ViewholderWishPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-    }
-
-    override fun getItemViewType(position: Int): Int =
-        if (position == itemCount) {
-            R.layout.viewholder_load
-        } else {
-            R.layout.viewholder_pokemon
+        override fun areContentsTheSame(oldItem: PokemonModel, newItem: PokemonModel): Boolean {
+            return (oldItem as? PokemonModel.Pokemon)?.name == (newItem as? PokemonModel.Pokemon)?.name
         }
-}
-
-object PokemonComparator : DiffUtil.ItemCallback<PokemonModel>() {
-    override fun areItemsTheSame(oldItem: PokemonModel, newItem: PokemonModel): Boolean {
-        return oldItem == newItem
-    }
-
-    override fun areContentsTheSame(oldItem: PokemonModel, newItem: PokemonModel): Boolean {
-        return (oldItem as? PokemonModel.Pokemon)?.name == (newItem as? PokemonModel.Pokemon)?.name
-    }
-}
-
-object WishPokemonComparator : DiffUtil.ItemCallback<PokemonModel>() {
-    override fun areItemsTheSame(oldItem: PokemonModel, newItem: PokemonModel): Boolean {
-        return oldItem == newItem
-    }
-
-    override fun areContentsTheSame(oldItem: PokemonModel, newItem: PokemonModel): Boolean {
-        return (oldItem as? PokemonModel.Pokemon)?.name == (newItem as? PokemonModel.Pokemon)?.name
     }
 }

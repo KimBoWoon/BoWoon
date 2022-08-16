@@ -3,7 +3,6 @@ package com.data.practice.local
 import android.content.Context
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -15,7 +14,6 @@ class LocalDatastore @Inject constructor(
     private val context: Context
 ) {
     object Keys {
-        val LOL_VERSION = stringPreferencesKey("LOL_VERSION")
     }
 
     suspend fun <T> set(key: Preferences.Key<T>, value: T) {

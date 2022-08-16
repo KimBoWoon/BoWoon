@@ -8,10 +8,8 @@ sealed class PokemonModel {
     @Parcelize
     @Serializable
     data class Pokemon(
-//        @SerializedName("name")
         val name: String? = null,
-//        @SerializedName("url")
-        val url: String? = null,
+        val url: String? = null
     ) : Parcelable, PokemonModel() {
         fun getImageUrl(): String {
             val index = url?.split("/".toRegex())?.dropLast(1)?.last()

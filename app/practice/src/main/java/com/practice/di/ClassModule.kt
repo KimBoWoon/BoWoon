@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.data.practice.local.LocalDatastore
 import com.data.practice.room.PokemonDAO
-import com.data.practice.room.RoomHelper
+import com.data.practice.room.RoomDataBase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,10 +22,10 @@ object ClassModule {
     @Provides
     fun provideRoomHelper(
         @ApplicationContext context: Context
-    ): RoomHelper = Room.databaseBuilder(context, RoomHelper::class.java, "room_pokemon")
+    ): RoomDataBase = Room.databaseBuilder(context, RoomDataBase::class.java, "room_pokemon")
         .fallbackToDestructiveMigration()
         .build()
 
     @Provides
-    fun providePokemon(appDatabase: RoomHelper): PokemonDAO = appDatabase.roomPokemonDao()
+    fun providePokemon(appDatabase: RoomDataBase): PokemonDAO = appDatabase.roomPokemonDao()
 }

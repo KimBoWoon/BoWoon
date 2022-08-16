@@ -5,11 +5,7 @@ import androidx.paging.PagingState
 import com.domain.practice.dto.PokemonModel
 import com.domain.practice.usecase.PokemonApiUseCase
 import com.domain.practice.usecase.RoomUseCase
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
-import util.Log
 
 class PokemonSource(
     private val pokemonApiUseCase: PokemonApiUseCase
