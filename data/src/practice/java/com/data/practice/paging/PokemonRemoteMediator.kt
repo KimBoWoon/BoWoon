@@ -1,5 +1,6 @@
 package com.data.practice.paging
 
+import android.content.res.Resources
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -43,7 +44,7 @@ class PokemonRemoteMediator @Inject constructor(
         }
 
         // 만약 네트워크 요청으로 인해 에러가 발생한다면 MediatorResult.Error을 반환
-//        return MediatorResult.Error(Resources.NotFoundException())
+        return MediatorResult.Error(Resources.NotFoundException())
     }
 
     /**
