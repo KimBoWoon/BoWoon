@@ -21,8 +21,6 @@ import kotlin.random.Random
 class PokemonDetailFragment : BaseFragment<FragmentPokemonDetailBinding>(
     R.layout.fragment_pokemon_detail,
 ) {
-    //    @Inject
-//    lateinit var roomHelper: RoomHelper
 //    private val pokemon by navArgs<PokemonDetailFragmentArgs>()
     private val viewModel by viewModels<PokemonDetailVM>()
     private var pokemon: PokemonModel.Pokemon? = null
@@ -31,7 +29,7 @@ class PokemonDetailFragment : BaseFragment<FragmentPokemonDetailBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.apply {
+        binding.apply {
             lifecycleOwner = this@PokemonDetailFragment
             vm = viewModel
         }
@@ -47,7 +45,7 @@ class PokemonDetailFragment : BaseFragment<FragmentPokemonDetailBinding>(
     }
 
     override fun initBinding() {
-        binding?.apply {
+        binding.apply {
             pokemon?.let {
                 when (type) {
                     0 -> {

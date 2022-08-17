@@ -7,6 +7,8 @@ plugins {
     kotlin(Dependencies.BuildPlugins.android)
     kotlin(Dependencies.BuildPlugins.kapt)
     id(Dependencies.BuildPlugins.hilt)
+    id(Dependencies.BuildPlugins.googleService)
+    id(Dependencies.BuildPlugins.firebasePerformance)
 }
 
 android {
@@ -33,6 +35,12 @@ android {
             keyAlias = getProp(Config.Sign.Release.keyAlias)
             keyPassword = getProp(Config.Sign.Release.keyPassword)
         }
+        getByName(Config.Sign.Debug.name) {
+            storeFile = file(getProp(Config.Sign.Debug.storeFile))
+            storePassword = getProp(Config.Sign.Debug.storePassword)
+            keyAlias = getProp(Config.Sign.Debug.keyAlias)
+            keyPassword = getProp(Config.Sign.Debug.keyPassword)
+        }
     }
     buildTypes {
         getByName(Config.BuildType.release) {
@@ -44,6 +52,11 @@ android {
         getByName(Config.BuildType.debug) {
             isMinifyEnabled = false
             isDebuggable = true
+        }
+        create(Config.BuildType.beta) {
+            isMinifyEnabled = false
+            isDebuggable = true
+            signingConfig = signingConfigs.getByName(Config.Sign.Debug.name)
         }
     }
     flavorDimensions.addAll(listOf(Config.Dimensions.mode))
@@ -94,6 +107,9 @@ dependencies {
         Dependencies.Jetpack.datastore,
         Dependencies.Hilt.hiltAndroid,
         Dependencies.Glide.glide,
+        Dependencies.Firebase.performance,
+        Dependencies.Firebase.analytics,
+        platform(Dependencies.Firebase.bom),
         project(Dependencies.InnerModules.data),
         project(Dependencies.InnerModules.domain)
     ).forEach {

@@ -4,6 +4,13 @@ object Versions {
         const val kotlin = "1.6.10"
     }
 
+    object Firebase {
+        const val googleService = "4.3.13"
+        const val gradle = "3.4.0"
+        const val performancePlugin = "1.4.1"
+        const val bom = "30.3.2"
+    }
+
     object Jetpack {
         const val core = "1.8.0"
         const val appcompat = "1.5.0"

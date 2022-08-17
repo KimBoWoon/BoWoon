@@ -23,12 +23,17 @@ object Config {
 
         object Debug {
             const val name = "debug"
+            const val storeFile = "store_file_path"
+            const val storePassword = "store_password"
+            const val keyAlias = "key_alias"
+            const val keyPassword = "key_password"
         }
     }
 
     object BuildType {
         const val release = "release"
         const val debug = "debug"
+        const val beta = "beta"
     }
 
     object Dimensions {

@@ -28,7 +28,7 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.apply {
+        binding.apply {
             lifecycleOwner = this@GameItemListFragment
         }
         lifecycle.addObserver(viewModel)
@@ -44,7 +44,7 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
     }
 
     override fun initBinding() {
-        binding?.apply {
+        binding.apply {
             rvGameItemList.apply {
             }
         }
@@ -64,15 +64,15 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
                             gameItemList.values.forEach { item ->
                                 item.image?.version = it.data.version ?: ""
                             }
-                            binding?.rvGameItemList?.adapter = LolAdapter(sortedGameItemList)
+                            binding.rvGameItemList.adapter = LolAdapter(sortedGameItemList)
                         } ?: run {
                             Log.e("championList is null")
                         }
-                        binding?.pbLoading?.isVisible = false
+                        binding.pbLoading.isVisible = false
                     }
                     is DataStatus.Failure -> {
                         Log.printStackTrace(it.throwable)
-                        binding?.pbLoading?.isVisible = false
+                        binding.pbLoading.isVisible = false
                     }
                 }
             }

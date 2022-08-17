@@ -27,7 +27,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.apply {
+        binding.apply {
             lifecycleOwner = this@SettingFragment
         }
         lifecycle.addObserver(viewModel)
@@ -46,7 +46,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
                         Log.d("data loading...")
                     }
                     is DataStatus.Success -> {
-                        binding?.spinnerVersion?.apply {
+                        binding.spinnerVersion.apply {
                             adapter = VersionAdapter(requireContext(), R.layout.spinner_item, it.data)
                             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                                 override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {

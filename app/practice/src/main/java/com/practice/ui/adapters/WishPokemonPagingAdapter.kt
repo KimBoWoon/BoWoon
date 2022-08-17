@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import com.domain.practice.dto.PokemonModel
 import com.practice.R
 import com.practice.databinding.ViewholderWishPokemonBinding
-import com.practice.ui.fragments.WishPokemonList
+import com.practice.ui.fragments.WishPokemonListFragment
 import com.practice.ui.vh.WishPokemonVH
 
 class WishPokemonPagingAdapter(
-    private val clickHandler: WishPokemonList.ClickHandler? = null
+    private val clickHandler: WishPokemonListFragment.ClickHandler? = null
 ) : PagingDataAdapter<PokemonModel, WishPokemonVH>(WishPokemonComparator) {
     override fun onBindViewHolder(holder: WishPokemonVH, position: Int) {
         getItem(position)?.let {

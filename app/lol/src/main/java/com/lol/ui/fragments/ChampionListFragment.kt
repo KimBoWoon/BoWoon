@@ -33,7 +33,7 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.apply {
+        binding.apply {
             lifecycleOwner = this@ChampionListFragment
         }
         lifecycle.addObserver(viewModel)
@@ -49,7 +49,7 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
     }
 
     override fun initBinding() {
-        binding?.apply {
+        binding.apply {
             rvLolChampionList.apply {
                 if (layoutManager == null) {
                     layoutManager = GridLayoutManager(requireContext(), 3).apply {
@@ -60,14 +60,14 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
                 }
             }
             // TODO 해당 코드 작동 안함 이유를 모르겠음 찾아봐야함
-//            etSearchChampion.apply {
-//                addTextChangedListener { editable ->
-//                    editable?.let {
-//                        Log.d("editable not null!")
-//                        Log.d(it.toString())
-//                    }
-//                }
-//            }
+    //            etSearchChampion.apply {
+    //                addTextChangedListener { editable ->
+    //                    editable?.let {
+    //                        Log.d("editable not null!")
+    //                        Log.d(it.toString())
+    //                    }
+    //                }
+    //            }
             etSearchChampion.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(text: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -82,7 +82,7 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
 
                         Log.d(sortedChampionList.toString())
 
-                        binding?.rvLolChampionList?.adapter = LolAdapter(sortedChampionList, ClickHandler())
+                        binding.rvLolChampionList.adapter = LolAdapter(sortedChampionList, ClickHandler())
                     }
                 }
 
@@ -102,15 +102,15 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
                         Log.d(it.data.toString())
                         (it.data as? ChampionRoot)?.data?.let { championList ->
                             val sortedChampionList = championList.values.sortedBy { item -> item.name }
-                            binding?.rvLolChampionList?.adapter = LolAdapter(sortedChampionList, ClickHandler())
+                            binding.rvLolChampionList.adapter = LolAdapter(sortedChampionList, ClickHandler())
                         } ?: run {
                             Log.e("championList is null")
                         }
-                        binding?.pbLoading?.isVisible = false
+                        binding.pbLoading.isVisible = false
                     }
                     is DataStatus.Failure -> {
                         Log.printStackTrace(it.throwable)
-                        binding?.pbLoading?.isVisible = false
+                        binding.pbLoading.isVisible = false
                     }
                 }
             }

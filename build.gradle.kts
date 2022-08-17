@@ -11,6 +11,9 @@ buildscript {
         classpath(Dependencies.Serialization.kotlinPlugin)
         classpath(Dependencies.Hilt.plugin)
         classpath(Dependencies.Plugins.safeArgs)
+        classpath(Dependencies.Firebase.googleService)
+        classpath(Dependencies.Firebase.gradle)
+        classpath(Dependencies.Firebase.performancePlugin)
     }
 }
 

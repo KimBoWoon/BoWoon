@@ -23,7 +23,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.apply {
+        binding.apply {
             lifecycleOwner = this@SettingFragment
             vm = viewModel
         }
@@ -34,7 +34,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
     }
 
     override fun initBinding() {
-        binding?.apply {
+        binding.apply {
             tvRemoveAllWish.text = "위시 모두 제거"
             bRemoveAllWish.onDebounceClickListener {
                 PokemonDialog(

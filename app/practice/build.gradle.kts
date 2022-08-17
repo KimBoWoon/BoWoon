@@ -34,6 +34,12 @@ android {
             keyAlias = getProp(Config.Sign.Release.keyAlias)
             keyPassword = getProp(Config.Sign.Release.keyPassword)
         }
+        getByName(Config.Sign.Debug.name) {
+            storeFile = file(getProp(Config.Sign.Debug.storeFile))
+            storePassword = getProp(Config.Sign.Debug.storePassword)
+            keyAlias = getProp(Config.Sign.Debug.keyAlias)
+            keyPassword = getProp(Config.Sign.Debug.keyPassword)
+        }
     }
     buildTypes {
         getByName(Config.BuildType.release) {
@@ -45,6 +51,11 @@ android {
         getByName(Config.BuildType.debug) {
             isMinifyEnabled = false
             isDebuggable = true
+        }
+        create(Config.BuildType.beta) {
+            isMinifyEnabled = false
+            isDebuggable = true
+            signingConfig = signingConfigs.getByName(Config.Sign.Debug.name)
         }
     }
     flavorDimensions.addAll(listOf(Config.Dimensions.mode))

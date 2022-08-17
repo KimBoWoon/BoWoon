@@ -1,6 +1,5 @@
 package com.practice.ui.fragments
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -18,10 +17,10 @@ import com.practice.ui.adapters.PokemonLoadPagingAdapter
 import com.practice.ui.adapters.PokemonPagingAdapter
 import com.practice.ui.dialog.PokemonDialog
 import com.practice.ui.fragments.vm.PokemonListVM
+import com.practice.util.PokemonDecorator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import util.ScreenUtils.dp
 
 @AndroidEntryPoint
 class PokemonListFragment : BaseFragment<FragmentPokemonListBinding>(
@@ -31,10 +30,10 @@ class PokemonListFragment : BaseFragment<FragmentPokemonListBinding>(
         PokemonPagingAdapter(ClickHandler()).apply {
             addLoadStateListener {
                 if (it.source.refresh is LoadState.Error) {
-                    binding?.rvPokemonList?.isVisible = false
-                    binding?.tvEmpty?.text = (it.source.refresh as? LoadState.Error)?.error?.message
-                    binding?.tvEmpty?.isVisible = true
-                    binding?.pbLoading?.isVisible = false
+                    binding.rvPokemonList.isVisible = false
+                    binding.tvEmpty.text = (it.source.refresh as? LoadState.Error)?.error?.message
+                    binding.tvEmpty.isVisible = true
+                    binding.pbLoading.isVisible = false
                     PokemonDialog(
                         "네트워크에 문제가 있는거 같습니다.\n다시 연결하시겠습니까?",
                         "예",
@@ -42,35 +41,24 @@ class PokemonListFragment : BaseFragment<FragmentPokemonListBinding>(
                         "아니오",
                         {}
                     ).show(childFragmentManager, PokemonListFragment::class.java.simpleName)
-                } else if (it.source.refresh is LoadState.NotLoading && it.append.endOfPaginationReached && (binding?.rvPokemonList?.adapter?.itemCount ?: 0) < 1) {
-                    binding?.rvPokemonList?.isVisible = false
-                    binding?.tvEmpty?.isVisible = true
-                    binding?.pbLoading?.isVisible = false
+                } else if (it.source.refresh is LoadState.NotLoading && it.append.endOfPaginationReached && (binding.rvPokemonList.adapter?.itemCount ?: 0) < 1) {
+                    binding.rvPokemonList.isVisible = false
+                    binding.tvEmpty.isVisible = true
+                    binding.pbLoading.isVisible = false
                 } else {
-                    binding?.rvPokemonList?.isVisible = true
-                    binding?.tvEmpty?.isVisible = false
-                    binding?.pbLoading?.isVisible = false
-                }
-                when (it.append) {
-                    is LoadState.Loading -> {
-                        binding?.pbLoading?.isVisible = true
-                    }
-                    is LoadState.NotLoading -> {
-                        binding?.pbLoading?.isVisible = false
-                    }
-                    is LoadState.Error -> {
-                        binding?.pbLoading?.isVisible = false
-                    }
+                    binding.rvPokemonList.isVisible = true
+                    binding.tvEmpty.isVisible = false
+                    binding.pbLoading.isVisible = false
                 }
                 when (it.refresh) {
                     is LoadState.Loading -> {
-                        binding?.pbLoading?.isVisible = true
+                        binding.pbLoading.isVisible = true
                     }
                     is LoadState.Error -> {
-                        binding?.pbLoading?.isVisible = false
+                        binding.pbLoading.isVisible = false
                     }
                     is LoadState.NotLoading -> {
-                        binding?.pbLoading?.isVisible = false
+                        binding.pbLoading.isVisible = false
                     }
                 }
             }
@@ -81,7 +69,7 @@ class PokemonListFragment : BaseFragment<FragmentPokemonListBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.apply {
+        binding.apply {
             lifecycleOwner = this@PokemonListFragment
         }
         lifecycle.addObserver(viewModel)
@@ -91,7 +79,7 @@ class PokemonListFragment : BaseFragment<FragmentPokemonListBinding>(
     }
 
     override fun initBinding() {
-        binding?.apply {
+        binding.apply {
             rvPokemonList.apply {
                 adapter = pokemonAdapter.withLoadStateHeaderAndFooter(
                     PokemonLoadPagingAdapter { pokemonAdapter.retry() },
@@ -108,25 +96,7 @@ class PokemonListFragment : BaseFragment<FragmentPokemonListBinding>(
                     }
                 }
                 if (itemDecorationCount == 0) {
-                    addItemDecoration(object : RecyclerView.ItemDecoration() {
-                        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-                            val position = parent.getChildLayoutPosition(view)
-                            val size = parent.adapter?.itemCount ?: 0
-                            if (position in 0 .. size) {
-                                when {
-                                    position % 2 == 0 -> {
-                                        outRect.left = 10.dp
-                                        outRect.right = 5.dp
-                                    }
-                                    position % 2 == 1 -> {
-                                        outRect.left = 5.dp
-                                        outRect.right = 10.dp
-                                    }
-                                }
-                                outRect.top = 10.dp
-                            }
-                        }
-                    })
+                    addItemDecoration(PokemonDecorator())
                 }
             }
         }
@@ -136,8 +106,10 @@ class PokemonListFragment : BaseFragment<FragmentPokemonListBinding>(
         lifecycleScope.launch {
             viewModel.pokemonPageFlow.collectLatest { pagingData ->
                 pokemonAdapter.submitData(pagingData)
-                binding?.pbLoading?.isVisible = false
-                binding?.tvEmpty?.isVisible = false
+                binding.apply {
+                    pbLoading.isVisible = false
+                    tvEmpty.isVisible = false
+                }
             }
         }
     }

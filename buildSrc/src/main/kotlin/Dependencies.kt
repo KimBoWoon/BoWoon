@@ -9,6 +9,8 @@ object Dependencies {
         const val jvm = "jvm"
         const val serialization = "plugin.serialization"
         const val safeArgs = "androidx.navigation.safeargs.kotlin"
+        const val googleService = "com.google.gms.google-services"
+        const val firebasePerformance = "com.google.firebase.firebase-perf"
     }
 
     object Gradle {
@@ -18,6 +20,15 @@ object Dependencies {
 
     object Plugins {
         const val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.Plugins.safeArgs}"
+    }
+
+    object Firebase {
+        const val googleService = "com.google.gms:google-services:${Versions.Firebase.googleService}"
+        const val gradle = "com.android.tools.build:gradle:${Versions.Firebase.gradle}"
+        const val performancePlugin = "com.google.firebase:perf-plugin:${Versions.Firebase.performancePlugin}"
+        const val bom = "com.google.firebase:firebase-bom:${Versions.Firebase.bom}"
+        const val performance = "com.google.firebase:firebase-perf-ktx"
+        const val analytics = "com.google.firebase:firebase-analytics-ktx"
     }
 
     object Jetpack {

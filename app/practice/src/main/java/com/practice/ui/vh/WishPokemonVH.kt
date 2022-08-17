@@ -3,12 +3,12 @@ package com.practice.ui.vh
 import com.domain.practice.dto.PokemonModel
 import com.practice.base.BaseVH
 import com.practice.databinding.ViewholderWishPokemonBinding
-import com.practice.ui.fragments.WishPokemonList
+import com.practice.ui.fragments.WishPokemonListFragment
 import util.Log
 
 class WishPokemonVH(
     override val binding: ViewholderWishPokemonBinding,
-    private val clickHandler: WishPokemonList.ClickHandler? = null
+    private val clickHandler: WishPokemonListFragment.ClickHandler? = null
 ) : BaseVH<ViewholderWishPokemonBinding, PokemonModel>(binding) {
     override fun bind(item: PokemonModel?) {
         runCatching {

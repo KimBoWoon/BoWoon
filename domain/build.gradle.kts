@@ -27,6 +27,9 @@ android {
         debug {
             isMinifyEnabled = false
         }
+        create(Config.BuildType.beta) {
+            isMinifyEnabled = false
+        }
     }
     flavorDimensions.addAll(listOf(Config.Dimensions.mode))
     productFlavors {

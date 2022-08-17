@@ -28,7 +28,7 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.apply {
+        binding.apply {
             lifecycleOwner = this@ChampionDetailFragment
         }
         lifecycle.addObserver(viewModel)
@@ -55,21 +55,21 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                 when (it) {
                     is DataStatus.Loading -> {
                         Log.d("data loading...")
-                        binding?.pbChampionDetailLoading?.isVisible = true
+                        binding.pbChampionDetailLoading.isVisible = true
                     }
                     is DataStatus.Success -> {
                         it.data.data?.keys?.firstOrNull()?.let { key ->
                             it.data.data?.get(key)?.let { championDetail ->
                                 championDetail.image?.version = championDetail.version
-                                binding?.champion = championDetail
-                                binding?.vpChampionSkins?.apply {
+                                binding.champion = championDetail
+                                binding.vpChampionSkins.apply {
                                     championDetail.skins?.forEach { skin ->
                                         skin?.championName = key
                                     }
                                     offscreenPageLimit = championDetail.skins?.size ?: 1
                                     infiniteViewPager2(championDetail.skins)
                                 }
-                                binding?.vpChampionSpells?.apply {
+                                binding.vpChampionSpells.apply {
                                     ifNotNull(championDetail.passive, championDetail.spells) { passive, spells ->
                                         passive.image?.version = championDetail.version
                                         mutableListOf<Any>(passive).apply {
@@ -85,8 +85,8 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                                         }
                                     }
                                 }
-                                binding?.pbChampionDetailLoading?.isVisible = false
-                                binding?.executePendingBindings()
+                                binding.pbChampionDetailLoading.isVisible = false
+                                binding.executePendingBindings()
                             }
                         } ?: run {
                             Log.e("champion not found")
@@ -94,7 +94,7 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                     }
                     is DataStatus.Failure -> {
                         Log.printStackTrace(it.throwable)
-                        binding?.pbChampionDetailLoading?.isVisible = false
+                        binding?.pbChampionDetailLoading.isVisible = false
                     }
                 }
             }

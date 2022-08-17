@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 abstract class BaseFragment<V : ViewDataBinding>(
     @LayoutRes private val layoutId: Int
 ) : Fragment() {
-    protected var binding: V? = null
+    protected lateinit var binding: V
 
     @CallSuper
     override fun onCreateView(
@@ -21,8 +21,12 @@ abstract class BaseFragment<V : ViewDataBinding>(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
-        return binding?.root
+        DataBindingUtil.inflate<V>(inflater, layoutId, container, false)?.apply {
+            binding = this
+        } ?: run {
+            throw RuntimeException("BaseFragment onCreateView layout inflater error!")
+        }
+        return binding.root
     }
 
     abstract fun initBinding()
