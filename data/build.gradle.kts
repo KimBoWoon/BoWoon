@@ -91,6 +91,7 @@ dependencies {
         Dependencies.Jetpack.datastore,
         Dependencies.Jetpack.paging,
         Dependencies.Jetpack.roomKtx,
+        Dependencies.Google.material,
         Dependencies.Retrofit2.retrofit2,
         Dependencies.OkHttp.bom,
         Dependencies.OkHttp.okhttp,

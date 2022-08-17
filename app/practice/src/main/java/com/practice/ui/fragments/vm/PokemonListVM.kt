@@ -2,7 +2,7 @@ package com.practice.ui.fragments.vm
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
-import com.data.practice.paging.source.PokemonSource
+import com.data.practice.paging.PokemonApiSource
 import com.domain.practice.dto.PokemonModel
 import com.domain.practice.usecase.PokemonApiUseCase
 import com.practice.base.BaseVM
@@ -18,7 +18,7 @@ class PokemonListVM @Inject constructor(
     val pokemonPageFlow: Flow<PagingData<PokemonModel>> = Pager(
         PagingConfig(pageSize = 20, initialLoadSize = 20)
     ) {
-        PokemonSource(pokemonApiUseCase) // TODO 유즈 케이스를 di 사용해야함
+        PokemonApiSource(pokemonApiUseCase) // TODO 유즈 케이스를 di 사용해야함
     }.flow.map {
         it.insertHeaderItem(item = PokemonModel.PokemonHeader("PokemonHeader"))
             .insertFooterItem(item = PokemonModel.PokemonFooter("PokemonFooter"))

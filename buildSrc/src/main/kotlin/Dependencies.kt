@@ -22,6 +22,10 @@ object Dependencies {
         const val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.Plugins.safeArgs}"
     }
 
+    object Google {
+        const val material = "com.google.android.material:material:${Versions.Google.material}"
+    }
+
     object Firebase {
         const val googleService = "com.google.gms:google-services:${Versions.Firebase.googleService}"
         const val gradle = "com.android.tools.build:gradle:${Versions.Firebase.gradle}"
@@ -34,7 +38,6 @@ object Dependencies {
     object Jetpack {
         const val core = "androidx.core:core-ktx:${Versions.Jetpack.core}"
         const val appcompat = "androidx.appcompat:appcompat:${Versions.Jetpack.appcompat}"
-        const val material = "com.google.android.material:material:${Versions.Jetpack.material}"
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.Jetpack.lifecycle}"
         const val liveData = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.Jetpack.lifecycle}"
         const val activity = "androidx.activity:activity-ktx:${Versions.Jetpack.activity}"

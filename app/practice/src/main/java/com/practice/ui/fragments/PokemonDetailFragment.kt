@@ -12,9 +12,8 @@ import com.practice.base.BaseFragment
 import com.practice.databinding.FragmentPokemonDetailBinding
 import com.practice.ui.fragments.vm.PokemonDetailVM
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import util.ContextUtils.showToast
 import kotlin.random.Random
 
 @AndroidEntryPoint
@@ -77,11 +76,10 @@ class PokemonDetailFragment : BaseFragment<FragmentPokemonDetailBinding>(
         lifecycleScope.launch {
             viewModel.addWish.collect { pokemon ->
                 pokemon?.let {
-                    val toastMessage = viewModel.addWish(pokemon)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
-                        findNavController().popBackStack()
+                    viewModel.addWish(pokemon).apply {
+                        requireContext().showToast(this, Toast.LENGTH_SHORT)
                     }
+                    findNavController().popBackStack()
                 }
             }
         }
@@ -89,11 +87,10 @@ class PokemonDetailFragment : BaseFragment<FragmentPokemonDetailBinding>(
         lifecycleScope.launch {
             viewModel.removeWish.collect { pokemon ->
                 pokemon?.let {
-                    val toastMessage = viewModel.removeWish(pokemon)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
-                        findNavController().popBackStack()
+                    viewModel.removeWish(pokemon).apply {
+                        requireContext().showToast(this, Toast.LENGTH_SHORT)
                     }
+                    findNavController().popBackStack()
                 }
             }
         }

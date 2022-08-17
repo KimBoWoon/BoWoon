@@ -95,11 +95,11 @@ dependencies {
     arrayOf(
         Dependencies.Jetpack.core,
         Dependencies.Jetpack.appcompat,
-        Dependencies.Jetpack.material,
         Dependencies.Jetpack.paging,
         Dependencies.Jetpack.roomKtx,
         Dependencies.Jetpack.navigationKtx,
         Dependencies.Jetpack.navigationUiKtx,
+        Dependencies.Google.material,
         Dependencies.Layout.constraint,
         Dependencies.Hilt.hiltAndroid,
         project(Dependencies.InnerModules.data),

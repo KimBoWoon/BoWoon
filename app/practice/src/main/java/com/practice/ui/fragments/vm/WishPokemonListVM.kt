@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.data.practice.paging.source.RoomPokemonSource
+import com.data.practice.paging.RoomPokemonSource
 import com.domain.practice.usecase.RoomUseCase
 import com.practice.base.BaseVM
 import dagger.hilt.android.lifecycle.HiltViewModel

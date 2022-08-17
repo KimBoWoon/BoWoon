@@ -12,6 +12,7 @@ import com.practice.ui.dialog.PokemonDialog
 import com.practice.ui.fragments.vm.SettingVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import util.ContextUtils.showToast
 import util.ViewAdapter.onDebounceClickListener
 
 @AndroidEntryPoint
@@ -42,7 +43,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
                     "삭제",
                     {
                         lifecycleScope.launch {
-                            Toast.makeText(requireContext(), viewModel.removeAllWish(), Toast.LENGTH_SHORT).show()
+                            viewModel.removeAllWish().apply {
+                                requireContext().showToast(this, Toast.LENGTH_SHORT)
+                            }
                         }
                     },
                     "취소",

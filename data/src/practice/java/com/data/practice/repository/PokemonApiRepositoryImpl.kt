@@ -7,6 +7,6 @@ import com.domain.practice.repository.PokemonApiRepository
 class PokemonApiRepositoryImpl(
     private val pokemonApiService: PokemonApiService
 ) : PokemonApiRepository {
-    override suspend fun getAllPokemon(limit: Int, offset: Int): PokemonResponse =
+    override suspend fun getPokemon(limit: Int, offset: Int): PokemonResponse =
         pokemonApiService.getAllPokemon(limit, offset)
 }
