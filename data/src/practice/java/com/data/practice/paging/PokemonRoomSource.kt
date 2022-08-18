@@ -2,15 +2,15 @@ package com.data.practice.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.domain.practice.dto.PokemonModel
+import com.domain.practice.dto.SealedPokemon
 import com.domain.practice.usecase.RoomUseCase
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class RoomPokemonSource @Inject constructor(
     private val roomUseCase: RoomUseCase
-) : PagingSource<Int, PokemonModel>() {
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonModel> {
+) : PagingSource<Int, SealedPokemon>() {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SealedPokemon> {
         runCatching {
             roomUseCase.getAllWishPokemon(params.loadSize)
         }.onSuccess{ response ->
@@ -27,7 +27,7 @@ class RoomPokemonSource @Inject constructor(
         return LoadResult.Error(Throwable("Paging error"))
     }
 
-    override fun getRefreshKey(state: PagingState<Int, PokemonModel>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, SealedPokemon>): Int? {
         // prevKet == null -> 첫 번째 페이지
         // nextKey == null -> 마지막 페이지
         // prevKey == null && nextKey == null -> 최초 페이지

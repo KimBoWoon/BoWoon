@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.domain.practice.dto.PokemonModel
+import com.domain.practice.dto.SealedPokemon
 import com.practice.R
 import com.practice.databinding.ViewholderPokemonBinding
 import com.practice.databinding.ViewholderPokemonFooterBinding
@@ -17,13 +17,13 @@ import com.practice.ui.vh.PokemonVH
 
 class PokemonPagingAdapter(
     private val clickHandler: PokemonListFragment.ClickHandler
-) : PagingDataAdapter<PokemonModel, RecyclerView.ViewHolder>(PokemonComparator) {
+) : PagingDataAdapter<SealedPokemon, RecyclerView.ViewHolder>(PokemonComparator) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         getItem(position)?.let {
             when (it) {
-                is PokemonModel.Pokemon -> { (holder as? PokemonVH)?.bind(it) }
-                is PokemonModel.PokemonHeader -> { (holder as? PokemonHeaderVH)?.bind(it.title ?: "PokemonHeader") }
-                is PokemonModel.PokemonFooter -> { (holder as? PokemonFooterVH)?.bind(it.title ?: "PokemonFooter") }
+                is SealedPokemon.Pokemon -> { (holder as? PokemonVH)?.bind(it) }
+                is SealedPokemon.PokemonHeader -> { (holder as? PokemonHeaderVH)?.bind(it.title ?: "PokemonHeader") }
+                is SealedPokemon.PokemonFooter -> { (holder as? PokemonFooterVH)?.bind(it.title ?: "PokemonFooter") }
             }
         }
     }
@@ -40,9 +40,9 @@ class PokemonPagingAdapter(
     override fun getItemViewType(position: Int): Int {
         if (position < itemCount) {
             return when (getItem(position)) {
-                is PokemonModel.Pokemon -> R.layout.viewholder_pokemon
-                is PokemonModel.PokemonHeader -> R.layout.viewholder_pokemon_header
-                is PokemonModel.PokemonFooter -> R.layout.viewholder_pokemon_footer
+                is SealedPokemon.Pokemon -> R.layout.viewholder_pokemon
+                is SealedPokemon.PokemonHeader -> R.layout.viewholder_pokemon_header
+                is SealedPokemon.PokemonFooter -> R.layout.viewholder_pokemon_footer
                 null -> throw UnsupportedOperationException("Unknown view")
             }
         }
@@ -50,13 +50,13 @@ class PokemonPagingAdapter(
         return R.layout.viewholder_load
     }
 
-    object PokemonComparator : DiffUtil.ItemCallback<PokemonModel>() {
-        override fun areItemsTheSame(oldItem: PokemonModel, newItem: PokemonModel): Boolean {
+    object PokemonComparator : DiffUtil.ItemCallback<SealedPokemon>() {
+        override fun areItemsTheSame(oldItem: SealedPokemon, newItem: SealedPokemon): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: PokemonModel, newItem: PokemonModel): Boolean {
-            return (oldItem as? PokemonModel.Pokemon)?.name == (newItem as? PokemonModel.Pokemon)?.name
+        override fun areContentsTheSame(oldItem: SealedPokemon, newItem: SealedPokemon): Boolean {
+            return (oldItem as? SealedPokemon.Pokemon)?.name == (newItem as? SealedPokemon.Pokemon)?.name
         }
     }
 }

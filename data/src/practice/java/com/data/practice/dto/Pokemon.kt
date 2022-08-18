@@ -1,16 +1,19 @@
 package com.data.practice.dto
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import android.os.Parcelable
+import androidx.annotation.Keep
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-@Entity(tableName = "pokemon")
+@Parcelize
+@Serializable
+@Keep
 data class Pokemon(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    val id: Long? = null,
-    @ColumnInfo(name = "name")
-    val name: String,
-    @ColumnInfo(name = "url")
-    val url: String
-)
+    val name: String? = null,
+    val url: String? = null
+) : Parcelable {
+    fun getImageUrl(): String {
+        val index = url?.split("/".toRegex())?.dropLast(1)?.last()
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$index.png"
+    }
+}

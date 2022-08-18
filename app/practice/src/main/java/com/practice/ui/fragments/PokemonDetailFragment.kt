@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.domain.practice.dto.PokemonModel
+import com.domain.practice.dto.SealedPokemon
 import com.practice.R
 import com.practice.base.BaseFragment
 import com.practice.databinding.FragmentPokemonDetailBinding
@@ -22,7 +22,7 @@ class PokemonDetailFragment : BaseFragment<FragmentPokemonDetailBinding>(
 ) {
 //    private val pokemon by navArgs<PokemonDetailFragmentArgs>()
     private val viewModel by viewModels<PokemonDetailVM>()
-    private var pokemon: PokemonModel.Pokemon? = null
+    private var pokemon: SealedPokemon.Pokemon? = null
     private var type: Int? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -7,6 +7,8 @@ plugins {
     kotlin(Dependencies.BuildPlugins.kapt)
     id(Dependencies.BuildPlugins.parcelize)
     id(Dependencies.BuildPlugins.hilt)
+    //    kotlin(Dependencies.BuildPlugins.jvm) // version "1.6.20" // or kotlin("multiplatform") or any other kotlin plugin
+    kotlin(Dependencies.BuildPlugins.serialization) // version "1.6.20"
 }
 
 android {

@@ -1,27 +1,29 @@
 package com.data.practice.repository
 
-import com.data.practice.dto.Pokemon
+import com.data.practice.dto.RoomPokemon
+import com.data.practice.mapper.convertPokemon
 import com.data.practice.room.RoomDataBase
-import com.domain.practice.dto.PokemonModel
+import com.domain.practice.dto.SealedPokemon
 import com.domain.practice.repository.RoomRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class RoomRepositoryImpl(
     private val roomDataBase: RoomDataBase
 ) : RoomRepository {
-    override suspend fun insert(value: PokemonModel.Pokemon) {
-        roomDataBase.roomPokemonDao().insert(Pokemon(name = value.name ?: "", url = value.url ?: ""))
+    override suspend fun insert(value: SealedPokemon.Pokemon) {
+        roomDataBase.roomPokemonDao().insert(RoomPokemon(name = value.name ?: "", url = value.url ?: ""))
     }
 
-    override suspend fun findPokemon(name: String): PokemonModel.Pokemon? {
+    override suspend fun findPokemon(name: String): SealedPokemon.Pokemon? {
         roomDataBase.roomPokemonDao().findPokemon(name)?.let { pokemon ->
-            return PokemonModel.Pokemon(pokemon.name, pokemon.url)
+            return RoomPokemon(name = pokemon.name, url = pokemon.url).convertPokemon()
         } ?: run {
             return null
         }
     }
 
-    override suspend fun delete(pokemon: PokemonModel.Pokemon): Int {
+    override suspend fun delete(pokemon: SealedPokemon.Pokemon): Int {
         roomDataBase.roomPokemonDao().findPokemon(pokemon.name ?: "")?.let {
             return roomDataBase.roomPokemonDao().delete(it)
         } ?: run {
@@ -32,6 +34,11 @@ class RoomRepositoryImpl(
     override suspend fun deleteAll(): Int =
         roomDataBase.roomPokemonDao().deleteAll()
 
-    override suspend fun getAllWishPokemon(limit: Int): Flow<List<PokemonModel.Pokemon>> =
-        roomDataBase.roomPokemonDao().getAllWishPokemon(limit)
+    override suspend fun getAllWishPokemon(limit: Int): Flow<List<SealedPokemon.Pokemon>> {
+        return roomDataBase.roomPokemonDao().getAllWishPokemon(limit).map { pokemonList ->
+            pokemonList.map { pokemon ->
+                SealedPokemon.Pokemon(pokemon.name, pokemon.url)
+            }
+        }
+    }
 }

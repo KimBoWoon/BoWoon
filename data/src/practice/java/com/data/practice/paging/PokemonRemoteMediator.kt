@@ -5,7 +5,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.data.practice.dto.Pokemon
+import com.data.practice.dto.RoomPokemon
 import com.data.practice.room.RoomDataBase
 import com.domain.practice.usecase.PokemonApiUseCase
 import javax.inject.Inject
@@ -17,13 +17,13 @@ import javax.inject.Inject
 class PokemonRemoteMediator @Inject constructor(
     private val roomDataBase: RoomDataBase,
     private val pokemonApiUseCase: PokemonApiUseCase
-) : RemoteMediator<Int, Pokemon>() {
+) : RemoteMediator<Int, RoomPokemon>() {
     private val limit = 100
     private var offset = 0
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, Pokemon>
+        state: PagingState<Int, RoomPokemon>
     ): MediatorResult {
         return try {
             when (loadType) {

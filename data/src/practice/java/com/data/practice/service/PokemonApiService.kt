@@ -1,6 +1,6 @@
 package com.data.practice.service
 
-import com.domain.practice.dto.PokemonResponse
+import com.data.practice.dto.PokemonResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

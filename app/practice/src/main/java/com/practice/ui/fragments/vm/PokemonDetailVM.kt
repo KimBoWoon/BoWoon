@@ -1,7 +1,7 @@
 package com.practice.ui.fragments.vm
 
 import androidx.lifecycle.viewModelScope
-import com.domain.practice.dto.PokemonModel
+import com.domain.practice.dto.SealedPokemon
 import com.domain.practice.usecase.RoomUseCase
 import com.practice.base.BaseVM
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,10 +13,10 @@ import javax.inject.Inject
 class PokemonDetailVM @Inject constructor(
     private val roomUseCase: RoomUseCase
 ) : BaseVM() {
-    val addWish = MutableStateFlow<PokemonModel.Pokemon?>(null)
-    val removeWish = MutableStateFlow<PokemonModel.Pokemon?>(null)
+    val addWish = MutableStateFlow<SealedPokemon.Pokemon?>(null)
+    val removeWish = MutableStateFlow<SealedPokemon.Pokemon?>(null)
 
-    suspend fun addWish(pokemon: PokemonModel.Pokemon): String =
+    suspend fun addWish(pokemon: SealedPokemon.Pokemon): String =
         viewModelScope.async {
             roomUseCase.findPokemon(pokemon.name ?: "")?.let {
                 "이미 등록됐습니다."
@@ -26,7 +26,7 @@ class PokemonDetailVM @Inject constructor(
             }
         }.await()
 
-    suspend fun removeWish(pokemon: PokemonModel.Pokemon): String =
+    suspend fun removeWish(pokemon: SealedPokemon.Pokemon): String =
         viewModelScope.async {
             if (roomUseCase.delete(pokemon) > 0) {
                 "제거했습니다."
