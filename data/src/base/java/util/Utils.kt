@@ -17,23 +17,71 @@ object ContextUtils {
         Toast.makeText(this, message, duration).show()
     }
 
-    fun Context?.showSnackBar(view: View, message: String, duration: Int) {
+    fun Context?.showSnackBar(view: View, message: String, duration: Int, actionText: String? = null, action: View.OnClickListener? = null) {
         this?.let { context ->
-            Snackbar.make(context, view, message, duration).show()
+            Snackbar.make(context, view, message, duration).run {
+                ifNotNull(actionText, action) { actionMessage, action ->
+                    setAction(actionMessage, action)
+                }
+                show()
+            }
+        }
+    }
+
+    fun Context?.showSnackBar(view: View, message: String, duration: Int, @StringRes actionResId: Int? = null, action: View.OnClickListener? = null) {
+        this?.let { context ->
+            Snackbar.make(context, view, message, duration).run {
+                ifNotNull(actionResId, action) { actionMessage, action ->
+                    setAction(actionMessage, action)
+                }
+                show()
+            }
         }
     }
 }
 
 object ViewUtils {
-    fun View?.showSnackBar(message: String, duration: Int) {
+    fun View?.showSnackBar(message: String, duration: Int, actionText: String? = null, action: View.OnClickListener? = null) {
         this?.let { view ->
-            Snackbar.make(view, message, duration).show()
+            Snackbar.make(view, message, duration).run {
+                ifNotNull(actionText, action) { actionMessage, action ->
+                    setAction(actionMessage, action)
+                }
+                show()
+            }
         }
     }
 
-    fun View?.showSnackBar(@StringRes resId: Int, duration: Int) {
+    fun View?.showSnackBar(message: String, duration: Int, @StringRes actionResId: Int? = null, action: View.OnClickListener? = null) {
         this?.let { view ->
-            Snackbar.make(view, resId, duration).show()
+            Snackbar.make(view, message, duration).run {
+                ifNotNull(actionResId, action) { actionMessage, action ->
+                    setAction(actionMessage, action)
+                }
+                show()
+            }
+        }
+    }
+
+    fun View?.showSnackBar(@StringRes resId: Int, duration: Int, actionText: String? = null, action: View.OnClickListener? = null) {
+        this?.let { view ->
+            Snackbar.make(view, resId, duration).run {
+                ifNotNull(actionText, action) { actionMessage, action ->
+                    setAction(actionMessage, action)
+                }
+                show()
+            }
+        }
+    }
+
+    fun View?.showSnackBar(@StringRes resId: Int, duration: Int, @StringRes actionResId: Int? = null, action: View.OnClickListener? = null) {
+        this?.let { view ->
+            Snackbar.make(view, resId, duration).run {
+                ifNotNull(actionResId, action) { actionMessage, action ->
+                    setAction(actionMessage, action)
+                }
+                show()
+            }
         }
     }
 }
