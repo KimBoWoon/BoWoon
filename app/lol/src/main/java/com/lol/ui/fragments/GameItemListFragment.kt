@@ -62,7 +62,7 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
                         (it.data as? GameItemRoot)?.data?.let { gameItemList ->
                             val sortedGameItemList = gameItemList.values.sortedBy { item -> item.name }
                             gameItemList.values.forEach { item ->
-                                item.image?.version = it.data.version ?: ""
+                                item.image?.version = it.data?.version ?: ""
                             }
                             binding.rvGameItemList.adapter = LolAdapter(sortedGameItemList)
                         } ?: run {

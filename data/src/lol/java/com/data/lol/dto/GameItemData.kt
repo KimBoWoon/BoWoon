@@ -1,12 +1,14 @@
-package com.domain.lol.dto
+package com.data.lol.dto
 
 import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
 import android.os.Parcelable
+import kotlinx.serialization.Serializable
 
 @Keep
+@Serializable
 @Parcelize
-data class GameItemRoot(
+data class GameItemData(
     val basic: Basic? = null,
     val `data`: Map<String, GameItemInfo>? = null,
     val groups: List<Group?>? = null,
@@ -16,6 +18,7 @@ data class GameItemRoot(
 ) : Parcelable
 
 @Keep
+@Serializable
 @Parcelize
 data class Basic(
     val colloq: String? = null, // ;
@@ -42,6 +45,7 @@ data class Basic(
 ) : Parcelable
 
 @Keep
+@Serializable
 @Parcelize
 data class Rune(
     val isrune: Boolean? = null, // false
@@ -50,6 +54,7 @@ data class Rune(
 ) : Parcelable
 
 @Keep
+@Serializable
 @Parcelize
 data class GameItemStats(
     val flatArmorMod: Float? = null, // 0
@@ -120,6 +125,7 @@ data class GameItemStats(
 ) : Parcelable
 
 @Keep
+@Serializable
 @Parcelize
 data class GameItemInfo(
     val colloq: String? = null, // ;똥신;boots;speed
@@ -135,6 +141,7 @@ data class GameItemInfo(
 ) : Parcelable
 
 @Keep
+@Serializable
 @Parcelize
 data class Gold(
     val base: Int? = null, // 300
@@ -144,6 +151,7 @@ data class Gold(
 ) : Parcelable
 
 @Keep
+@Serializable
 @Parcelize
 data class Group(
     val id: String? = null, // HuntersTalismanGroup
@@ -151,6 +159,7 @@ data class Group(
 ) : Parcelable
 
 @Keep
+@Serializable
 @Parcelize
 data class Tree(
     val header: String? = null, // START

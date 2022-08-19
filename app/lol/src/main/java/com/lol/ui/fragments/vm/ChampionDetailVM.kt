@@ -14,7 +14,7 @@ import javax.inject.Inject
 class ChampionDetailVM @Inject constructor(
     private val dataDragonApiUseCase: DataDragonApiUseCase
 ) : BaseVM() {
-    val champion = MutableStateFlow<DataStatus<ChampionDetailRoot>>(DataStatus.Loading)
+    val champion = MutableStateFlow<DataStatus<ChampionDetailRoot?>>(DataStatus.Loading)
 
     fun getChampionInfo(version: String, name: String, language: String = "ko_KR") {
         viewModelScope.launch {

@@ -6,7 +6,7 @@ import com.domain.lol.dto.GameItemRoot
 
 interface DataDragonApiRepository {
     suspend fun getVersion(): List<String>
-    suspend fun getAllChampion(version: String, language: String): ChampionRoot
-    suspend fun getChampionInfo(version: String, language: String, name: String): ChampionDetailRoot
-    suspend fun getAllGameItem(version: String, language: String): GameItemRoot
+    suspend fun getAllChampion(version: String, language: String): ChampionRoot?
+    suspend fun getChampionInfo(version: String, language: String, name: String): ChampionDetailRoot?
+    suspend fun getAllGameItem(version: String, language: String): GameItemRoot?
 }

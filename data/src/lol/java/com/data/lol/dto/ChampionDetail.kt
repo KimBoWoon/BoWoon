@@ -1,12 +1,14 @@
-package com.domain.lol.dto
+package com.data.lol.dto
 
 import android.os.Parcelable
 import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Keep
+@Serializable
 @Parcelize
-data class ChampionDetailRoot(
+data class ChampionDetailData(
     val `data`: Map<String, ChampionDetail>? = null,
     val format: String? = null,
     val type: String? = null,
@@ -20,6 +22,7 @@ data class ChampionDetailRoot(
 }
 
 @Keep
+@Serializable
 @Parcelize
 data class ChampionDetail(
     val allytips: List<String?>? = null,
@@ -33,7 +36,7 @@ data class ChampionDetail(
     val name: String? = null,
     val partype: String? = null,
     val passive: Passive? = null,
-//            val recommended: List<Any?>? = null,
+//    val recommended: List<Any?>? = null,
     val skins: List<Skin?>? = null,
     val spells: List<Spell?>? = null,
     val stats: ChampionStats? = null,
@@ -45,6 +48,7 @@ data class ChampionDetail(
 }
 
 @Keep
+@Serializable
 @Parcelize
 data class Passive(
     val description: String? = null,
@@ -53,6 +57,7 @@ data class Passive(
 ) : Parcelable
 
 @Keep
+@Serializable
 @Parcelize
 data class Skin(
     val chromas: Boolean? = null,
@@ -67,6 +72,7 @@ data class Skin(
 }
 
 @Keep
+@Serializable
 @Parcelize
 data class Spell(
     val cooldown: List<Float?>? = null,
@@ -92,10 +98,12 @@ data class Spell(
 ) : Parcelable
 
 @Keep
+@Serializable
 @Parcelize
 class Datavalues : Parcelable
 
 @Keep
+@Serializable
 @Parcelize
 data class Leveltip(
     val effect: List<String?>? = null,

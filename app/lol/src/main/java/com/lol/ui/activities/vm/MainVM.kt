@@ -20,8 +20,8 @@ class MainVM @Inject constructor(
 ) : BaseVM() {
     val lolVersion = MutableStateFlow<DataStatus<String?>>(DataStatus.Loading)
     val lolVersionList = MutableStateFlow<DataStatus<List<String>>>(DataStatus.Loading)
-    val allChampion = MutableStateFlow<DataStatus<ChampionRoot>>(DataStatus.Loading)
-    val allGameItem = MutableStateFlow<DataStatus<GameItemRoot>>(DataStatus.Loading)
+    val allChampion = MutableStateFlow<DataStatus<ChampionRoot?>>(DataStatus.Loading)
+    val allGameItem = MutableStateFlow<DataStatus<GameItemRoot?>>(DataStatus.Loading)
 
     init {
         viewModelScope.launch {

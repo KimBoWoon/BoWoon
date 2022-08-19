@@ -4,8 +4,6 @@ plugins {
     kotlin(Dependencies.BuildPlugins.kapt)
     id(Dependencies.BuildPlugins.hilt)
     id(Dependencies.BuildPlugins.parcelize)
-//    kotlin(Dependencies.BuildPlugins.jvm) // version "1.6.20" // or kotlin("multiplatform") or any other kotlin plugin
-    kotlin(Dependencies.BuildPlugins.serialization) // version "1.6.20"
 }
 
 android {
@@ -84,8 +82,6 @@ dependencies {
         Dependencies.Jetpack.core,
         Dependencies.Jetpack.datastore,
         Dependencies.Jetpack.pagingCommon,
-        Dependencies.Serialization.kotlin,
-        Dependencies.Serialization.converter,
         Dependencies.Hilt.hiltAndroid
     ).forEach {
         implementation(it)

@@ -9,10 +9,10 @@ class DataDragonApiUseCase(
     private val dataDragonApiRepository: DataDragonApiRepository
 ) {
     suspend fun getVersion(): List<String> = dataDragonApiRepository.getVersion()
-    suspend fun getAllChampion(version: String, language: String): ChampionRoot =
+    suspend fun getAllChampion(version: String, language: String): ChampionRoot? =
         dataDragonApiRepository.getAllChampion(version, language)
-    suspend fun getChampionInfo(version: String, language: String, name: String): ChampionDetailRoot =
+    suspend fun getChampionInfo(version: String, language: String, name: String): ChampionDetailRoot? =
         dataDragonApiRepository.getChampionInfo(version, language, name)
-    suspend fun getAllGameItem(version: String, language: String): GameItemRoot =
+    suspend fun getAllGameItem(version: String, language: String): GameItemRoot? =
         dataDragonApiRepository.getAllGameItem(version, language)
 }

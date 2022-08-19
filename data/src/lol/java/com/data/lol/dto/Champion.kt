@@ -1,21 +1,24 @@
-package com.domain.lol.dto
+package com.data.lol.dto
 
 import android.os.Parcelable
 import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Keep
+@Serializable
 @Parcelize
-data class ChampionRoot(
+data class ChampionData(
     val type: String? = null,
     val format: String? = null,
     val version: String? = null,
-    val `data`: Map<String, ChampionInfo>? = null
+    val `data`: Map<String, Champion>? = null
 ) : Parcelable
 
 @Keep
+@Serializable
 @Parcelize
-data class ChampionInfo(
+data class Champion(
     val blurb: String? = null,
     val id: String? = null,
     val image: Image? = null,

@@ -6,7 +6,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.domain.lol.dto.ChampionInfo
-import com.domain.lol.dto.Skin
 import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentChampionDetailBinding
@@ -58,8 +57,8 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                         binding.pbChampionDetailLoading.isVisible = true
                     }
                     is DataStatus.Success -> {
-                        it.data.data?.keys?.firstOrNull()?.let { key ->
-                            it.data.data?.get(key)?.let { championDetail ->
+                        it.data?.data?.keys?.firstOrNull()?.let { key ->
+                            it.data?.data?.get(key)?.let { championDetail ->
                                 championDetail.image?.version = championDetail.version
                                 binding.champion = championDetail
                                 binding.vpChampionSkins.apply {
@@ -94,7 +93,7 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                     }
                     is DataStatus.Failure -> {
                         Log.printStackTrace(it.throwable)
-                        binding?.pbChampionDetailLoading.isVisible = false
+                        binding.pbChampionDetailLoading.isVisible = false
                     }
                 }
             }

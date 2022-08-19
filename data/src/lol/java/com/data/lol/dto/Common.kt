@@ -1,16 +1,19 @@
-package com.domain.lol.dto
+package com.data.lol.dto
 
 import android.os.Parcelable
 import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Keep
+@Serializable
 @Parcelize
 data class Image(
     val full: String? = null,
     val group: String? = null,
-    val sprite: String? = null,
     val h: Int? = null,
+    val sprite: String? = null,
     val w: Int? = null,
     val x: Int? = null,
     val y: Int? = null
@@ -34,6 +37,7 @@ data class Image(
 }
 
 @Keep
+@Serializable
 @Parcelize
 data class Info(
     val attack: Int? = null,
@@ -43,6 +47,7 @@ data class Info(
 ) : Parcelable
 
 @Keep
+@Serializable
 @Parcelize
 data class ChampionStats(
     val armor: Float? = null,
