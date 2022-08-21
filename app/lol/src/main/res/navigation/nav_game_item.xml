@@ -9,5 +9,15 @@
         android:id="@+id/gameItemListFragment"
         android:name="com.lol.ui.fragments.GameItemListFragment"
         android:label="GameItemListFragment"
-        tools:layout="@layout/fragment_game_item" />
+        tools:layout="@layout/fragment_game_item">
+        <action
+            android:id="@+id/action_gameItemListFragment_to_gameItemDetailFragment"
+            app:destination="@id/gameItemDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/gameItemDetailFragment"
+        android:name="com.lol.ui.fragments.GameItemDetailFragment"
+        android:label="GameItemDetailFragment"
+        tools:layout="@layout/fragment_game_item_detail" />
 </navigation>

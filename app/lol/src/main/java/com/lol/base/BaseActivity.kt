@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 
-abstract class BaseActivity <V: ViewDataBinding>(
+abstract class BaseActivity<V : ViewDataBinding>(
     @LayoutRes val layoutId: Int
 ) : AppCompatActivity() {
     protected val binding: V by lazy {

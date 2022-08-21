@@ -2,9 +2,11 @@ package com.lol.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.domain.lol.dto.*
 import com.lol.R
+import com.lol.base.BaseFragment
 import com.lol.databinding.*
 import com.lol.ui.fragments.ChampionListFragment
 import com.lol.ui.vh.*
@@ -12,14 +14,14 @@ import util.Log
 
 class LolAdapter(
     private val items: List<Any?>? = null,
-    private val handler: ChampionListFragment.ClickHandler? = null,
+    private val handler: BaseFragment<out ViewDataBinding>.ClickHandler? = null,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val NONE = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
             R.layout.vh_champion -> ChampionVH(VhChampionBinding.inflate(LayoutInflater.from(parent.context), parent, false), handler)
-            R.layout.vh_game_item -> GameItemVH(VhGameItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.vh_game_item -> GameItemVH(VhGameItemBinding.inflate(LayoutInflater.from(parent.context), parent, false), handler)
             R.layout.vh_champion_skin -> ChampionSkinVH(VhChampionSkinBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             R.layout.vh_champion_spell -> ChampionSpellVH(VhChampionSpellBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             R.layout.vh_champion_passive -> ChampionPassiveVH(VhChampionPassiveBinding.inflate(LayoutInflater.from(parent.context), parent, false))

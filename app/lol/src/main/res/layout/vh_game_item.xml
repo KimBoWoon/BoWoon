@@ -6,13 +6,18 @@
     <data>
 
         <variable
+            name="vh"
+            type="com.lol.ui.vh.GameItemVH" />
+
+        <variable
             name="gameItem"
             type="com.domain.lol.dto.GameItemInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:onDebounceClickListener="@{() -> vh.onClick(gameItem)}">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_game_item_image"

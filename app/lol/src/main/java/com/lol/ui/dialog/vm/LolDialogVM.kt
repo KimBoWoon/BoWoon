@@ -1,9 +1,11 @@
 package com.lol.ui.dialog.vm
 
 import com.lol.base.BaseVM
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
+@HiltViewModel
 class LolDialogVM @Inject constructor(
 
 ) : BaseVM() {

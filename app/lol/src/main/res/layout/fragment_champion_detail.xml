@@ -18,64 +18,98 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_champion"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:adjustViewBounds="true"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:loadImage="@{champion.image.getChampionSquareImage()}"
-                tools:background="@tools:sample/avatars" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_champion_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@{champion.name}"
-                app:layout_constraintStart_toEndOf="@id/iv_champion"
+                android:adjustViewBounds="true"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="champion name" />
+                app:loadImage="@{champion.skins.get(0).championSkinImageUrl}"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.BottomCorner"
+                tools:background="@tools:sample/avatars" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_champion_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{champion.title}"
-                app:layout_constraintStart_toEndOf="@id/iv_champion"
-                app:layout_constraintTop_toBottomOf="@id/tv_champion_name"
+                android:textSize="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_champion"
                 tools:text="champion title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_champion_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{champion.name}"
+                android:textSize="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_champion_title"
+                tools:text="champion name" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_champion_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{champion.tags.toString()}"
-                app:layout_constraintStart_toEndOf="@id/iv_champion"
-                app:layout_constraintTop_toBottomOf="@id/tv_champion_title"
+                android:textSize="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_champion_name"
                 tools:text="champion tag" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llc_champion_tip_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/tv_champion_tag">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/b_champion_stats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="챔피언 스탯"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/b_champion_allytips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="챔피언 사용 팁"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/b_champion_enemytip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="챔피언 적대 팁"
+                    android:visibility="gone" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_champion_description"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:text="@{champion.getReplaceLore()}"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_champion"
+                app:layout_constraintTop_toBottomOf="@id/llc_champion_tip_group"
                 tools:text="champion description" />
 
             <androidx.viewpager2.widget.ViewPager2

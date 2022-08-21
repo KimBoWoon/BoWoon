@@ -8,10 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.domain.lol.dto.ChampionInfo
-import com.domain.lol.dto.ChampionRoot
 import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentChampionListBinding
@@ -82,7 +79,7 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
 
                         Log.d(sortedChampionList.toString())
 
-                        binding.rvLolChampionList.adapter = LolAdapter(sortedChampionList, ClickHandler())
+                        binding.rvLolChampionList.adapter = LolAdapter(sortedChampionList, handler)
                     }
                 }
 
@@ -100,7 +97,7 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
                     }
                     is DataStatus.Success -> {
                         Log.d(it.data.toString())
-                        (it.data as? ChampionRoot)?.data?.let { championList ->
+                        it.data?.data?.let { championList ->
                             val sortedChampionList = championList.values.sortedBy { item -> item.name }
                             binding.rvLolChampionList.adapter = LolAdapter(sortedChampionList, ClickHandler())
                         } ?: run {
@@ -114,18 +111,6 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
                     }
                 }
             }
-        }
-    }
-
-    inner class ClickHandler {
-        fun showChampionDetail(championInfo: ChampionInfo) {
-            Log.d("showChampionDetail >>>>> $championInfo")
-            findNavController().navigate(
-                R.id.action_championListFragment_to_championDetailFragment,
-                Bundle().apply {
-                    putParcelable("championInfo", championInfo)
-                }
-            )
         }
     }
 }

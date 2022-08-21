@@ -10,12 +10,14 @@ import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentChampionDetailBinding
 import com.lol.ui.adapter.LolAdapter
+import com.lol.ui.dialog.ChampionInfoBottomDialog
 import com.lol.ui.fragments.vm.ChampionDetailVM
 import com.lol.util.ViewPagerUtils.infiniteViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import util.DataStatus
 import util.Log
+import util.ViewAdapter.onDebounceClickListener
 import util.ifNotNull
 
 @AndroidEntryPoint
@@ -45,7 +47,31 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
     }
 
     override fun initBinding() {
-//        TODO("Not yet implemented")
+        binding.apply {
+            bChampionStats.apply {
+                onDebounceClickListener {
+                    showChampionInfoDialog((viewModel.champion.value as? DataStatus.Success)?.data?.data?.values?.firstOrNull()?.info.toString())
+                }
+            }
+            bChampionAllytips.apply {
+                onDebounceClickListener {
+                    var result = ""
+                    (viewModel.champion.value as? DataStatus.Success)?.data?.data?.values?.firstOrNull()?.allytips?.forEach {
+                        result += "$it\n"
+                    }
+                    showChampionInfoDialog(result)
+                }
+            }
+            bChampionEnemytip.apply {
+                onDebounceClickListener {
+                    var result = ""
+                    (viewModel.champion.value as? DataStatus.Success)?.data?.data?.values?.firstOrNull()?.allytips?.forEach {
+                        result += "$it\n"
+                    }
+                    showChampionInfoDialog(result)
+                }
+            }
+        }
     }
 
     override fun initFlow() {
@@ -79,12 +105,15 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                                                 }
                                             }
                                         }.apply {
-                                            offscreenPageLimit = size ?: 1
+                                            offscreenPageLimit = size
                                             adapter = LolAdapter(this)
                                         }
                                     }
                                 }
                                 binding.pbChampionDetailLoading.isVisible = false
+                                binding.bChampionStats.isVisible = true
+                                binding.bChampionAllytips.isVisible = true
+                                binding.bChampionEnemytip.isVisible = true
                                 binding.executePendingBindings()
                             }
                         } ?: run {
@@ -98,5 +127,9 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                 }
             }
         }
+    }
+
+    private fun showChampionInfoDialog(content: String) {
+        ChampionInfoBottomDialog(content).show(childFragmentManager, ChampionDetailFragment::class.simpleName)
     }
 }

@@ -13,14 +13,14 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
 import com.lol.R
 
-abstract class BaseDialog<T : ViewDataBinding>(
+abstract class BaseDialog<V : ViewDataBinding>(
     @LayoutRes
     private val layoutId: Int,
     private val fullWidth: Boolean,
     private val fullHeight: Boolean,
     private val isBackPress: Boolean = true
 ) : AppCompatDialogFragment() {
-    protected lateinit var binding: T
+    protected lateinit var binding: V
 
     @CallSuper
     override fun onCreateView(
@@ -28,7 +28,11 @@ abstract class BaseDialog<T : ViewDataBinding>(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
+        DataBindingUtil.inflate<V>(inflater, layoutId, container, false)?.apply {
+            binding = this
+        } ?: run {
+            throw RuntimeException("BaseDialog onCreateView layout inflater error!")
+        }
         return binding.root
     }
 

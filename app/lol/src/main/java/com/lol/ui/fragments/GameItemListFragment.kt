@@ -6,7 +6,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.domain.lol.dto.GameItemRoot
 import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentGameItemBinding
@@ -59,12 +58,12 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
                     }
                     is DataStatus.Success -> {
                         Log.d(it.data.toString())
-                        (it.data as? GameItemRoot)?.data?.let { gameItemList ->
+                        it.data?.data?.let { gameItemList ->
                             val sortedGameItemList = gameItemList.values.sortedBy { item -> item.name }
                             gameItemList.values.forEach { item ->
                                 item.image?.version = it.data?.version ?: ""
                             }
-                            binding.rvGameItemList.adapter = LolAdapter(sortedGameItemList)
+                            binding.rvGameItemList.adapter = LolAdapter(sortedGameItemList, handler)
                         } ?: run {
                             Log.e("championList is null")
                         }

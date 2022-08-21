@@ -1,12 +1,15 @@
 package com.lol.ui.vh
 
+import androidx.databinding.ViewDataBinding
 import com.domain.lol.dto.GameItemInfo
+import com.lol.base.BaseFragment
 import com.lol.base.BaseVH
 import com.lol.databinding.VhGameItemBinding
 import util.Log
 
 class GameItemVH(
-    override val binding: VhGameItemBinding
+    override val binding: VhGameItemBinding,
+    private val handler: BaseFragment<out ViewDataBinding>.ClickHandler? = null
 ) : BaseVH<VhGameItemBinding, GameItemInfo>(binding) {
     override fun bind(item: GameItemInfo?) {
         runCatching {
@@ -15,9 +18,16 @@ class GameItemVH(
                 return
             }
         }.onSuccess { gameItemInfo ->
-            binding.gameItem = gameItemInfo
+            binding.apply {
+                vh = this@GameItemVH
+                gameItem = gameItemInfo
+            }
         }.onFailure { e ->
             Log.printStackTrace(e)
         }
+    }
+
+    fun onClick(gameItemInfo: GameItemInfo) {
+        handler?.showGameItemDetail(gameItemInfo)
     }
 }

@@ -1,22 +1,29 @@
 package com.data.lol.mapper
 
+import com.data.lol.dto.*
 import com.data.lol.dto.Basic
-import com.data.lol.dto.Champion
-import com.data.lol.dto.ChampionData
-import com.data.lol.dto.ChampionDetailData
-import com.data.lol.dto.GameItemData
 import com.data.lol.dto.GameItemStats
 import com.data.lol.dto.Gold
 import com.data.lol.dto.Group
 import com.data.lol.dto.Rune
 import com.data.lol.dto.Tree
 import com.domain.lol.dto.*
+import com.domain.lol.dto.ChampionDetail
+import com.domain.lol.dto.ChampionStats
+import com.domain.lol.dto.Datavalues
+import com.domain.lol.dto.GameItemInfo
+import com.domain.lol.dto.Image
+import com.domain.lol.dto.Info
+import com.domain.lol.dto.Leveltip
+import com.domain.lol.dto.Passive
+import com.domain.lol.dto.Skin
+import com.domain.lol.dto.Spell
 
-fun ChampionData.convert(): com.domain.lol.dto.ChampionRoot? {
+fun ChampionData.convert(): ChampionRoot? {
     data?.keys?.let { keys ->
-        mutableMapOf<String, com.domain.lol.dto.ChampionInfo>().apply {
+        mutableMapOf<String, ChampionInfo>().apply {
             keys.forEach { key ->
-                val championInfo = com.domain.lol.dto.ChampionInfo(
+                val championInfo = ChampionInfo(
                     data[key]?.blurb,
                     data[key]?.id,
                     data[key]?.image?.convert(),
@@ -31,14 +38,14 @@ fun ChampionData.convert(): com.domain.lol.dto.ChampionRoot? {
                 )
                 this[key] = championInfo
             }
-            return com.domain.lol.dto.ChampionRoot(type, format, version, this)
+            return ChampionRoot(type, format, version, this)
         }
     }
     return null
 }
 
-fun Champion.convert(): com.domain.lol.dto.ChampionInfo =
-    com.domain.lol.dto.ChampionInfo(
+fun Champion.convert(): ChampionInfo =
+    ChampionInfo(
         blurb,
         id,
         image?.convert(),
@@ -56,8 +63,8 @@ fun com.data.lol.dto.Image.convert(): Image = Image(full, group, sprite, h, w, x
 
 fun com.data.lol.dto.Info.convert(): Info = Info(attack, defense, difficulty, magic)
 
-fun com.data.lol.dto.ChampionStats.convert(): com.domain.lol.dto.ChampionStats =
-    com.domain.lol.dto.ChampionStats(
+fun com.data.lol.dto.ChampionStats.convert(): ChampionStats =
+    ChampionStats(
         armor,
         armorperlevel,
         attackdamage,
@@ -109,14 +116,14 @@ fun ChampionDetailData.convert(): ChampionDetailRoot? {
     return null
 }
 
-fun com.data.lol.dto.Passive.convert(): com.domain.lol.dto.Passive =
-    com.domain.lol.dto.Passive(description, image?.convert(), name)
+fun com.data.lol.dto.Passive.convert(): Passive =
+    Passive(description, image?.convert(), name)
 
-fun com.data.lol.dto.Skin.convert(): com.domain.lol.dto.Skin =
-    com.domain.lol.dto.Skin(chromas, id, name, num)
+fun com.data.lol.dto.Skin.convert(): Skin =
+    Skin(chromas, id, name, num)
 
-fun com.data.lol.dto.Spell.convert(): com.domain.lol.dto.Spell =
-    com.domain.lol.dto.Spell(
+fun com.data.lol.dto.Spell.convert(): Spell =
+    Spell(
         cooldown,
         cooldownBurn,
         cost,
@@ -138,11 +145,11 @@ fun com.data.lol.dto.Spell.convert(): com.domain.lol.dto.Spell =
         tooltip
     )
 
-fun com.data.lol.dto.Datavalues.convert(): com.domain.lol.dto.Datavalues =
-    com.domain.lol.dto.Datavalues()
+fun com.data.lol.dto.Datavalues.convert(): Datavalues =
+    Datavalues()
 
-fun com.data.lol.dto.Leveltip.convert(): com.domain.lol.dto.Leveltip =
-    com.domain.lol.dto.Leveltip(effect, label)
+fun com.data.lol.dto.Leveltip.convert(): Leveltip =
+    Leveltip(effect, label)
 
 fun GameItemData.convert(): GameItemRoot? {
     data?.keys?.let { keys ->
