@@ -42,6 +42,20 @@ data class ChampionDetail(
 ) : Parcelable {
     var version = ""
     fun getReplaceLore(): String = lore?.replace(" ", "\u00A0") ?: ""
+    fun getAllytipsString(): String {
+        var result = ""
+        allytips?.forEach {
+            result += "$it\n"
+        }
+        return result
+    }
+    fun getEnemytipsString(): String {
+        var result = ""
+        enemytips?.forEach {
+            result += "$it\n"
+        }
+        return result
+    }
 }
 
 @Keep

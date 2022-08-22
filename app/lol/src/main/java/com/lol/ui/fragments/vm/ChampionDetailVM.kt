@@ -15,6 +15,7 @@ class ChampionDetailVM @Inject constructor(
     private val dataDragonApiUseCase: DataDragonApiUseCase
 ) : BaseVM() {
     val champion = MutableStateFlow<DataStatus<ChampionDetailRoot?>>(DataStatus.Loading)
+    val content = MutableStateFlow<String?>(null)
 
     fun getChampionInfo(version: String, name: String, language: String = "ko_KR") {
         viewModelScope.launch {
@@ -26,5 +27,9 @@ class ChampionDetailVM @Inject constructor(
                 champion.value = DataStatus.Failure(e)
             }
         }
+    }
+
+    fun showChampionDetailDialog(content: String) {
+        this.content.value = content
     }
 }

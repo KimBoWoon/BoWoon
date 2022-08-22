@@ -17,7 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import util.DataStatus
 import util.Log
-import util.ViewAdapter.onDebounceClickListener
 import util.ifNotNull
 
 @AndroidEntryPoint
@@ -31,6 +30,7 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
 
         binding.apply {
             lifecycleOwner = this@ChampionDetailFragment
+            vm = viewModel
         }
         lifecycle.addObserver(viewModel)
 
@@ -47,31 +47,7 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
     }
 
     override fun initBinding() {
-        binding.apply {
-            bChampionStats.apply {
-                onDebounceClickListener {
-                    showChampionInfoDialog((viewModel.champion.value as? DataStatus.Success)?.data?.data?.values?.firstOrNull()?.info.toString())
-                }
-            }
-            bChampionAllytips.apply {
-                onDebounceClickListener {
-                    var result = ""
-                    (viewModel.champion.value as? DataStatus.Success)?.data?.data?.values?.firstOrNull()?.allytips?.forEach {
-                        result += "$it\n"
-                    }
-                    showChampionInfoDialog(result)
-                }
-            }
-            bChampionEnemytip.apply {
-                onDebounceClickListener {
-                    var result = ""
-                    (viewModel.champion.value as? DataStatus.Success)?.data?.data?.values?.firstOrNull()?.allytips?.forEach {
-                        result += "$it\n"
-                    }
-                    showChampionInfoDialog(result)
-                }
-            }
-        }
+        binding.apply {}
     }
 
     override fun initFlow() {
@@ -124,6 +100,14 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                         Log.printStackTrace(it.throwable)
                         binding.pbChampionDetailLoading.isVisible = false
                     }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.content.collect { content ->
+                content?.let {
+                    showChampionInfoDialog(it)
                 }
             }
         }

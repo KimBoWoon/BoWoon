@@ -8,6 +8,10 @@
         <variable
             name="champion"
             type="com.domain.lol.dto.ChampionDetail" />
+
+        <variable
+            name="vm"
+            type="com.lol.ui.fragments.vm.ChampionDetailVM" />
     </data>
 
     <ScrollView
@@ -82,21 +86,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="챔피언 스탯"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:onDebounceClickListener="@{() -> vm.showChampionDetailDialog(champion.info.toString())}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/b_champion_allytips"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="챔피언 사용 팁"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:onDebounceClickListener="@{() -> vm.showChampionDetailDialog(champion.allytipsString)}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/b_champion_enemytip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="챔피언 적대 팁"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:onDebounceClickListener="@{() -> vm.showChampionDetailDialog(champion.enemytipsString)}" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatTextView
