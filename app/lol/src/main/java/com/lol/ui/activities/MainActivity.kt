@@ -1,16 +1,20 @@
 package com.lol.ui.activities
 
+import android.Manifest
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.google.firebase.messaging.FirebaseMessaging
 import com.lol.R
 import com.lol.base.BaseActivity
 import com.lol.databinding.ActivityMainBinding
 import com.lol.ui.activities.vm.MainVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import util.ContextUtils.showToast
 import util.DataStatus
 import util.Log
 
@@ -33,7 +37,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         initNavigation()
     }
 
-    override fun initBinding() {}
+    override fun initBinding() {
+        binding.apply {
+            FirebaseMessaging.getInstance().token
+                .addOnSuccessListener { token ->
+                    showToast(token, Toast.LENGTH_SHORT)
+                }
+                .addOnFailureListener { e ->
+                    Log.e("Fetching FCM registration token failed", e)
+                }
+        }
+
+        requirePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+    }
 
     override fun initFlow() {
         lifecycleScope.launch {
@@ -44,7 +60,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                     }
                     is DataStatus.Success -> {
                         Log.d(it.data.toString())
-                        @Suppress("UNCHECKED_CAST")
                         it.data?.let { version ->
                             supportActionBar?.title = "LOL(${version})"
                             viewModel.getAllChampion(version)
@@ -63,5 +78,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fcv_content) as NavHostFragment
         val navController = navHostFragment.navController
         NavigationUI.setupWithNavController(binding.bnvLolCategory, navController)
+    }
+
+    override fun permissionGranted(requestCode: Int) {
+        showToast("권한 승인", Toast.LENGTH_SHORT)
+    }
+
+    override fun permissionDenied(requestCode: Int) {
+        showToast("권한 거부", Toast.LENGTH_SHORT)
     }
 }

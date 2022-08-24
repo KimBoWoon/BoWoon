@@ -104,11 +104,13 @@ dependencies {
         Dependencies.Jetpack.navigationKtx,
         Dependencies.Jetpack.navigationUiKtx,
         Dependencies.Jetpack.datastore,
+        Dependencies.Jetpack.workManager,
         Dependencies.Google.material,
         Dependencies.Hilt.hiltAndroid,
         Dependencies.Glide.glide,
         Dependencies.Firebase.performance,
         Dependencies.Firebase.analytics,
+        Dependencies.Firebase.message,
         platform(Dependencies.Firebase.bom),
         project(Dependencies.InnerModules.data),
         project(Dependencies.InnerModules.domain)

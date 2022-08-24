@@ -25,10 +25,11 @@ object Versions {
         const val datastore = "1.0.0"
         const val paging = "3.1.1"
         const val room = "2.4.3"
+        const val workManager = "2.7.1"
     }
 
     object Gradle {
-        const val gradle = "7.2.1"
+        const val gradle = "7.2.2"
         const val plugin = "1.6.0"
     }
 

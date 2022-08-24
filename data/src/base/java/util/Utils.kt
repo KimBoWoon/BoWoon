@@ -2,7 +2,11 @@ package util
 
 import android.content.Context
 import android.content.res.Resources
+import android.os.Build
+import android.util.DisplayMetrics
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.StringRes
 import com.google.android.material.snackbar.Snackbar
@@ -37,6 +41,54 @@ object ContextUtils {
                 show()
             }
         }
+    }
+
+    fun Context?.getScreenWidth(): Int? {
+        this ?: run {
+            Log.e("getScreenWidth context is null!")
+            return null
+        }
+
+        (this.getSystemService(Context.WINDOW_SERVICE) as? WindowManager)?.apply {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                currentWindowMetrics.run {
+                    windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars()).let {
+                        bounds.width() - it.left - it.right
+                    }
+                }
+            } else {
+                DisplayMetrics().run {
+                    defaultDisplay.getMetrics(this)
+                    widthPixels
+                }
+            }
+        }
+
+        return null
+    }
+
+    fun Context?.getScreenHeight(): Int? {
+        this ?: run {
+            Log.e("getScreenHeight context is null!")
+            return null
+        }
+
+        (this.getSystemService(Context.WINDOW_SERVICE) as? WindowManager)?.apply {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                currentWindowMetrics.run {
+                    windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars()).let {
+                        bounds.height() - it.bottom - it.top
+                    }
+                }
+            } else {
+                DisplayMetrics().run {
+                    defaultDisplay.getMetrics(this)
+                    heightPixels
+                }
+            }
+        }
+
+        return null
     }
 }
 

@@ -33,6 +33,7 @@ object Dependencies {
         const val bom = "com.google.firebase:firebase-bom:${Versions.Firebase.bom}"
         const val performance = "com.google.firebase:firebase-perf-ktx"
         const val analytics = "com.google.firebase:firebase-analytics-ktx"
+        const val message = "com.google.firebase:firebase-messaging-ktx"
     }
 
     object Jetpack {
@@ -51,6 +52,7 @@ object Dependencies {
         const val room = "androidx.room:room-runtime:${Versions.Jetpack.room}"
         const val roomKtx = "androidx.room:room-ktx:${Versions.Jetpack.room}"
         const val roomCompiler = "androidx.room:room-compiler:${Versions.Jetpack.room}"
+        const val workManager = "androidx.work:work-runtime-ktx:${Versions.Jetpack.workManager}"
     }
 
     object Layout {

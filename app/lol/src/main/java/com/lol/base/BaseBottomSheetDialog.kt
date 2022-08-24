@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -16,6 +17,7 @@ open class BaseBottomSheetDialog<V : ViewDataBinding>(
 ) : BottomSheetDialogFragment() {
     protected lateinit var binding: V
 
+    @CallSuper
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,6 +32,7 @@ open class BaseBottomSheetDialog<V : ViewDataBinding>(
         return binding.root
     }
 
+    @CallSuper
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         super.onCreateDialog(savedInstanceState).apply {
             window?.requestFeature(Window.FEATURE_NO_TITLE)
