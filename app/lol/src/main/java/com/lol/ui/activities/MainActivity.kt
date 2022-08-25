@@ -41,7 +41,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
         binding.apply {
             FirebaseMessaging.getInstance().token
                 .addOnSuccessListener { token ->
-                    showToast(token, Toast.LENGTH_SHORT)
+                    Log.d("Firebase FCM Token >>>>> $token")
                 }
                 .addOnFailureListener { e ->
                     Log.e("Fetching FCM registration token failed", e)

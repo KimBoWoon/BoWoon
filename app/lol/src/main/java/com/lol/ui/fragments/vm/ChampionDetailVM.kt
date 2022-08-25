@@ -1,11 +1,15 @@
 package com.lol.ui.fragments.vm
 
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.domain.lol.dto.ChampionDetailRoot
 import com.domain.lol.usecase.DataDragonApiUseCase
 import com.lol.base.BaseVM
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import util.DataStatus
 import javax.inject.Inject
@@ -15,7 +19,8 @@ class ChampionDetailVM @Inject constructor(
     private val dataDragonApiUseCase: DataDragonApiUseCase
 ) : BaseVM() {
     val champion = MutableStateFlow<DataStatus<ChampionDetailRoot?>>(DataStatus.Loading)
-    val content = MutableStateFlow<String?>(null)
+//    val content = MutableStateFlow<String?>(null)
+    val showDialog = MutableLiveData<String?>()
 
     fun getChampionInfo(version: String, name: String, language: String = "ko_KR") {
         viewModelScope.launch {
@@ -30,6 +35,7 @@ class ChampionDetailVM @Inject constructor(
     }
 
     fun showChampionDetailDialog(content: String) {
-        this.content.value = content
+//        this.content.value = content
+        showDialog.value = content
     }
 }

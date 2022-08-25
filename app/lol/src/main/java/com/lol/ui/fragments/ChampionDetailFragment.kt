@@ -104,11 +104,17 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
             }
         }
 
-        lifecycleScope.launch {
-            viewModel.content.collect { content ->
-                content?.let {
-                    showChampionInfoDialog(it)
-                }
+//        lifecycleScope.launch {
+//            viewModel.content.collect { content ->
+//                content?.let {
+//                    showChampionInfoDialog(it)
+//                }
+//            }
+//        }
+
+        viewModel.showDialog.observe(viewLifecycleOwner) { content ->
+            content?.let {
+                showChampionInfoDialog(it)
             }
         }
     }
