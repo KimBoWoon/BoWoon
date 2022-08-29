@@ -24,17 +24,13 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_champion"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/vp_champion_skins"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                app:layout_constraintTop_toTopOf="parent"
-                app:loadImage="@{champion.skins.get(0).championSkinImageUrl}"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.BottomCorner"
-                tools:background="@tools:sample/avatars" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_champion_title"
@@ -47,7 +43,7 @@
                 android:textSize="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_champion"
+                app:layout_constraintTop_toBottomOf="@id/vp_champion_skins"
                 tools:text="champion title" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -128,12 +124,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_champion_description" />
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/vp_champion_skins"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/vp_champion_spells" />
 
             <ProgressBar
                 android:id="@+id/pb_champion_detail_loading"

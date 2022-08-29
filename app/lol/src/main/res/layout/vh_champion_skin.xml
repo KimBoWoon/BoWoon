@@ -27,9 +27,10 @@
             android:id="@+id/tv_champion_skin_nmae"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#66FFFFFF"
             android:gravity="center"
             android:text="@{skin.name.equals(&quot;default&quot;) ? skin.championName : skin.name}"
-            app:layout_constraintTop_toBottomOf="@id/iv_champion_skin_image"
+            app:layout_constraintBottom_toBottomOf="@id/iv_champion_skin_image"
             tools:text="champion skin" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
