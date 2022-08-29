@@ -31,6 +31,7 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
         binding.apply {
             lifecycleOwner = this@ChampionDetailFragment
             vm = viewModel
+            clickHandler = ClickHandler()
         }
         lifecycle.addObserver(viewModel)
 
@@ -103,23 +104,11 @@ class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(
                 }
             }
         }
-
-//        lifecycleScope.launch {
-//            viewModel.content.collect { content ->
-//                content?.let {
-//                    showChampionInfoDialog(it)
-//                }
-//            }
-//        }
-
-        viewModel.showDialog.observe(viewLifecycleOwner) { content ->
-            content?.let {
-                showChampionInfoDialog(it)
-            }
-        }
     }
 
-    private fun showChampionInfoDialog(content: String) {
-        ChampionInfoBottomDialog(content).show(childFragmentManager, ChampionDetailFragment::class.simpleName)
+    inner class ClickHandler {
+        fun showChampionInfoDialog(content: String) {
+            ChampionInfoBottomDialog(content).show(childFragmentManager, ChampionDetailFragment::class.simpleName)
+        }
     }
 }

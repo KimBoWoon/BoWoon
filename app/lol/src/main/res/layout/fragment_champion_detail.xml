@@ -12,6 +12,10 @@
         <variable
             name="vm"
             type="com.lol.ui.fragments.vm.ChampionDetailVM" />
+
+        <variable
+            name="clickHandler"
+            type="com.lol.ui.fragments.ChampionDetailFragment.ClickHandler" />
     </data>
 
     <ScrollView
@@ -87,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:text="챔피언 스탯"
                     android:visibility="gone"
-                    app:onDebounceClickListener="@{() -> vm.showChampionDetailDialog(champion.info.toString())}" />
+                    app:onDebounceClickListener="@{() -> clickHandler.showChampionInfoDialog(champion.info.toString())}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/b_champion_allytips"
@@ -95,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:text="챔피언 사용 팁"
                     android:visibility="gone"
-                    app:onDebounceClickListener="@{() -> vm.showChampionDetailDialog(champion.allytipsString)}" />
+                    app:onDebounceClickListener="@{() -> clickHandler.showChampionInfoDialog(champion.allytipsString)}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/b_champion_enemytip"
@@ -103,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:text="챔피언 적대 팁"
                     android:visibility="gone"
-                    app:onDebounceClickListener="@{() -> vm.showChampionDetailDialog(champion.enemytipsString)}" />
+                    app:onDebounceClickListener="@{() -> clickHandler.showChampionInfoDialog(champion.enemytipsString)}" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatTextView
