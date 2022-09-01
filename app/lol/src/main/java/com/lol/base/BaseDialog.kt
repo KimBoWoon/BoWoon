@@ -2,6 +2,8 @@ package com.lol.base
 
 import android.app.Dialog
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.InsetDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.*
@@ -12,8 +14,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
 import com.lol.R
+import util.ScreenUtils.dp
 
-abstract class BaseDialog<V : ViewDataBinding>(
+open class BaseDialog<V : ViewDataBinding>(
     @LayoutRes
     private val layoutId: Int,
     private val fullWidth: Boolean,
@@ -41,20 +44,20 @@ abstract class BaseDialog<V : ViewDataBinding>(
 
         dialog?.window?.let { window ->
             if (fullWidth && fullHeight) {
-//                window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 window.setLayout(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
                     window.statusBarColor = Color.WHITE
                 }
             } else if (fullWidth) {
-//                val back = ColorDrawable(Color.TRANSPARENT)
-//                val inset = InsetDrawable(back, 20.dp)
-//                window.setBackgroundDrawable(inset)
+                val back = ColorDrawable(Color.TRANSPARENT)
+                val inset = InsetDrawable(back, 20.dp)
+                window.setBackgroundDrawable(inset)
 
                 window.setLayout(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -64,7 +67,7 @@ abstract class BaseDialog<V : ViewDataBinding>(
                     }
                 )
             } else {
-//                window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
                 window.setLayout(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -84,12 +87,13 @@ abstract class BaseDialog<V : ViewDataBinding>(
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        super.onCreateDialog(savedInstanceState).apply {
-            window?.requestFeature(Window.FEATURE_NO_TITLE)
-            setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_BoWoon)
-            setCanceledOnTouchOutside(false)
-        }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCanceledOnTouchOutside(false)
+        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_BoWoon)
+        return dialog
+    }
 
     open fun onBackPressed(): Boolean {
         return isBackPress

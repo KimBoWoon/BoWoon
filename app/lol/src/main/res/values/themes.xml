@@ -15,6 +15,10 @@
 
         <item name="android:textViewStyle">@style/BlackColorTextView</item>
         <item name="bottomSheetDialogTheme">@style/RoundedBottomDialog</item>
+
+        <!-- No ActionBar -->
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
     </style>
 
     <style name="BlackColorTextView">

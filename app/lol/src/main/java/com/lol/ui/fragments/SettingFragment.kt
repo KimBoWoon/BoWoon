@@ -11,11 +11,13 @@ import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentSettingBinding
 import com.lol.ui.activities.vm.MainVM
 import com.lol.ui.adapter.VersionAdapter
+import com.lol.ui.dialog.LolDialog
 import com.lol.ui.fragments.vm.SettingVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import util.DataStatus
 import util.Log
+import util.ViewAdapter.onDebounceClickListener
 
 @AndroidEntryPoint
 class SettingFragment : BaseFragment<FragmentSettingBinding>(
@@ -36,7 +38,13 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
         initFlow()
     }
 
-    override fun initBinding() {}
+    override fun initBinding() {
+        binding.apply {
+            bShowDialog.onDebounceClickListener {
+                LolDialog("Hello, World!", "확인", {}, "취소", {}).show(childFragmentManager, SettingFragment::class.simpleName)
+            }
+        }
+    }
 
     override fun initFlow() {
         lifecycleScope.launch {

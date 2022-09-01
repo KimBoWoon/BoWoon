@@ -31,6 +31,7 @@ class MainVM @Inject constructor(
                 lolVersion.value = dataStoreUseCase.get(LocalDatastore.Keys.LOL_VERSION)?.let {
                     DataStatus.Success(it)
                 } ?: run {
+                    dataStoreUseCase.set(LocalDatastore.Keys.LOL_VERSION, versionList.firstOrNull() ?: "UNKNOWN VERSION")
                     DataStatus.Success(versionList.firstOrNull())
                 }
                 lolVersionList.value = DataStatus.Success(versionList)

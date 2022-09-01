@@ -17,7 +17,7 @@ class LolDialog(
     private val dismissText: String? = null,
     private val dismissCallback: (() -> Unit)? = null
 ) : BaseDialog<DialogConfirmDismissBinding>(
-    R.layout.dialog_confirm_dismiss, false, false
+    R.layout.dialog_confirm_dismiss, true, false
 ) {
     private val viewModel by viewModels<LolDialogVM>()
 

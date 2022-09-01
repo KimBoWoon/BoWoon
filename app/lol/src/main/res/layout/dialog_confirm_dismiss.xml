@@ -10,57 +10,71 @@
             type="com.lol.ui.dialog.vm.LolDialogVM" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/black"
+        app:strokeWidth="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_message_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/dialog_message_border"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_custom_dialog"
+                android:id="@+id/tv_dialog_message"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
                 android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
                 android:text="@{vm.message}"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/llc_dialog_button_group"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Hello, World!" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/llc_dialog_button_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_dialog_message">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_confirm"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/dialog_confirm_border"
+                    android:gravity="center"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="@{vm.confirmText}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tv_dismiss"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:onDebounceClickListener="@{() -> vm.onConfirmClick()}"
+                    tools:text="확인" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_dismiss"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/dialog_dismiss_border"
+                    android:gravity="center"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="@{vm.dismissText}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_confirm"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:onDebounceClickListener="@{() -> vm.dismissClick()}"
+                    tools:text="취소" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_confirm"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="@{vm.confirmText}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_dismiss"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_message_group"
-            app:onDebounceClickListener="@{() -> vm.onConfirmClick()}"
-            tools:text="확인" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_dismiss"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="@{vm.dismissText}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_confirm"
-            app:layout_constraintTop_toBottomOf="@id/cl_message_group"
-            app:onDebounceClickListener="@{() -> vm.dismissClick()}"
-            tools:text="취소" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

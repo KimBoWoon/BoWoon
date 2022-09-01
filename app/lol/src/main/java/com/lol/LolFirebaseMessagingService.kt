@@ -1,13 +1,20 @@
 package com.lol
 
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.media.RingtoneManager
+import androidx.core.app.NotificationCompat
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.lol.ui.activities.MainActivity
 import util.Log
+
 
 class LolFirebaseMessagingService : FirebaseMessagingService() {
     companion object {
@@ -35,6 +42,7 @@ class LolFirebaseMessagingService : FirebaseMessagingService() {
         // Check if message contains a notification payload.
         remoteMessage.notification?.let {
             Log.d(TAG, "Message Notification Body: ${it.body}")
+            sendNotification(it.title ?: "", it.body ?: "")
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -70,6 +78,23 @@ class LolFirebaseMessagingService : FirebaseMessagingService() {
     private fun sendRegistrationToServer(token: String?) {
         // TODO: Implement this method to send token to your app server.
         Log.d(TAG, "sendRegistrationTokenToServer($token)")
+    }
+
+    private fun sendNotification(messageTitle: String, messageBody: String) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val notificationBuilder: NotificationCompat.Builder =
+            NotificationCompat.Builder(this, getString(R.string.firebase_notification_channel_id))
+                .setSmallIcon(R.drawable.icon_setting)
+                .setContentTitle(messageTitle)
+                .setContentText(messageBody)
+                .setAutoCancel(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentIntent(pendingIntent)
+        notificationManager.notify(0, notificationBuilder.build())
     }
 
     internal class MyWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {

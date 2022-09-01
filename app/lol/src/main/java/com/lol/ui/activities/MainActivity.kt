@@ -1,13 +1,13 @@
 package com.lol.ui.activities
 
-import android.Manifest
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import com.google.firebase.messaging.FirebaseMessaging
 import com.lol.R
 import com.lol.base.BaseActivity
 import com.lol.databinding.ActivityMainBinding
@@ -39,16 +39,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
 
     override fun initBinding() {
         binding.apply {
-            FirebaseMessaging.getInstance().token
-                .addOnSuccessListener { token ->
-                    Log.d("Firebase FCM Token >>>>> $token")
-                }
-                .addOnFailureListener { e ->
-                    Log.e("Fetching FCM registration token failed", e)
-                }
+            val key = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+            val model = Build.MODEL
+            val id = Build.ID
+            val brand = Build.BRAND
+            val host = Build.HOST
+            val fingerprint = Build.FINGERPRINT
+            Log.d("key >>>>> $key, model >>>>> $model, id >>>>> $id, brand >>>>> $brand, host >>>>> $host, fingerprint >>>>> $fingerprint")
         }
 
-        requirePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+//        requirePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE))
     }
 
     override fun initFlow() {
@@ -61,7 +61,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
                     is DataStatus.Success -> {
                         Log.d(it.data.toString())
                         it.data?.let { version ->
-                            supportActionBar?.title = "LOL(${version})"
                             viewModel.getAllChampion(version)
                             viewModel.getAllGameItem(version)
                         } ?: Log.e("version is null!")

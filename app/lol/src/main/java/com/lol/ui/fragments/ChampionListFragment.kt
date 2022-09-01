@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentChampionListBinding
+import com.lol.ui.activities.MainActivity
 import com.lol.ui.activities.vm.MainVM
 import com.lol.ui.adapter.LolAdapter
 import com.lol.ui.fragments.vm.ChampionListVM
@@ -47,6 +48,9 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
 
     override fun initBinding() {
         binding.apply {
+            (requireActivity() as? MainActivity)?.apply {
+                setSupportActionBar(binding.toolbar)
+            }
             rvLolChampionList.apply {
                 if (layoutManager == null) {
                     layoutManager = GridLayoutManager(requireContext(), 3).apply {
@@ -99,6 +103,7 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
                         Log.d(it.data.toString())
                         it.data?.data?.let { championList ->
                             val sortedChampionList = championList.values.sortedBy { item -> item.name }
+                            binding.version = it.data?.version
                             binding.rvLolChampionList.adapter = LolAdapter(sortedChampionList, ClickHandler())
                         } ?: run {
                             Log.e("championList is null")
