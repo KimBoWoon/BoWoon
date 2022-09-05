@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.domain.practice.dto.SealedPokemon
+import com.domain.practice.dto.Pokemon
 import com.practice.R
 import com.practice.base.BaseFragment
 import com.practice.databinding.FragmentPokemonListBinding
@@ -115,7 +115,7 @@ class PokemonListFragment : BaseFragment<FragmentPokemonListBinding>(
     }
 
     inner class ClickHandler {
-        fun goToDetail(pokemon: SealedPokemon.Pokemon, type: Int) {
+        fun goToDetail(pokemon: Pokemon, type: Int) {
             findNavController().navigate(R.id.action_home_to_detail, Bundle().apply {
                 putParcelable("pokemon", pokemon)
                 putInt("type", type)

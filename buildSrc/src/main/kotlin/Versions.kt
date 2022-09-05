@@ -62,6 +62,8 @@ object Versions {
     object Hilt {
         const val hilt = "2.42"
         const val compiler = "1.0.0"
+        const val hiltNavigation = "1.0.0"
+        const val hiltWorkManager = "1.0.0"
     }
 
     object Compose {

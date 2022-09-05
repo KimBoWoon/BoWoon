@@ -10,5 +10,5 @@ data class PokemonData(
     val count: Int? = null,
     val next: String? = null,
     val previous: String? = null,
-    val results: List<SealedPokemon.Pokemon>? = null
+    val results: List<Pokemon>? = null
 ) : Parcelable

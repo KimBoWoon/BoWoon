@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
+import androidx.hilt.work.HiltWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.Worker
@@ -13,6 +14,8 @@ import androidx.work.WorkerParameters
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.lol.ui.activities.MainActivity
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import util.Log
 
 
@@ -97,7 +100,11 @@ class LolFirebaseMessagingService : FirebaseMessagingService() {
         notificationManager.notify(0, notificationBuilder.build())
     }
 
-    internal class MyWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+    @HiltWorker
+    internal class MyWorker @AssistedInject constructor(
+        @Assisted appContext: Context,
+        @Assisted workerParams: WorkerParameters
+    ) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             // TODO(developer): add long running task here.
             return Result.success()

@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.domain.practice.dto.SealedPokemon
+import com.domain.practice.dto.Pokemon
 import com.practice.R
 import com.practice.base.BaseFragment
 import com.practice.databinding.FragmentWishPokemonBinding
@@ -106,9 +106,9 @@ class WishPokemonListFragment : BaseFragment<FragmentWishPokemonBinding>(
     }
 
     inner class ClickHandler {
-        fun goToDetail(type: Int, pokemon: SealedPokemon.Pokemon) {
+        fun goToDetail(type: Int, pokemon: Pokemon) {
             findNavController().navigate(R.id.action_wish_to_detail, Bundle().apply {
-                putParcelable("pokemon", SealedPokemon.Pokemon(pokemon.name, pokemon.url))
+                putParcelable("pokemon", Pokemon(pokemon.name, pokemon.url))
                 putInt("type", type)
             })
         }

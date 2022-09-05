@@ -1,6 +1,6 @@
 package com.practice.ui.vh
 
-import com.domain.practice.dto.SealedPokemon
+import com.domain.practice.dto.Pokemon
 import com.practice.base.BaseVH
 import com.practice.databinding.ViewholderWishPokemonBinding
 import com.practice.ui.fragments.WishPokemonListFragment
@@ -9,8 +9,8 @@ import util.Log
 class WishPokemonVH(
     override val binding: ViewholderWishPokemonBinding,
     private val clickHandler: WishPokemonListFragment.ClickHandler? = null
-) : BaseVH<ViewholderWishPokemonBinding, SealedPokemon>(binding) {
-    override fun bind(item: SealedPokemon?) {
+) : BaseVH<ViewholderWishPokemonBinding, Pokemon>(binding) {
+    override fun bind(item: Pokemon?) {
         runCatching {
             item ?: run {
                 Log.e("WishPokemonViewHolder item is null")
@@ -19,14 +19,14 @@ class WishPokemonVH(
         }.onSuccess { pokemon ->
             binding.apply {
                 vh = this@WishPokemonVH
-                dto = pokemon as? SealedPokemon.Pokemon
+                dto = pokemon
             }
         }.onFailure { e ->
             Log.printStackTrace(e)
         }
     }
 
-    fun goToDetail(pokemon: SealedPokemon.Pokemon) {
+    fun goToDetail(pokemon: Pokemon) {
         clickHandler?.goToDetail(1, pokemon)
     }
 }

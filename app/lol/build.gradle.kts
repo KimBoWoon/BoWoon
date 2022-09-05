@@ -107,6 +107,8 @@ dependencies {
         Dependencies.Jetpack.workManager,
         Dependencies.Google.material,
         Dependencies.Hilt.hiltAndroid,
+        Dependencies.Hilt.hiltNavigation,
+        Dependencies.Hilt.hiltWorkManager,
         Dependencies.Glide.glide,
         Dependencies.Firebase.performance,
         Dependencies.Firebase.analytics,

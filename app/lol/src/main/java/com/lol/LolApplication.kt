@@ -5,18 +5,29 @@ import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.os.Build
+import android.provider.Settings
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.HiltAndroidApp
 import util.Log
+import javax.inject.Inject
 
 @HiltAndroidApp
-class LolApplication : Application() {
+class LolApplication : Application()/*, Configuration.Provider*/ {
+//    @Inject private lateinit var workerFactory: HiltWorkerFactory
+
     override fun onCreate() {
         super.onCreate()
 
         createFirebaseMessageToken()
         createNotificationChannel()
     }
+
+//    override fun getWorkManagerConfiguration() =
+//        Configuration.Builder()
+//            .setWorkerFactory(workerFactory)
+//            .build()
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -38,7 +49,15 @@ class LolApplication : Application() {
     private fun createFirebaseMessageToken() {
         FirebaseMessaging.getInstance().token
             .addOnSuccessListener { token ->
+                // TODO 서버로 토큰값 저장
+                val data = mapOf(
+                    "id" to Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID),
+                    "model" to Build.MODEL,
+                    "brand" to Build.BRAND,
+                    "token" to token
+                )
                 Log.d("Firebase FCM Token >>>>> $token")
+                Log.d(data.toString())
             }
             .addOnFailureListener { e ->
                 Log.e("Fetching FCM registration token failed", e)

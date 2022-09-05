@@ -38,15 +38,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     }
 
     override fun initBinding() {
-        binding.apply {
-            val key = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-            val model = Build.MODEL
-            val id = Build.ID
-            val brand = Build.BRAND
-            val host = Build.HOST
-            val fingerprint = Build.FINGERPRINT
-            Log.d("key >>>>> $key, model >>>>> $model, id >>>>> $id, brand >>>>> $brand, host >>>>> $host, fingerprint >>>>> $fingerprint")
-        }
+        binding.apply {}
 
 //        requirePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE))
     }
