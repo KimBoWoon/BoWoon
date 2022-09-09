@@ -75,8 +75,7 @@ class WishPokemonListFragment : BaseFragment<FragmentWishPokemonBinding>(
 
     override fun initBinding() {
         binding.rvWishPokemonList.apply {
-            adapter = pokemonAdapter.withLoadStateHeaderAndFooter(
-                PokemonLoadPagingAdapter { pokemonAdapter.retry() },
+            adapter = pokemonAdapter.withLoadStateFooter(
                 PokemonLoadPagingAdapter { pokemonAdapter.retry() }
             )
             layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false).apply {

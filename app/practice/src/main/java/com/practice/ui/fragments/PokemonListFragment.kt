@@ -81,8 +81,7 @@ class PokemonListFragment : BaseFragment<FragmentPokemonListBinding>(
     override fun initBinding() {
         binding.apply {
             rvPokemonList.apply {
-                adapter = pokemonAdapter.withLoadStateHeaderAndFooter(
-                    PokemonLoadPagingAdapter { pokemonAdapter.retry() },
+                adapter = pokemonAdapter.withLoadStateFooter(
                     PokemonLoadPagingAdapter { pokemonAdapter.retry() }
                 )
                 layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false).apply {

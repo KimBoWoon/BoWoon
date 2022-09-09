@@ -57,11 +57,15 @@ android {
     }
 
     packagingOptions {
-        resources.excludes.add("META-INF/DEPENDENCIES")
-        resources.excludes.add("META-INF/NOTICE")
-        resources.excludes.add("META-INF/LICENSE.txt")
-        resources.excludes.add("META-INF/NOTICE.txt")
-        resources.excludes.add("META-INF/LICENSE")
+        resources.excludes.addAll(
+            listOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+            )
+        )
     }
     sourceSets {
         getByName(Config.SourceSet.main) {

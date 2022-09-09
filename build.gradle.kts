@@ -6,14 +6,18 @@ buildscript {
     }
 
     dependencies {
-        classpath(Dependencies.Gradle.gradle)
-        classpath(Dependencies.Gradle.plugin)
-        classpath(Dependencies.Serialization.kotlinPlugin)
-        classpath(Dependencies.Hilt.plugin)
-        classpath(Dependencies.Plugins.safeArgs)
-        classpath(Dependencies.Firebase.googleService)
-        classpath(Dependencies.Firebase.gradle)
-        classpath(Dependencies.Firebase.performancePlugin)
+        listOf(
+            Dependencies.Gradle.gradle,
+            Dependencies.Gradle.plugin,
+            Dependencies.Serialization.kotlinPlugin,
+            Dependencies.Hilt.plugin,
+            Dependencies.Plugins.safeArgs,
+            Dependencies.Firebase.googleService,
+            Dependencies.Firebase.gradle,
+            Dependencies.Firebase.performancePlugin
+        ).forEach {
+            classpath(it)
+        }
     }
 }
 

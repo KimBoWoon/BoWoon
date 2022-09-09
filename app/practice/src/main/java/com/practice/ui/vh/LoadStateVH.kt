@@ -5,6 +5,7 @@ import androidx.paging.LoadState
 import com.practice.base.BaseVH
 import com.practice.databinding.ViewholderLoadBinding
 import util.Log
+import util.ViewAdapter.onDebounceClickListener
 
 class LoadStateVH(
     override val binding: ViewholderLoadBinding,
@@ -17,9 +18,12 @@ class LoadStateVH(
                 return
             }
         }.onSuccess { loadState ->
-            binding.tvLoadText.isVisible = loadState is LoadState.Loading
-            binding.pbNextLoading.isVisible = loadState is LoadState.Loading
-            binding.bRetry.isVisible = loadState is LoadState.Error
+            binding.apply {
+                vh = this@LoadStateVH
+                tvLoadText.isVisible = loadState is LoadState.Loading
+                pbNextLoading.isVisible = loadState is LoadState.Loading
+                bRetry.isVisible = loadState is LoadState.Error
+            }
         }.onFailure { e ->
             Log.printStackTrace(e)
         }
