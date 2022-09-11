@@ -133,6 +133,10 @@ data class GameItemInfo(
     val gold: Gold? = null,
     val image: Image? = null,
     val into: List<String?>? = null,
+    val inStore: Boolean? = null, // true
+    val consumed: Boolean? = null,
+    val stacks: Int? = null,
+    val hideFromAll: Boolean? = null,
     val maps: Map<String, Boolean>? = null,
     val name: String? = null, // 장화
     val plaintext: String? = null, // 이동 속도가 약간 증가합니다.

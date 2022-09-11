@@ -23,10 +23,7 @@ object ViewAdapter {
             return
         }
 
-        Glide.with(this)
-            .load(url)
-            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-            .into(this)
+        ImageLoader.load(this.context, url, imageView = this)
     }
 
     @JvmStatic

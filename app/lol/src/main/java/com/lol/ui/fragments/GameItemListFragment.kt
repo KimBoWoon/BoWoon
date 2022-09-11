@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.chip.Chip
 import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentGameItemBinding
@@ -16,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import util.DataStatus
 import util.Log
+import util.ViewAdapter.onDebounceClickListener
 
 @AndroidEntryPoint
 class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
@@ -23,6 +25,8 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
 ) {
     private val activityVM by activityViewModels<MainVM>()
     private val viewModel by viewModels<GameItemVM>()
+    private val tags = mutableListOf<String>()
+    private val clickHandler = ClickHandler()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,11 +63,29 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
                     is DataStatus.Success -> {
                         Log.d(it.data.toString())
                         it.data?.data?.let { gameItemList ->
-                            val sortedGameItemList = gameItemList.values.sortedBy { item -> item.name }
+                            val sortedGameItemList = gameItemList.values.filter { item -> item.inStore != false }.sortedBy { item -> item.name }
                             gameItemList.values.forEach { item ->
                                 item.image?.version = it.data?.version ?: ""
+                                item.tags?.let { tagList ->
+                                    tagList.forEach { tag ->
+                                        tag?.let {
+                                            tags.add(it)
+                                        }
+                                    }
+                                }
                             }
                             binding.rvGameItemList.adapter = LolAdapter(sortedGameItemList, handler)
+                            binding.cgGameItemCategoryGroup.apply {
+                                tags.distinct().sorted().forEach { tag ->
+                                    addView(Chip(requireContext()).apply {
+                                        text = tag
+                                        isCheckable = true
+                                        onDebounceClickListener {
+                                            clickHandler.clickCategory(tag)
+                                        }
+                                    })
+                                }
+                            }
                         } ?: run {
                             Log.e("championList is null")
                         }
@@ -75,6 +97,15 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
                     }
                 }
             }
+        }
+    }
+
+    inner class ClickHandler {
+        fun clickCategory(category: String) {
+            binding.rvGameItemList.adapter = LolAdapter(
+                (activityVM.allGameItem.value as? DataStatus.Success)?.data?.data?.values?.filter { it.tags?.contains(category) == true },
+                handler
+            )
         }
     }
 }
