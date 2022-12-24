@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">위치 알람</string>
+
+    <!-- navigation -->
+    <string name="bottom_alarm">알람</string>
+    <string name="bottom_maps">지도</string>
+    <string name="bottom_setting">설정</string>
+
+    <string name="create_alarm">알람 만들기</string>
+</resources>

@@ -1,8 +1,8 @@
 object Config {
     object Application {
-        const val compileSdk = 32
+        const val compileSdk = 33
         const val minSdk = 23
-        const val targetSdk = 32
+        const val targetSdk = 33
         const val testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         const val jvmVersion = "11"
         const val applicationId = "com.bowoon"
@@ -48,6 +48,7 @@ object Config {
     object Flavors {
         const val lol = "lol"
         const val practice = "practice"
+        const val gpsAlarm = "gpsAlarm"
     }
 
     object Practice {
@@ -60,5 +61,14 @@ object Config {
         const val versionCode = 1
         const val versionName = "1.0.0"
         const val applicationIdSuffix = ".lol"
+    }
+
+    object GpsAlarm {
+        const val versionCode = 1
+        const val versionName = "1.0.0"
+        const val applicationIdSuffix = ".gpsAlarm"
+        const val namespace = "com.bowoon.android.gps_alarm"
+        const val naverMapsClientName = "NAVER_MAPS_CLIENT_KEY"
+        const val naverMapsClientKey = "naver_maps_client_key"
     }
 }

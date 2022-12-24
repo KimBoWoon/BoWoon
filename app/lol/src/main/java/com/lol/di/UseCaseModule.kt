@@ -1,11 +1,6 @@
 package com.lol.di
 
-import com.domain.lol.repository.DataDragonApiRepository
-import com.domain.lol.repository.DataStoreRepository
-import com.domain.lol.repository.RiotApiRepository
-import com.domain.lol.usecase.DataDragonApiUseCase
-import com.domain.lol.usecase.DataStoreUseCase
-import com.domain.lol.usecase.RiotApiUseCase
+import com.domain.gpsAlarm.usecase.DataDragonApiUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

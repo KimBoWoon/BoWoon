@@ -21,6 +21,9 @@ object BaseRetrofitModule {
         interceptor: HttpLoggingInterceptor
     ): OkHttpClient = OkHttpClient().newBuilder().apply {
         addNetworkInterceptor(interceptor)
+        if (BuildConfig.FLAVOR.equals("gpsAlarm", true)) {
+            addInterceptor(AppInterceptor())
+        }
         if (BuildConfig.DEBUG) {
             addInterceptor(OkHttpProfilerInterceptor())
             addInterceptor(NetworkLogInterceptor())
@@ -38,6 +41,6 @@ object BaseRetrofitModule {
 
     @Provides
     fun provideInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.NONE
+        level = HttpLoggingInterceptor.Level.BODY
     }
 }

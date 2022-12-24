@@ -1,11 +1,10 @@
 package com.lol.ui.activities.vm
 
 import androidx.lifecycle.viewModelScope
-import com.data.lol.local.LocalDatastore
+import com.data.gpsAlarm.local.LocalDatastore
 import com.domain.lol.dto.ChampionRoot
 import com.domain.lol.dto.GameItemRoot
-import com.domain.lol.usecase.DataDragonApiUseCase
-import com.domain.lol.usecase.DataStoreUseCase
+import com.domain.gpsAlarm.usecase.DataDragonApiUseCase
 import com.lol.base.BaseVM
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

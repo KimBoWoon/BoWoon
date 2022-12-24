@@ -1,7 +1,7 @@
 package com.lol.di
 
 import android.content.Context
-import com.data.lol.local.LocalDatastore
+import com.data.gpsAlarm.local.LocalDatastore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

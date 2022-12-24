@@ -1,11 +1,11 @@
 object Versions {
     object Kotlin {
-//        const val kotlin = "1.6.20"
-        const val kotlin = "1.6.10"
+        const val kotlin = "1.7.20"
     }
 
     object Google {
         const val material = "1.6.1"
+        const val location = "20.0.0"
     }
 
     object Firebase {
@@ -29,7 +29,7 @@ object Versions {
     }
 
     object Gradle {
-        const val gradle = "7.2.2"
+        const val gradle = "7.3.1"
         const val plugin = "1.6.0"
     }
 
@@ -67,16 +67,20 @@ object Versions {
     }
 
     object Compose {
-        const val compose = "1.1.1"
-        const val activity = "1.4.0"
+        const val bom = "2022.10.00"
+        const val compose = "1.3.2"
+        const val activity = "1.5.1"
+        const val viewModel = "2.5.1"
+        const val navigation = "2.5.3"
+        const val hiltNavigation = "1.0.0"
     }
 
     object Coroutine {
         const val core = "1.6.4"
     }
 
-    object ViewPager2 {
-        const val core = "1.0.0"
+    object Naver {
+        const val map = "3.15.0"
     }
 
     object ThreeTenABP {

@@ -67,6 +67,9 @@ android {
         create(Config.Flavors.practice) {
             dimension = Config.Dimensions.mode
         }
+        create(Config.Flavors.gpsAlarm) {
+            dimension = Config.Dimensions.mode
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

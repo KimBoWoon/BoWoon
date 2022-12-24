@@ -37,6 +37,9 @@ android {
         create(Config.Flavors.practice) {
             dimension = Config.Dimensions.mode
         }
+        create(Config.Flavors.gpsAlarm) {
+            dimension = Config.Dimensions.mode
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -67,6 +70,10 @@ android {
                 manifest.srcFile("src/practice/AndroidManifest.xml")
                 java.setSrcDirs(listOf("src/base/java", "src/practice/java"))
             }
+            getByName(Config.Flavors.gpsAlarm) {
+                manifest.srcFile("src/gpsAlarm/AndroidManifest.xml")
+                java.setSrcDirs(listOf("src/base/java", "src/gpsAlarm/java"))
+            }
         }
         getByName(Config.SourceSet.debug) {
             getByName(Config.Flavors.lol) {
@@ -76,6 +83,10 @@ android {
             getByName(Config.Flavors.practice) {
                 manifest.srcFile("src/practice/AndroidManifest.xml")
                 java.setSrcDirs(listOf("src/base/java", "src/practice/java"))
+            }
+            getByName(Config.Flavors.gpsAlarm) {
+                manifest.srcFile("src/gpsAlarm/AndroidManifest.xml")
+                java.setSrcDirs(listOf("src/base/java", "src/gpsAlarm/java"))
             }
         }
     }

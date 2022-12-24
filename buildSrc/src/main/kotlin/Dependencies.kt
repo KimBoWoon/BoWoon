@@ -24,6 +24,7 @@ object Dependencies {
 
     object Google {
         const val material = "com.google.android.material:material:${Versions.Google.material}"
+        const val location = "com.google.android.gms:play-services-location:${Versions.Google.location}"
     }
 
     object Firebase {
@@ -91,21 +92,28 @@ object Dependencies {
     }
 
     object Compose {
-        const val ui = "androidx.compose.ui:ui:${Versions.Compose.compose}"
-        const val material = "androidx.compose.material:material:${Versions.Compose.compose}"
-        const val uiToolPreview = "androidx.compose.ui:ui-tooling-preview:${Versions.Compose.compose}"
-        const val uiTest = "androidx.compose.ui:ui-test-junit4:${Versions.Compose.compose}"
-        const val uiTooling = "androidx.compose.ui:ui-tooling:${Versions.Compose.compose}"
+        const val bom = "androidx.compose:compose-bom:${Versions.Compose.bom}"
+        const val material3 = "androidx.compose.material3:material3"
+        const val material2 = "androidx.compose.material:material"
+        const val preview = "androidx.compose.ui:ui-tooling-preview"
+        const val previewUiTooling = "androidx.compose.ui:ui-tooling"
+        const val uiTestJunit4 = "androidx.compose.ui:ui-test-junit4"
+        const val uiTestManifest = "androidx.compose.ui:ui-test-manifest"
+        const val materialIconsCore = "androidx.compose.material:material-icons-core"
+        const val materialIconsExtended = "androidx.compose.material:material-icons-extended"
+        const val material3WindowSizeClass = "androidx.compose.material3:material3-window-size-class"
         const val activity = "androidx.activity:activity-compose:${Versions.Compose.activity}"
-        const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Jetpack.lifecycle}"
+        const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Compose.viewModel}"
+        const val navigation = "androidx.navigation:navigation-compose:${Versions.Compose.navigation}"
+        const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:${Versions.Compose.hiltNavigation}"
     }
 
     object Coroutine {
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.Coroutine.core}"
     }
 
-    object ViewPager2 {
-        const val core = "androidx.viewpager2:viewpager2:${Versions.ViewPager2.core}"
+    object Naver {
+        const val map = "com.naver.maps:map-sdk:${Versions.Naver.map}"
     }
 
     object ThreeTenABP {

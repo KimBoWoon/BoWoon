@@ -1,8 +1,7 @@
 package com.lol.ui.fragments.vm
 
 import androidx.lifecycle.viewModelScope
-import com.data.lol.local.LocalDatastore
-import com.domain.lol.usecase.DataStoreUseCase
+import com.data.gpsAlarm.local.LocalDatastore
 import com.lol.base.BaseVM
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
