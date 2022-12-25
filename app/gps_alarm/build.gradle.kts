@@ -115,8 +115,13 @@ dependencies {
         Dependencies.Compose.viewModel,
         Dependencies.Compose.navigation,
         Dependencies.Compose.hiltNavigation,
+        Dependencies.Compose.paging,
+        Dependencies.Accompanist.webview,
         Dependencies.Layout.constraint,
         Dependencies.Jetpack.core,
+        Dependencies.Jetpack.room,
+        Dependencies.Jetpack.roomKtx,
+        Dependencies.Jetpack.roomPaging,
         Dependencies.Jetpack.appcompat,
         Dependencies.Jetpack.liveData,
         Dependencies.Jetpack.activity,
@@ -153,7 +158,8 @@ dependencies {
     arrayOf(
         Dependencies.Hilt.hiltAndroidCompiler,
         Dependencies.Hilt.hiltCompiler,
-        Dependencies.Glide.glideCompiler
+        Dependencies.Glide.glideCompiler,
+        Dependencies.Jetpack.roomCompiler
     ).forEach {
         kapt(it)
     }

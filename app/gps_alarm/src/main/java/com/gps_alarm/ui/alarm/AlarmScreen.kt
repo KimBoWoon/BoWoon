@@ -3,29 +3,31 @@ package com.gps_alarm.ui.alarm
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.domain.gpsAlarm.dto.Addresses
-import com.gps_alarm.ui.activities.Screen
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemsIndexed
+import com.gps_alarm.paging.room.entity.Address
+import com.gps_alarm.ui.Screen
 import com.gps_alarm.ui.fragments.AlarmVM
 import com.gps_alarm.ui.theme.Purple700
-import com.gps_alarm.ui.util.dpToSp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import util.DataStatus
 import util.Log
 
 @Composable
@@ -33,6 +35,7 @@ fun AlarmScreen(onNavigate: NavHostController) {
     AlarmCompose(onNavigate)
 }
 
+@OptIn(ExperimentalMaterialApi::class, ExperimentalPagingApi::class)
 @Composable
 fun AlarmCompose(
     onNavigate: NavHostController,
@@ -40,37 +43,39 @@ fun AlarmCompose(
 ) {
     Scaffold(
         content = {
-            it.toString()
-            val state by viewModel.geocodeList.collectAsState()
+            val geocodeList = viewModel.pager.collectAsLazyPagingItems()
 
-            when (state) {
-                is DataStatus.Loading -> {
-                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator()
-                    }
+            var isRefreshing by remember { mutableStateOf(false) }
+            val pullRefreshState = rememberPullRefreshState(
+                refreshing = isRefreshing,
+                onRefresh = {
+                    isRefreshing = true
+                    geocodeList.refresh()
+                })
+
+            Box(modifier = Modifier.pullRefresh(pullRefreshState), contentAlignment = Alignment.TopCenter) {
+                AlarmContent(geocodeList)
+                PullRefreshIndicator(refreshing = isRefreshing, state = pullRefreshState)
+            }
+
+            LaunchedEffect(geocodeList.loadState) {
+//                when (geocodeList.loadState.prepend) {
+//                    is LoadState.Loading -> { isRefreshing = true }
+//                    is LoadState.NotLoading -> { isRefreshing = false }
+//                    is LoadState.Error -> { isRefreshing = false }
+//                    else -> { isRefreshing = false }
+//                }
+                when (geocodeList.loadState.refresh) {
+                    is LoadState.Loading -> { isRefreshing = true }
+                    is LoadState.NotLoading -> { isRefreshing = false }
+                    is LoadState.Error -> { isRefreshing = false }
+                    else -> { isRefreshing = false }
                 }
-                is DataStatus.Success -> {
-                    val data = (state as? DataStatus.Success<List<Addresses>>)?.data
-                    if (data.isNullOrEmpty()) {
-                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                            Text(
-                                text = "저장된 데이터가 없습니다.",
-                                fontSize = dpToSp(20.dp),
-                                color = Color.Black
-                            )
-                        }
-                    } else {
-                        AlarmContent(addressesList = (state as DataStatus.Success<List<Addresses>>).data)
-                    }
-                }
-                is DataStatus.Failure -> {
-                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                        Text(
-                            text = (state as? DataStatus.Failure)?.throwable?.message ?: "Something wrong...",
-                            fontSize = dpToSp(20.dp),
-                            color = Color.Black
-                        )
-                    }
+                when (geocodeList.loadState.append) {
+                    is LoadState.Loading -> { isRefreshing = true }
+                    is LoadState.NotLoading -> { isRefreshing = false }
+                    is LoadState.Error -> { isRefreshing = false }
+                    else -> { isRefreshing = false }
                 }
             }
         },
@@ -79,49 +84,25 @@ fun AlarmCompose(
 }
 
 @Composable
-fun AlarmContent(addressesList: List<Addresses>) {
+fun AlarmContent(addressesList: LazyPagingItems<Address>) {
     val state = rememberLazyListState()
-    val scope = rememberCoroutineScope()
 
-    LazyColumn(state = state) {
-        addressesList.let { alarmList ->
-            itemsIndexed(addressesList) { index, addresses ->
-                addresses.let {
-                    val clickEvent = {
-                        scope.launch {
-                            state.scrollToItem(index)
-                        }
-                    }
-
-                    val modifier = Modifier.padding(
-                        start = 8.dp,
-                        top = if (index == 0) 8.dp else 4.dp,
-                        end = 8.dp,
-                        bottom = if (index == alarmList.lastIndex) 8.dp else 4.dp
-                    )
-                    AddressItem(addresses)
-                }
+    LazyColumn(
+        state = state,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+    ) {
+        itemsIndexed(addressesList) { index, addresses ->
+            addresses?.let {
+                AddressItem(addresses)
             }
         }
     }
 }
 
-class SampleAddressProvider: PreviewParameterProvider<Addresses> {
-    override val values = sequenceOf(
-        Addresses(
-            null,
-            20.toDouble(),
-            "englishAddress",
-            "jibunAddress",
-            "roadAddress",
-            36.toDouble(),
-            78.toDouble()
-        )
-    )
-}
-
 @Composable
-fun AddressItem(@PreviewParameter(SampleAddressProvider::class) addresses: Addresses) {
+fun AddressItem(addresses: Address) {
     Card(
         Modifier
             .fillMaxWidth()

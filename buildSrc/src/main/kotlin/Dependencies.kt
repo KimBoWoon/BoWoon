@@ -54,6 +54,7 @@ object Dependencies {
         const val roomKtx = "androidx.room:room-ktx:${Versions.Jetpack.room}"
         const val roomCompiler = "androidx.room:room-compiler:${Versions.Jetpack.room}"
         const val workManager = "androidx.work:work-runtime-ktx:${Versions.Jetpack.workManager}"
+        const val roomPaging = "androidx.room:room-paging:${Versions.Jetpack.room}"
     }
 
     object Layout {
@@ -106,6 +107,12 @@ object Dependencies {
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Compose.viewModel}"
         const val navigation = "androidx.navigation:navigation-compose:${Versions.Compose.navigation}"
         const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:${Versions.Compose.hiltNavigation}"
+        const val paging = "androidx.paging:paging-compose:${Versions.Compose.paging}"
+    }
+
+    object Accompanist {
+        const val webview =  "com.google.accompanist:accompanist-webview:${Versions.Accompanist.webview}"
+        const val pullToRefresh = "com.google.accompanist:accompanist-swiperefresh:${Versions.Accompanist.pullToRefresh}"
     }
 
     object Coroutine {

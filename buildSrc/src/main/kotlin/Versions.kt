@@ -73,6 +73,12 @@ object Versions {
         const val viewModel = "2.5.1"
         const val navigation = "2.5.3"
         const val hiltNavigation = "1.0.0"
+        const val paging = "1.0.0-alpha17"
+    }
+
+    object Accompanist {
+        const val webview = "0.28.0"
+        const val pullToRefresh = "0.28.0"
     }
 
     object Coroutine {
