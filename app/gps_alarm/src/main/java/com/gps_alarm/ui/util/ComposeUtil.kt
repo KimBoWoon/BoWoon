@@ -18,7 +18,7 @@ fun dpToSp(value: Dp) = with(LocalDensity.current) { value.toSp() }
 @Composable
 fun ShowSnackbar(
     message: String,
-    actionLabel: String
+    actionLabel: String = "OK"
 ) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val coroutineScope: CoroutineScope = rememberCoroutineScope()

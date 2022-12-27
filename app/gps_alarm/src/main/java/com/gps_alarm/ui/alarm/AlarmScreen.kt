@@ -1,9 +1,11 @@
 package com.gps_alarm.ui.alarm
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -39,9 +41,11 @@ fun AlarmCompose(
     onNavigate: NavHostController,
     viewModel: AlarmVM = hiltViewModel()
 ) {
+    val scaffoldState: ScaffoldState = rememberScaffoldState()
     var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
+        scaffoldState = scaffoldState,
         content = {
             val geocodeList = viewModel.pager.collectAsLazyPagingItems()
 
@@ -54,7 +58,7 @@ fun AlarmCompose(
                 })
 
             Box(modifier = Modifier.pullRefresh(pullRefreshState), contentAlignment = Alignment.TopCenter) {
-                AlarmContent(geocodeList)
+                AlarmContent(onNavigate, geocodeList)
                 PullRefreshIndicator(refreshing = isRefreshing, state = pullRefreshState)
             }
 
@@ -100,7 +104,10 @@ fun AlarmCompose(
 }
 
 @Composable
-fun AlarmContent(addressesList: LazyPagingItems<Address>) {
+fun AlarmContent(
+    onNavigate: NavHostController,
+    addressesList: LazyPagingItems<Address>
+) {
     val state = rememberLazyListState()
 
     LazyColumn(
@@ -111,20 +118,27 @@ fun AlarmContent(addressesList: LazyPagingItems<Address>) {
     ) {
         itemsIndexed(addressesList) { index, addresses ->
             addresses?.let {
-                AddressItem(addresses)
+                AddressItem(onNavigate, addresses)
             }
         }
     }
 }
 
 @Composable
-fun AddressItem(addresses: Address) {
+fun AddressItem(
+    onNavigate: NavHostController,
+    addresses: Address
+) {
+    var showSnackbar by remember { mutableStateOf(false) }
+
     Card(
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(start = 10.dp, end = 10.dp)
             .border(width = 2.dp, color = Color.Black)
+            .clickable { onNavigate.navigate("${Screen.AlarmDetail.route}/${addresses.id}") },
+        shape = RoundedCornerShape(8.dp)
     ) {
         Column() {
             Text(text = addresses.roadAddress ?: "")

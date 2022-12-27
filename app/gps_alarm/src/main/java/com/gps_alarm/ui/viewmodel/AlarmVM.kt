@@ -1,5 +1,6 @@
 package com.gps_alarm.ui.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
@@ -12,10 +13,12 @@ import com.domain.gpsAlarm.dto.Geocode
 import com.domain.gpsAlarm.usecase.MapsApiUseCase
 import com.gps_alarm.base.BaseVM
 import com.gps_alarm.paging.room.AppDatabase
+import com.gps_alarm.paging.room.entity.Address
 import com.gps_alarm.paging.source.GeocodeSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -25,6 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AlarmVM @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val mapsApiUseCase: MapsApiUseCase,
     private val localDatastore: LocalDatastore,
     private val database: AppDatabase
@@ -120,4 +124,6 @@ class AlarmVM @Inject constructor(
             addresses.x,
             addresses.y
         )
+
+    suspend fun getAddress(addressId: Int): Address = addressDao.getAddress(addressId)
 }

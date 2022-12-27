@@ -6,6 +6,7 @@ plugins {
     id(Dependencies.BuildPlugins.application)
     kotlin(Dependencies.BuildPlugins.android)
     kotlin(Dependencies.BuildPlugins.kapt)
+    id(Dependencies.BuildPlugins.parcelize)
     id(Dependencies.BuildPlugins.hilt)
     id(Dependencies.BuildPlugins.googleService)
     id(Dependencies.BuildPlugins.firebasePerformance)

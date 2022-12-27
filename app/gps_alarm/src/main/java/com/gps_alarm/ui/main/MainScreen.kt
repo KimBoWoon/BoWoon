@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,11 +25,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.gps_alarm.ui.Screen
+import com.gps_alarm.ui.alarm.AlarmDetailScreen
 import com.gps_alarm.ui.alarm.AlarmScreen
 import com.gps_alarm.ui.alarm.CreateAlarmScreen
 import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.map.MapScreen
 import com.gps_alarm.ui.setting.SettingScreen
+import com.gps_alarm.ui.util.alarmDeepLink
+import com.gps_alarm.ui.util.alarmDetailArgument
 import com.gps_alarm.ui.util.dpToSp
 import util.Log
 
@@ -97,6 +97,14 @@ private fun InitBottomNavigation() {
             composable(Screen.Maps.route) { MapScreen(navController) }
             composable(Screen.Setting.route) { SettingScreen(navController) }
             composable(Screen.CreateAlarm.route) { CreateAlarmScreen(navController) }
+            composable(
+                route = "${Screen.AlarmDetail.route}/{addressId}",
+                arguments = alarmDetailArgument,
+                deepLinks = alarmDeepLink
+            ) {
+                val args = it.arguments?.getInt("addressId") ?: -1
+                AlarmDetailScreen(navController, args)
+            }
         }
     }
 }

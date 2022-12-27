@@ -1,9 +1,10 @@
 package util
 
 import android.util.Log
+import com.data.BuildConfig
 
 object Log {
-    private const val showLog = true
+    private val showLog = BuildConfig.DEBUG
 
     fun i(tag: String, msg: String) {
         if (showLog) Log.i(tag, msg)
