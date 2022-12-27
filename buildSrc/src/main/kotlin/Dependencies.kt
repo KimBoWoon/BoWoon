@@ -108,6 +108,8 @@ object Dependencies {
         const val navigation = "androidx.navigation:navigation-compose:${Versions.Compose.navigation}"
         const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:${Versions.Compose.hiltNavigation}"
         const val paging = "androidx.paging:paging-compose:${Versions.Compose.paging}"
+        const val viewBinding = "androidx.compose.ui:ui-viewbinding:${Versions.Compose.viewBinding}"
+        const val iconExtended = "androidx.compose.material:material-icons-extended:${Versions.Compose.iconExtended}"
     }
 
     object Accompanist {

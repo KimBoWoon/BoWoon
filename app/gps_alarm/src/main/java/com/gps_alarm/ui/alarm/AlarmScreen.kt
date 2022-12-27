@@ -24,11 +24,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import com.gps_alarm.paging.room.entity.Address
 import com.gps_alarm.ui.Screen
-import com.gps_alarm.ui.fragments.AlarmVM
+import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.theme.Purple700
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import util.Log
+import com.gps_alarm.ui.viewmodel.AlarmVM
 
 @Composable
 fun AlarmScreen(onNavigate: NavHostController) {
@@ -41,6 +39,8 @@ fun AlarmCompose(
     onNavigate: NavHostController,
     viewModel: AlarmVM = hiltViewModel()
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         content = {
             val geocodeList = viewModel.pager.collectAsLazyPagingItems()
@@ -66,17 +66,33 @@ fun AlarmCompose(
 //                    else -> { isRefreshing = false }
 //                }
                 when (geocodeList.loadState.refresh) {
-                    is LoadState.Loading -> { isRefreshing = true }
+                    is LoadState.Loading -> {  }
                     is LoadState.NotLoading -> { isRefreshing = false }
-                    is LoadState.Error -> { isRefreshing = false }
+                    is LoadState.Error -> {
+                        showDialog = true
+                        isRefreshing = false
+                    }
                     else -> { isRefreshing = false }
                 }
                 when (geocodeList.loadState.append) {
-                    is LoadState.Loading -> { isRefreshing = true }
+                    is LoadState.Loading -> {  }
                     is LoadState.NotLoading -> { isRefreshing = false }
-                    is LoadState.Error -> { isRefreshing = false }
+                    is LoadState.Error -> {
+                        isRefreshing = false
+                        showDialog = true
+                    }
                     else -> { isRefreshing = false }
                 }
+            }
+
+            if (showDialog) {
+                GpsAlarmDialog(
+                    "dialog",
+                    "재시도",
+                    { geocodeList.refresh() },
+                    "취소",
+                    {}
+                )
             }
         },
         floatingActionButton = { floatingActionButtons(onNavigate) }
@@ -126,28 +142,6 @@ fun floatingActionButtons(onNavigate: NavHostController) {
         contentColor = Color.White
     ) {
         Icon(Icons.Filled.Add, "add alarm")
-    }
-}
-
-@Composable
-fun ShowSnackbar(
-    message: String,
-    actionLabel: String
-) {
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
-    val coroutineScope: CoroutineScope = rememberCoroutineScope()
-
-    Scaffold(scaffoldState = scaffoldState) {
-        coroutineScope.launch {
-            val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-                message = message,
-                actionLabel = actionLabel
-            )
-            when (snackbarResult) {
-                SnackbarResult.Dismissed -> Log.d("SnackbarResult Dismissed")
-                SnackbarResult.ActionPerformed -> Log.d("SnackbarResult ActionPerformed")
-            }
-        }
     }
 }
 

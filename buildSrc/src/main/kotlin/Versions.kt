@@ -74,6 +74,8 @@ object Versions {
         const val navigation = "2.5.3"
         const val hiltNavigation = "1.0.0"
         const val paging = "1.0.0-alpha17"
+        const val viewBinding = "1.3.0"
+        const val iconExtended = "1.3.1"
     }
 
     object Accompanist {

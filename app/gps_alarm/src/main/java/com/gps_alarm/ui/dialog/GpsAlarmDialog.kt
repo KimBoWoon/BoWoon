@@ -1,63 +1,83 @@
 package com.gps_alarm.ui.dialog
 
-import android.os.Bundle
-import android.view.View
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.bowoon.android.gps_alarm.R
-import com.bowoon.android.gps_alarm.databinding.DialogConfirmDismissBinding
-import com.gps_alarm.base.BaseDialog
-import kotlinx.coroutines.launch
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 
-class GpsAlarmDialog(
-    private val message: String,
-    private val confirmText: String,
-    private val confirmCallback: (() -> Unit)? = null,
-    private val dismissText: String? = null,
-    private val dismissCallback: (() -> Unit)? = null
-) : BaseDialog<DialogConfirmDismissBinding>(
-    R.layout.dialog_confirm_dismiss, true, false
+@Composable
+fun GpsAlarmDialog(
+    message: String,
+    confirmText: String,
+    confirmCallback: (() -> Unit)? = null,
+    dismissText: String? = null,
+    dismissCallback: (() -> Unit)? = null
 ) {
-    private val viewModel by viewModels<GpsAlarmDialogVM>()
+    var showDialog by remember { mutableStateOf(true) }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding?.apply {
-            lifecycleOwner = this@GpsAlarmDialog
-            vm = viewModel
-        }
-        lifecycle.addObserver(viewModel)
-
-        viewModel.init(message, confirmText, dismissText)
-
-        initFlow()
-    }
-
-    override fun onBackPressed(): Boolean {
-        dismissAllowingStateLoss()
-        return true
-    }
-
-    private fun initFlow() {
-        lifecycleScope.launch {
-            viewModel.choose.collect { choose ->
-                when (choose) {
-                    true -> {
-                        confirmCallback?.invoke()
-                        dismissAllowingStateLoss()
+    if (showDialog) {
+        Dialog(
+            onDismissRequest = { showDialog = true },
+            properties = DialogProperties(false, false)
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                shape = RoundedCornerShape(8.dp, 8.dp, 8.dp, 8.dp),
+            ) {
+                Column {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentSize()
+                                .padding(vertical = 20.dp, horizontal = 10.dp),
+                            text = message
+                        )
                     }
-                    false -> {
-                        dismissCallback?.invoke()
-                        dismissAllowingStateLoss()
+
+                    Box {
+                        Row {
+                            if (!dismissText.isNullOrEmpty()) {
+                                Button(
+                                    shape = RoundedCornerShape(0.dp, 0.dp, 0.dp, 8.dp),
+                                    modifier = Modifier.weight(1f).height(50.dp),
+                                    onClick = {
+                                        dismissCallback?.invoke()
+                                        showDialog = false
+                                    }
+                                ) {
+                                    Text(text = dismissText)
+                                }
+                            }
+                            Button(
+                                shape = RoundedCornerShape(0.dp, 0.dp, 8.dp, if (!dismissText.isNullOrEmpty()) 0.dp else 8.dp),
+                                modifier = Modifier.weight(1f).height(50.dp),
+                                onClick = {
+                                    confirmCallback?.invoke()
+                                    showDialog = false
+                                }
+                            ) {
+                                Text(text = confirmText)
+                            }
+                        }
                     }
-                    else -> {}
                 }
             }
         }
     }
+}
 
-    companion object {
-        const val TAG = "CustomDialog"
-    }
+@Preview
+@Composable
+fun DialogPreview() {
+    GpsAlarmDialog(message = "", confirmText = "ㅁㄴㅇㄹ", dismissText = "")
 }

@@ -153,12 +153,12 @@ kapt {
 }
 
 lateinit var prop: Properties
-fun getProp(propertyKey: String): String {
-    if (!this::prop.isInitialized) {
-        prop = Properties().apply {
-            load(FileInputStream(File("./sign", "local.properties")))
+fun getProp(propertyKey: String): String =
+    runCatching {
+        if (!this::prop.isInitialized) {
+            prop = Properties().apply {
+                load(FileInputStream(File("./sign", "local.properties")))
+            }
         }
-    }
-
-    return prop.getProperty(propertyKey)
-}
+        prop.getProperty(propertyKey)
+    }.getOrDefault("")

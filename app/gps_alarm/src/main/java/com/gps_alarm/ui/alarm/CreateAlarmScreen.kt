@@ -18,7 +18,7 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.web.*
 import com.gps_alarm.javascript.GpsAlarmInterface
 import com.gps_alarm.javascript.GpsAlarmInterfaceImpl
-import com.gps_alarm.ui.fragments.AlarmVM
+import com.gps_alarm.ui.viewmodel.AlarmVM
 import util.Log
 
 @Composable
@@ -50,7 +50,10 @@ fun AddressDialog(dismissDialogCallback: () -> Unit) {
 
 @Composable
 fun FindAddressWebView(dismissDialogCallback: () -> Unit, viewModel: AlarmVM = hiltViewModel()) {
-    val url by remember { mutableStateOf("http://10.0.2.2/address.html") }
+    val url by remember { mutableStateOf(
+//        "http://10.0.2.2/address.html"
+    "http://10.102.4.207/address.html"
+    )}
     val webViewState = rememberWebViewState(
         url = url,
         additionalHttpHeaders = emptyMap()

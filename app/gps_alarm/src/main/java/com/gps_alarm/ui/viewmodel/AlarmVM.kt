@@ -1,4 +1,4 @@
-package com.gps_alarm.ui.fragments
+package com.gps_alarm.ui.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
