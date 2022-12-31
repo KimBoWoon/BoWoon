@@ -13,7 +13,7 @@ fun List<com.data.gpsAlarm.dto.Addresses>.mapper(): List<Addresses> =
     this.map { it.mapper() }
 
 fun com.data.gpsAlarm.dto.Addresses.mapper(): Addresses =
-    Addresses(addressElements?.mapper(), distance, englishAddress, jibunAddress, roadAddress, x, y)
+    Addresses(addressElements?.mapper(), distance, englishAddress, jibunAddress, roadAddress, longitude, latitude)
 
 @JvmName("addressElementMapper")
 fun List<com.data.gpsAlarm.dto.AddressElement>.mapper(): List<AddressElement> =

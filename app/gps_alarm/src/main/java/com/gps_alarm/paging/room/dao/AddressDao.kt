@@ -22,5 +22,5 @@ interface AddressDao {
     suspend fun clearAll()
 
     @Query("SELECT * FROM address WHERE id = :addressId")
-    suspend fun getAddress(addressId: Int): Address
+    suspend fun getAddress(addressId: Int): com.gps_alarm.data.Address
 }

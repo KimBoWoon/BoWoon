@@ -6,15 +6,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.data.gpsAlarm.dto.AddressElement
 import com.data.gpsAlarm.local.LocalDatastore
-import com.data.gpsAlarm.mapper.mapper
 import com.domain.gpsAlarm.dto.Addresses
 import com.domain.gpsAlarm.dto.Geocode
 import com.domain.gpsAlarm.usecase.MapsApiUseCase
 import com.gps_alarm.base.BaseVM
 import com.gps_alarm.paging.room.AppDatabase
-import com.gps_alarm.paging.room.entity.Address
 import com.gps_alarm.paging.source.GeocodeSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +31,8 @@ class AlarmVM @Inject constructor(
     private val localDatastore: LocalDatastore,
     private val database: AppDatabase
 ) : BaseVM() {
-    val geocodeList = MutableStateFlow<DataStatus<List<Addresses>>>(DataStatus.Loading)
+    private val json = Json { ignoreUnknownKeys = true }
+    val geocodeList = MutableStateFlow<DataStatus<List<com.gps_alarm.data.Address>>>(DataStatus.Loading)
     val addressDao = database.addressDao()
     val geocode = mutableStateOf<Geocode?>(null)
 
@@ -54,37 +52,37 @@ class AlarmVM @Inject constructor(
         viewModelScope.launch {
             coroutineIOCallbackTo(
                 block = { mapsApiUseCase.getGeocode(address) },
-                success = {
-                    geocode.value = it
-                },
+                success = { geocode.value = it },
                 error = { e -> Log.printStackTrace(e) }
             )
         }
     }
 
-    fun setDataStore(addresses: List<Addresses>?) {
+    fun setDataStore(alarmTitle: String, addresses: List<Addresses>?) {
         viewModelScope.launch {
             addresses?.firstOrNull()?.let { addresses ->
                 localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
                     addressesSet.find {
-                        val data = Json.decodeFromString<com.data.gpsAlarm.dto.Addresses>(it)
-                        data.x == addresses.x && data.y == addresses.y
+                        val data = json.decodeFromString<com.gps_alarm.data.Address>(it)
+                        data.longitude == addresses.longitude && data.latitude == addresses.latitude
                     }?.let {
                         val result = mutableSetOf<String>()
-                        result.addAll(addressesSet.map { it })
-                        result.add(it)
+                        val decodeString = json.decodeFromString<Addresses>(it)
+                        val data = json.encodeToString(dataMapper(alarmTitle, decodeString))
+                        result.addAll(addressesSet)
+                        result.add(data)
                         localDatastore.set(LocalDatastore.Keys.alarmList, result)
                     } ?: run {
-                        val data = dataMapper(addresses)
+                        val data = dataMapper(alarmTitle, addresses)
                         val result = mutableSetOf<String>()
-                        result.addAll(addressesSet.map { it })
-                        result.add(Json.encodeToString(data))
+                        result.addAll(addressesSet)
+                        result.add(json.encodeToString(data))
                         localDatastore.set(LocalDatastore.Keys.alarmList, result)
                     }
                 } ?: run {
-                    val data = dataMapper(addresses)
+                    val data = dataMapper(alarmTitle, addresses)
                     val result = mutableSetOf<String>()
-                    result.add(Json.encodeToString(data))
+                    result.add(json.encodeToString(data))
                     localDatastore.set(LocalDatastore.Keys.alarmList, result)
                 }
             }
@@ -95,10 +93,10 @@ class AlarmVM @Inject constructor(
         geocodeList.value = DataStatus.Loading
         viewModelScope.launch {
             localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
-                val result = mutableListOf<Addresses>()
+                val result = mutableListOf<com.gps_alarm.data.Address>()
                 addressesSet.forEach {
-                    val address = Json.decodeFromString<com.data.gpsAlarm.dto.Addresses>(it)
-                    result.add(address.mapper())
+                    val address = json.decodeFromString<com.gps_alarm.data.Address>(it)
+                    result.add(address)
                 }
                 geocodeList.value = DataStatus.Success(result)
             } ?: run {
@@ -107,23 +105,16 @@ class AlarmVM @Inject constructor(
         }
     }
 
-    private fun dataMapper(addresses: Addresses): com.data.gpsAlarm.dto.Addresses =
-        com.data.gpsAlarm.dto.Addresses(
-            addresses.addressElements?.map {
-                AddressElement(
-                    it.code,
-                    it.longName,
-                    it.shortName,
-                    it.types
-                )
-            },
+    private fun dataMapper(alarmTitle: String, addresses: Addresses): com.gps_alarm.data.Address =
+        com.gps_alarm.data.Address(
+            alarmTitle,
             addresses.distance,
             addresses.englishAddress,
             addresses.jibunAddress,
             addresses.roadAddress,
-            addresses.x,
-            addresses.y
+            addresses.longitude,
+            addresses.latitude
         )
 
-    suspend fun getAddress(addressId: Int): Address = addressDao.getAddress(addressId)
+    suspend fun getAddress(addressId: Int): com.gps_alarm.data.Address = addressDao.getAddress(addressId)
 }

@@ -54,7 +54,7 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
                         .padding(start = 10.dp, end = 5.dp),
                     onClick = {
                         if (!geocode?.addresses.isNullOrEmpty() && alarmTitle.isNotEmpty()) {
-                            viewModel.setDataStore(geocode?.addresses)
+                            viewModel.setDataStore(alarmTitle, geocode?.addresses)
                             onNavigate.navigateUp()
                         } else {
                             showSnackbar = true

@@ -31,7 +31,6 @@ import com.gps_alarm.ui.alarm.CreateAlarmScreen
 import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.map.MapScreen
 import com.gps_alarm.ui.setting.SettingScreen
-import com.gps_alarm.ui.splash.SplashScreen
 import com.gps_alarm.ui.util.alarmDeepLink
 import com.gps_alarm.ui.util.alarmDetailArgument
 import com.gps_alarm.ui.util.dpToSp

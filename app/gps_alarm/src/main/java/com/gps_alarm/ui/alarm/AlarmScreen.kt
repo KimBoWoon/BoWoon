@@ -69,7 +69,6 @@ fun AlarmCompose(
                     geocodeList.refresh()
                 })
 
-//            geocodeList.refresh()
             Box(modifier = Modifier.pullRefresh(pullRefreshState), contentAlignment = Alignment.TopCenter) {
                 AlarmContent(onNavigate, geocodeList)
                 PullRefreshIndicator(refreshing = isRefreshing, state = pullRefreshState)
@@ -112,7 +111,7 @@ fun AlarmCompose(
                 )
             }
         },
-        floatingActionButton = { floatingActionButtons(onNavigate) }
+        floatingActionButton = { FloatingActionButtons(onNavigate) }
     )
 }
 
@@ -161,7 +160,7 @@ fun AddressItem(
 
 
 @Composable
-fun floatingActionButtons(onNavigate: NavHostController) {
+fun FloatingActionButtons(onNavigate: NavHostController) {
     FloatingActionButton(
         onClick = { onNavigate.navigate(NavigationScreen.CreateAlarm.route) },
         backgroundColor = Purple700,

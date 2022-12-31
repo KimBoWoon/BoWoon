@@ -35,9 +35,9 @@ data class Addresses(
     @SerialName("roadAddress")
     val roadAddress: String? = null, // 경기도 성남시 분당구 불정로 6 그린팩토리
     @SerialName("x")
-    val x: Double? = null, // 127.10522081658463
+    val longitude: Double? = null, // 127.10522081658463
     @SerialName("y")
-    val y: Double? = null // 37.35951219616309
+    val latitude: Double? = null // 37.35951219616309
 ) : Parcelable
 
 @Keep

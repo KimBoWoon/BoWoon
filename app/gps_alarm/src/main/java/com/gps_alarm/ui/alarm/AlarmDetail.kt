@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.gps_alarm.paging.room.entity.Address
+import com.gps_alarm.data.Address
 import com.gps_alarm.ui.util.dpToSp
 import com.gps_alarm.ui.viewmodel.AlarmVM
 import kotlinx.coroutines.launch
@@ -20,15 +20,23 @@ import kotlinx.coroutines.withContext
 import util.Log
 
 @Composable
-fun AlarmDetailScreen(onNavigate: NavHostController, addressId: Int, viewModel: AlarmVM = hiltViewModel()) {
+fun AlarmDetailScreen(
+    onNavigate: NavHostController,
+    addressId: Int,
+    viewModel: AlarmVM = hiltViewModel()
+) {
     val scope = rememberCoroutineScope()
     var address by remember { mutableStateOf<Address?>(null) }
 
     if (addressId != -1) {
-        scope.launch {
-            address = withContext(scope.coroutineContext) { viewModel.getAddress(addressId) }
-            Log.d(address.toString())
-        }
+        LaunchedEffect(
+            key1 = scope,
+            block = {
+                scope.launch {
+                    address = withContext(scope.coroutineContext) { viewModel.getAddress(addressId) }
+                    Log.d(address.toString())
+                }
+            })
     }
 
     AlarmDetailCompose(address)

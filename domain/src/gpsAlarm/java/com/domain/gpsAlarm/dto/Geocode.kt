@@ -21,8 +21,8 @@ data class Addresses(
     val englishAddress: String? = null, // 6, Buljeong-ro, Bundang-gu, Seongnam-si, Gyeonggi-do, Republic of Korea
     val jibunAddress: String? = null, // 경기도 성남시 분당구 정자동 178-1 그린팩토리
     val roadAddress: String? = null, // 경기도 성남시 분당구 불정로 6 그린팩토리
-    val x: Double? = null, // 127.10522081658463
-    val y: Double? = null // 37.35951219616309
+    val longitude: Double? = null, // 127.10522081658463
+    val latitude: Double? = null // 37.35951219616309
 ) : Parcelable
 
 @Keep

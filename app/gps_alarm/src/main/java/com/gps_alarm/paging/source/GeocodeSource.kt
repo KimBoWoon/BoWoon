@@ -17,6 +17,7 @@ class GeocodeSource @Inject constructor(
     private val database: AppDatabase
 ) : RemoteMediator<Int, Address>() {
     private val addressDao = database.addressDao()
+    private val json = Json { ignoreUnknownKeys = true }
 
     override suspend fun load(
         loadType: LoadType,
@@ -24,14 +25,14 @@ class GeocodeSource @Inject constructor(
     ): MediatorResult {
         return try {
             val response = localDatastore.get(LocalDatastore.Keys.alarmList)?.map { address ->
-                val decodeAddress = Json.decodeFromString<com.data.gpsAlarm.dto.Addresses>(address)
+                val decodeAddress = json.decodeFromString<com.data.gpsAlarm.dto.Addresses>(address)
                 Address(
                     distance = decodeAddress.distance,
                     englishAddress = decodeAddress.englishAddress,
                     jibunAddress = decodeAddress.jibunAddress,
                     roadAddress = decodeAddress.roadAddress,
-                    x = decodeAddress.x,
-                    y = decodeAddress.y
+                    longitude = decodeAddress.longitude,
+                    latitude = decodeAddress.latitude
                 )
             } ?: run {
                 emptyList()
