@@ -26,12 +26,19 @@ android {
 
         testInstrumentationRunner = Config.Application.testInstrumentationRunner
 
-        buildConfigField("String", Config.GpsAlarm.naverMapsClientName, getProp(Config.GpsAlarm.naverMapsClientKey))
+        buildConfigField(
+            "String",
+            Config.GpsAlarm.naverMapsClientName,
+            getProp(Config.GpsAlarm.naverMapsClientKey)
+        )
     }
 
     val format = SimpleDateFormat(Config.Application.dateFormat)
     val buildTime = format.format(System.currentTimeMillis())
-    setProperty("archivesBaseName", "${Config.Application.appBundleName}${Config.GpsAlarm.versionName}-$buildTime")
+    setProperty(
+        "archivesBaseName",
+        "${Config.Application.appBundleName}${Config.GpsAlarm.versionName}-$buildTime"
+    )
 
     signingConfigs {
         create(Config.Sign.Release.name) {
@@ -51,7 +58,10 @@ android {
         getByName(Config.BuildType.release) {
             isMinifyEnabled = true
             isDebuggable = false
-            proguardFiles(getDefaultProguardFile(Config.Application.defaultProguardFile), Config.Application.proguardFile)
+            proguardFiles(
+                getDefaultProguardFile(Config.Application.defaultProguardFile),
+                Config.Application.proguardFile
+            )
             signingConfig = signingConfigs.getByName(Config.Sign.Release.name)
         }
         getByName(Config.BuildType.debug) {
@@ -119,19 +129,16 @@ dependencies {
         Dependencies.Compose.paging,
         Dependencies.Compose.viewBinding,
         Dependencies.Compose.iconExtended,
+        Dependencies.Compose.lottie,
         Dependencies.Accompanist.webview,
         Dependencies.Layout.constraint,
         Dependencies.Jetpack.core,
         Dependencies.Jetpack.room,
         Dependencies.Jetpack.roomKtx,
         Dependencies.Jetpack.roomPaging,
-        Dependencies.Jetpack.appcompat,
-        Dependencies.Jetpack.liveData,
-        Dependencies.Jetpack.activity,
-        Dependencies.Jetpack.fragment,
         Dependencies.Jetpack.datastore,
         Dependencies.Jetpack.workManager,
-        Dependencies.Google.material,
+        Dependencies.Jetpack.splash,
         Dependencies.Google.location,
         Dependencies.Hilt.hiltAndroid,
         Dependencies.Hilt.hiltNavigation,

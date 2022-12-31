@@ -24,13 +24,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.gps_alarm.ui.Screen
+import com.gps_alarm.ui.NavigationScreen
 import com.gps_alarm.ui.alarm.AlarmDetailScreen
 import com.gps_alarm.ui.alarm.AlarmScreen
 import com.gps_alarm.ui.alarm.CreateAlarmScreen
 import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.map.MapScreen
 import com.gps_alarm.ui.setting.SettingScreen
+import com.gps_alarm.ui.splash.SplashScreen
 import com.gps_alarm.ui.util.alarmDeepLink
 import com.gps_alarm.ui.util.alarmDetailArgument
 import com.gps_alarm.ui.util.dpToSp
@@ -41,7 +42,7 @@ fun GpsMainCompose() {
     CheckPermission()
 
     Scaffold(
-        topBar = { GpsAlarmActionBar() },
+//        topBar = { GpsAlarmActionBar() },
         content = { InitBottomNavigation() }
     )
 }
@@ -63,9 +64,9 @@ fun GpsAlarmActionBar() {
 private fun InitBottomNavigation() {
     val navController = rememberNavController()
     val items = listOf(
-        Screen.Alarm,
-        Screen.Maps,
-        Screen.Setting
+        NavigationScreen.Alarm,
+        NavigationScreen.Maps,
+        NavigationScreen.Setting
     )
 
     Scaffold(
@@ -92,13 +93,13 @@ private fun InitBottomNavigation() {
             }
         }
     ) { innerPadding ->
-        NavHost(navController, startDestination = Screen.Alarm.route, Modifier.padding(innerPadding)) {
-            composable(Screen.Alarm.route) { AlarmScreen(navController) }
-            composable(Screen.Maps.route) { MapScreen(navController) }
-            composable(Screen.Setting.route) { SettingScreen(navController) }
-            composable(Screen.CreateAlarm.route) { CreateAlarmScreen(navController) }
+        NavHost(navController, startDestination = NavigationScreen.Alarm.route, Modifier.padding(innerPadding)) {
+            composable(NavigationScreen.Alarm.route) { AlarmScreen(navController) }
+            composable(NavigationScreen.Maps.route) { MapScreen(navController) }
+            composable(NavigationScreen.Setting.route) { SettingScreen(navController) }
+            composable(NavigationScreen.CreateAlarm.route) { CreateAlarmScreen(navController) }
             composable(
-                route = "${Screen.AlarmDetail.route}/{addressId}",
+                route = "${NavigationScreen.AlarmDetail.route}/{addressId}",
                 arguments = alarmDetailArgument,
                 deepLinks = alarmDeepLink
             ) {

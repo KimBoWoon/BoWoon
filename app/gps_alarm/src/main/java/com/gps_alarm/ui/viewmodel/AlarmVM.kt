@@ -1,5 +1,6 @@
 package com.gps_alarm.ui.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
@@ -18,11 +19,11 @@ import com.gps_alarm.paging.source.GeocodeSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import util.DataStatus
+import util.Log
 import util.coroutineIOCallbackTo
 import javax.inject.Inject
 
@@ -34,12 +35,12 @@ class AlarmVM @Inject constructor(
     private val database: AppDatabase
 ) : BaseVM() {
     val geocodeList = MutableStateFlow<DataStatus<List<Addresses>>>(DataStatus.Loading)
-    val geocode = MutableStateFlow<DataStatus<Geocode?>>(DataStatus.Loading)
     val addressDao = database.addressDao()
+    val geocode = mutableStateOf<Geocode?>(null)
 
     @ExperimentalPagingApi
     val pager = Pager(
-        config = PagingConfig(pageSize = 50),
+        config = PagingConfig(pageSize = 20, initialLoadSize = 20, prefetchDistance = 5),
         remoteMediator = GeocodeSource(localDatastore, database)
     ) {
         addressDao.pagingSource()
@@ -54,10 +55,9 @@ class AlarmVM @Inject constructor(
             coroutineIOCallbackTo(
                 block = { mapsApiUseCase.getGeocode(address) },
                 success = {
-                    geocode.value = DataStatus.Success(it)
-                    setDataStore(it?.addresses)
+                    geocode.value = it
                 },
-                error = { e -> geocode.value = DataStatus.Failure(e) }
+                error = { e -> Log.printStackTrace(e) }
             )
         }
     }

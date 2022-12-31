@@ -12,21 +12,14 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-
-        <item name="android:textViewStyle">@style/BaseTextView</item>
     </style>
 
-    <style name="BaseTextView">
-        <item name="android:textSize">20dp</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabSelectedTextColor">@color/black</item>
-        <item name="tabTextAppearance">@style/TabTextAppearance</item>
-    </style>
-
-    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="android:textColor">@color/white</item>
+    <style name="Theme.GpsAlarm.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.BoWoon</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

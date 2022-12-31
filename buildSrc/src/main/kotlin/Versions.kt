@@ -26,6 +26,7 @@ object Versions {
         const val paging = "3.1.1"
         const val room = "2.4.3"
         const val workManager = "2.7.1"
+        const val splash = "1.0.0"
     }
 
     object Gradle {
@@ -76,6 +77,7 @@ object Versions {
         const val paging = "1.0.0-alpha17"
         const val viewBinding = "1.3.0"
         const val iconExtended = "1.3.1"
+        const val lottie = "5.2.0"
     }
 
     object Accompanist {

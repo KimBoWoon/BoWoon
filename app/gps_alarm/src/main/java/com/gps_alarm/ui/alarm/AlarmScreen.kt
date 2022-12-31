@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -25,9 +26,10 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import com.gps_alarm.paging.room.entity.Address
-import com.gps_alarm.ui.Screen
+import com.gps_alarm.ui.NavigationScreen
 import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.theme.Purple700
+import com.gps_alarm.ui.util.dpToSp
 import com.gps_alarm.ui.viewmodel.AlarmVM
 
 @Composable
@@ -46,9 +48,19 @@ fun AlarmCompose(
 
     Scaffold(
         scaffoldState = scaffoldState,
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "알람 리스트", color = Color.White, fontSize = dpToSp(20.dp)) },
+                backgroundColor = MaterialTheme.colors.primary,
+                contentColor = Color.White,
+                elevation = 2.dp,
+                modifier = Modifier
+                    .wrapContentHeight(Alignment.Top)
+                    .fillMaxWidth()
+            )
+        },
         content = {
             val geocodeList = viewModel.pager.collectAsLazyPagingItems()
-
             var isRefreshing by remember { mutableStateOf(false) }
             val pullRefreshState = rememberPullRefreshState(
                 refreshing = isRefreshing,
@@ -57,6 +69,7 @@ fun AlarmCompose(
                     geocodeList.refresh()
                 })
 
+//            geocodeList.refresh()
             Box(modifier = Modifier.pullRefresh(pullRefreshState), contentAlignment = Alignment.TopCenter) {
                 AlarmContent(onNavigate, geocodeList)
                 PullRefreshIndicator(refreshing = isRefreshing, state = pullRefreshState)
@@ -129,20 +142,19 @@ fun AddressItem(
     onNavigate: NavHostController,
     addresses: Address
 ) {
-    var showSnackbar by remember { mutableStateOf(false) }
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(start = 10.dp, end = 10.dp)
-            .border(width = 2.dp, color = Color.Black)
-            .clickable { onNavigate.navigate("${Screen.AlarmDetail.route}/${addresses.id}") },
-        shape = RoundedCornerShape(8.dp)
+            .padding(start = 10.dp, end = 10.dp, top = 10.dp)
+            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(8.dp))
+            .clickable { onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${addresses.id}") },
     ) {
-        Column() {
-            Text(text = addresses.roadAddress ?: "")
-            Text(text = addresses.jibunAddress ?: "")
+        Column(
+            modifier = Modifier.padding(5.dp)
+        ) {
+            Text(text = addresses.roadAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = addresses.jibunAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }
@@ -151,7 +163,7 @@ fun AddressItem(
 @Composable
 fun floatingActionButtons(onNavigate: NavHostController) {
     FloatingActionButton(
-        onClick = { onNavigate.navigate(Screen.CreateAlarm.route) },
+        onClick = { onNavigate.navigate(NavigationScreen.CreateAlarm.route) },
         backgroundColor = Purple700,
         contentColor = Color.White
     ) {

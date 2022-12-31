@@ -55,6 +55,7 @@ object Dependencies {
         const val roomCompiler = "androidx.room:room-compiler:${Versions.Jetpack.room}"
         const val workManager = "androidx.work:work-runtime-ktx:${Versions.Jetpack.workManager}"
         const val roomPaging = "androidx.room:room-paging:${Versions.Jetpack.room}"
+        const val splash = "androidx.core:core-splashscreen:${Versions.Jetpack.splash}"
     }
 
     object Layout {
@@ -110,6 +111,7 @@ object Dependencies {
         const val paging = "androidx.paging:paging-compose:${Versions.Compose.paging}"
         const val viewBinding = "androidx.compose.ui:ui-viewbinding:${Versions.Compose.viewBinding}"
         const val iconExtended = "androidx.compose.material:material-icons-extended:${Versions.Compose.iconExtended}"
+        const val lottie = "com.airbnb.android:lottie-compose:${Versions.Compose.lottie}"
     }
 
     object Accompanist {

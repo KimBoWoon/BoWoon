@@ -10,12 +10,14 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BoWoon"
+        android:theme="@style/Theme.GpsAlarm.Splash"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.gps_alarm.ui.activities.MainActivity"
-            android:exported="true">
+            android:name="com.gps_alarm.ui.activities.GpsAlarmActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,9 +25,13 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="gps_alarm" android:host="gps_alarm" />
+
+                <data
+                    android:host="gps_alarm"
+                    android:scheme="gps_alarm" />
             </intent-filter>
 
             <meta-data

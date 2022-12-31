@@ -1,9 +1,7 @@
 package com.gps_alarm.ui.util
 
-import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarResult
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalDensity
@@ -17,21 +15,26 @@ fun dpToSp(value: Dp) = with(LocalDensity.current) { value.toSp() }
 
 @Composable
 fun ShowSnackbar(
+    scaffoldState: ScaffoldState,
     message: String,
-    actionLabel: String = "OK"
+    actionLabel: String = "OK",
+    dismissSnackbarCallback: (() -> Unit)? = null,
 ) {
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
-    Scaffold(scaffoldState = scaffoldState) {
-        coroutineScope.launch {
-            val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-                message = message,
-                actionLabel = actionLabel
-            )
-            when (snackbarResult) {
-                SnackbarResult.Dismissed -> Log.d("SnackbarResult Dismissed")
-                SnackbarResult.ActionPerformed -> Log.d("SnackbarResult ActionPerformed")
+    coroutineScope.launch {
+        val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+            message = message,
+            actionLabel = actionLabel
+        )
+        when (snackbarResult) {
+            SnackbarResult.Dismissed -> {
+                Log.d("SnackbarResult Dismissed")
+                dismissSnackbarCallback?.invoke()
+            }
+            SnackbarResult.ActionPerformed -> {
+                Log.d("SnackbarResult ActionPerformed")
+                dismissSnackbarCallback?.invoke()
             }
         }
     }
