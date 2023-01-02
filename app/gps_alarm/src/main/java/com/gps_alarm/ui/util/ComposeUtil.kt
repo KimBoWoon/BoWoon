@@ -1,41 +1,40 @@
 package com.gps_alarm.ui.util
 
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SnackbarResult
+import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import util.Log
 
 @Composable
 fun dpToSp(value: Dp) = with(LocalDensity.current) { value.toSp() }
 
 @Composable
 fun ShowSnackbar(
-    scaffoldState: ScaffoldState,
     message: String,
     actionLabel: String = "OK",
     dismissSnackbarCallback: (() -> Unit)? = null,
 ) {
-    val coroutineScope: CoroutineScope = rememberCoroutineScope()
-
-    coroutineScope.launch {
-        val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-            message = message,
-            actionLabel = actionLabel
-        )
-        when (snackbarResult) {
-            SnackbarResult.Dismissed -> {
-                Log.d("SnackbarResult Dismissed")
-                dismissSnackbarCallback?.invoke()
-            }
-            SnackbarResult.ActionPerformed -> {
-                Log.d("SnackbarResult ActionPerformed")
-                dismissSnackbarCallback?.invoke()
-            }
-        }
-    }
+    Toast.makeText(LocalContext.current, message, Toast.LENGTH_SHORT).show()
+//    val snackbarHostState = remember { SnackbarHostState() }
+//    val channel = remember { Channel<Int>(Channel.Factory.CONFLATED) }
+//
+//    LaunchedEffect(channel) {
+//        channel.receiveAsFlow().collect { index ->
+//            val result = snackbarHostState.showSnackbar(
+//                message = message,
+//                actionLabel = actionLabel
+//            )
+//            when (result) {
+//                SnackbarResult.ActionPerformed -> {
+//                    Log.d("SnackbarResult ActionPerformed")
+//                    dismissSnackbarCallback?.invoke()
+//                }
+//                SnackbarResult.Dismissed -> {
+//                    Log.d("SnackbarResult Dismissed")
+//                    dismissSnackbarCallback?.invoke()
+//                }
+//            }
+//        }
+//    }
 }

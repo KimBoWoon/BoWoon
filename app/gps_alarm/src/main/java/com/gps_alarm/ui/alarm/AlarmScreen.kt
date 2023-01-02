@@ -42,55 +42,64 @@ fun AlarmCompose(
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     var showDialog by remember { mutableStateOf(false) }
 
-    Scaffold(
-        scaffoldState = scaffoldState,
-        content = { paddingValues ->
-            val geocodeList by viewModel.geocodeList.collectAsState()
-            var isRefreshing by remember { mutableStateOf(false) }
-            val pullRefreshState = rememberPullRefreshState(
-                refreshing = isRefreshing,
-                onRefresh = {
-                    isRefreshing = true
-                    viewModel.setList()
-                })
+    val geocodeList by viewModel.geocodeList.collectAsState()
+    var isRefreshing by remember { mutableStateOf(false) }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = {
+            isRefreshing = true
+            viewModel.setList()
+        })
 
-            Box(
-                modifier = Modifier
-                    .pullRefresh(pullRefreshState)
-                    .padding(paddingValues), contentAlignment = Alignment.TopCenter
-            ) {
-                when (geocodeList) {
-                    is DataStatus.Loading -> {
-                        Log.d("alarm list geocode data loading...")
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .pullRefresh(pullRefreshState),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        when (geocodeList) {
+            is DataStatus.Loading -> {
+                Log.d("alarm list geocode data loading...")
 //                        isRefreshing = true
-                    }
-                    is DataStatus.Success -> {
-                        AlarmContent(onNavigate, (geocodeList as? DataStatus.Success)?.data ?: emptyList())
-                        isRefreshing = false
-                    }
-                    is DataStatus.Failure -> {
-                        isRefreshing = false
-                        if (!showDialog) {
-                            showDialog = true
-
-                            GpsAlarmDialog(
-                                "데이터를 가져오는대 문제가 발생했습니다.\n다시 시도하시겠습니까?",
-                                "재시도",
-                                {
-                                    showDialog = false
-                                    viewModel.setList()
-                                },
-                                "취소",
-                                { showDialog = false }
-                            )
-                        }
-                    }
-                }
-                PullRefreshIndicator(refreshing = isRefreshing, state = pullRefreshState)
             }
-        },
-        floatingActionButton = { FloatingActionButtons(onNavigate) }
-    )
+            is DataStatus.Success -> {
+                AlarmContent(onNavigate, (geocodeList as? DataStatus.Success)?.data ?: emptyList())
+                isRefreshing = false
+            }
+            is DataStatus.Failure -> {
+                isRefreshing = false
+                if (!showDialog) {
+                    showDialog = true
+
+                    GpsAlarmDialog(
+                        "데이터를 가져오는대 문제가 발생했습니다.\n다시 시도하시겠습니까?",
+                        "재시도",
+                        {
+                            showDialog = false
+                            viewModel.setList()
+                        },
+                        "취소",
+                        { showDialog = false }
+                    )
+                }
+            }
+        }
+        PullRefreshIndicator(refreshing = isRefreshing, state = pullRefreshState)
+
+        FloatingActionButton(
+            modifier = Modifier
+                .wrapContentWidth()
+                .wrapContentHeight()
+                .padding(bottom = 10.dp, end = 10.dp)
+                .align(alignment = Alignment.BottomEnd),
+            onClick = { onNavigate.navigate(NavigationScreen.CreateAlarm.route) },
+            backgroundColor = Purple700,
+            contentColor = Color.White
+        ) {
+            Icon(Icons.Filled.Add, "add alarm")
+        }
+    }
 }
 
 @Composable
@@ -131,17 +140,5 @@ fun AddressItem(
             Text(text = addresses.roadAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(text = addresses.jibunAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
-    }
-}
-
-
-@Composable
-fun FloatingActionButtons(onNavigate: NavHostController) {
-    FloatingActionButton(
-        onClick = { onNavigate.navigate(NavigationScreen.CreateAlarm.route) },
-        backgroundColor = Purple700,
-        contentColor = Color.White
-    ) {
-        Icon(Icons.Filled.Add, "add alarm")
     }
 }
