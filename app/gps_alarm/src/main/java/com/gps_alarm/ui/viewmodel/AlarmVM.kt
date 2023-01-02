@@ -3,18 +3,14 @@ package com.gps_alarm.ui.viewmodel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import com.data.gpsAlarm.local.LocalDatastore
 import com.domain.gpsAlarm.dto.Addresses
 import com.domain.gpsAlarm.dto.Geocode
 import com.domain.gpsAlarm.usecase.MapsApiUseCase
 import com.gps_alarm.base.BaseVM
-import com.gps_alarm.paging.room.AppDatabase
-import com.gps_alarm.paging.source.GeocodeSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -28,21 +24,12 @@ import javax.inject.Inject
 class AlarmVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val mapsApiUseCase: MapsApiUseCase,
-    private val localDatastore: LocalDatastore,
-    private val database: AppDatabase
+    private val localDatastore: LocalDatastore
 ) : BaseVM() {
     private val json = Json { ignoreUnknownKeys = true }
     val geocodeList = MutableStateFlow<DataStatus<List<com.gps_alarm.data.Address>>>(DataStatus.Loading)
-    val addressDao = database.addressDao()
+    val findAddress = MutableStateFlow<com.gps_alarm.data.Address?>(null)
     val geocode = mutableStateOf<Geocode?>(null)
-
-    @ExperimentalPagingApi
-    val pager = Pager(
-        config = PagingConfig(pageSize = 20, initialLoadSize = 20, prefetchDistance = 5),
-        remoteMediator = GeocodeSource(localDatastore, database)
-    ) {
-        addressDao.pagingSource()
-    }.flow
 
     init {
         setList()
@@ -98,9 +85,11 @@ class AlarmVM @Inject constructor(
                     val address = json.decodeFromString<com.gps_alarm.data.Address>(it)
                     result.add(address)
                 }
+                Log.d(result.toString())
                 geocodeList.value = DataStatus.Success(result)
             } ?: run {
                 geocodeList.value = DataStatus.Success(emptyList())
+                Log.d("setList is null")
             }
         }
     }
@@ -116,5 +105,10 @@ class AlarmVM @Inject constructor(
             addresses.latitude
         )
 
-    suspend fun getAddress(addressId: Int): com.gps_alarm.data.Address = addressDao.getAddress(addressId)
+    fun getAddress(longitude: String, latitude: String) {
+        findAddress.value = null
+        (geocodeList.value as? DataStatus.Success)?.data
+            ?.find { it.longitude == longitude.toDouble() && it.latitude == latitude.toDouble() }
+            ?.let { findAddress.value = it }
+    }
 }

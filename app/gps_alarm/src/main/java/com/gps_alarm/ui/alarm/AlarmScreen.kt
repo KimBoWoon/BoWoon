@@ -4,6 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -20,23 +21,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemsIndexed
-import com.gps_alarm.paging.room.entity.Address
 import com.gps_alarm.ui.NavigationScreen
 import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.theme.Purple700
 import com.gps_alarm.ui.viewmodel.AlarmVM
+import util.DataStatus
+import util.Log
 
 @Composable
 fun AlarmScreen(onNavigate: NavHostController) {
     AlarmCompose(onNavigate)
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalPagingApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AlarmCompose(
     onNavigate: NavHostController,
@@ -48,55 +45,48 @@ fun AlarmCompose(
     Scaffold(
         scaffoldState = scaffoldState,
         content = { paddingValues ->
-            val geocodeList = viewModel.pager.collectAsLazyPagingItems()
+            val geocodeList by viewModel.geocodeList.collectAsState()
             var isRefreshing by remember { mutableStateOf(false) }
             val pullRefreshState = rememberPullRefreshState(
                 refreshing = isRefreshing,
                 onRefresh = {
                     isRefreshing = true
-                    geocodeList.refresh()
+                    viewModel.setList()
                 })
 
-            Box(modifier = Modifier.pullRefresh(pullRefreshState).padding(paddingValues), contentAlignment = Alignment.TopCenter) {
-                AlarmContent(onNavigate, geocodeList)
+            Box(
+                modifier = Modifier
+                    .pullRefresh(pullRefreshState)
+                    .padding(paddingValues), contentAlignment = Alignment.TopCenter
+            ) {
+                when (geocodeList) {
+                    is DataStatus.Loading -> {
+                        Log.d("alarm list geocode data loading...")
+//                        isRefreshing = true
+                    }
+                    is DataStatus.Success -> {
+                        AlarmContent(onNavigate, (geocodeList as? DataStatus.Success)?.data ?: emptyList())
+                        isRefreshing = false
+                    }
+                    is DataStatus.Failure -> {
+                        isRefreshing = false
+                        if (!showDialog) {
+                            showDialog = true
+
+                            GpsAlarmDialog(
+                                "데이터를 가져오는대 문제가 발생했습니다.\n다시 시도하시겠습니까?",
+                                "재시도",
+                                {
+                                    showDialog = false
+                                    viewModel.setList()
+                                },
+                                "취소",
+                                { showDialog = false }
+                            )
+                        }
+                    }
+                }
                 PullRefreshIndicator(refreshing = isRefreshing, state = pullRefreshState)
-            }
-
-            LaunchedEffect(geocodeList.loadState) {
-//                when (geocodeList.loadState.prepend) {
-//                    is LoadState.Loading -> { isRefreshing = true }
-//                    is LoadState.NotLoading -> { isRefreshing = false }
-//                    is LoadState.Error -> { isRefreshing = false }
-//                    else -> { isRefreshing = false }
-//                }
-                when (geocodeList.loadState.refresh) {
-                    is LoadState.Loading -> {  }
-                    is LoadState.NotLoading -> { isRefreshing = false }
-                    is LoadState.Error -> {
-                        showDialog = true
-                        isRefreshing = false
-                    }
-                    else -> { isRefreshing = false }
-                }
-                when (geocodeList.loadState.append) {
-                    is LoadState.Loading -> {  }
-                    is LoadState.NotLoading -> { isRefreshing = false }
-                    is LoadState.Error -> {
-                        isRefreshing = false
-                        showDialog = true
-                    }
-                    else -> { isRefreshing = false }
-                }
-            }
-
-            if (showDialog) {
-                GpsAlarmDialog(
-                    "dialog",
-                    "재시도",
-                    { geocodeList.refresh() },
-                    "취소",
-                    {}
-                )
             }
         },
         floatingActionButton = { FloatingActionButtons(onNavigate) }
@@ -106,7 +96,7 @@ fun AlarmCompose(
 @Composable
 fun AlarmContent(
     onNavigate: NavHostController,
-    addressesList: LazyPagingItems<Address>
+    addressesList: List<com.gps_alarm.data.Address>
 ) {
     val state = rememberLazyListState()
 
@@ -117,9 +107,7 @@ fun AlarmContent(
             .fillMaxHeight()
     ) {
         itemsIndexed(addressesList) { index, addresses ->
-            addresses?.let {
-                AddressItem(onNavigate, addresses)
-            }
+            AddressItem(onNavigate, addresses)
         }
     }
 }
@@ -127,7 +115,7 @@ fun AlarmContent(
 @Composable
 fun AddressItem(
     onNavigate: NavHostController,
-    addresses: Address
+    addresses: com.gps_alarm.data.Address
 ) {
     Card(
         modifier = Modifier
@@ -135,7 +123,7 @@ fun AddressItem(
             .wrapContentHeight()
             .padding(start = 10.dp, end = 10.dp, top = 10.dp)
             .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(8.dp))
-            .clickable { onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${addresses.id}") },
+            .clickable { onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${addresses.longitude}/${addresses.latitude}") },
     ) {
         Column(
             modifier = Modifier.padding(5.dp)
@@ -157,12 +145,3 @@ fun FloatingActionButtons(onNavigate: NavHostController) {
         Icon(Icons.Filled.Add, "add alarm")
     }
 }
-
-//@Preview(
-//    name = "main screen preview",
-//    showBackground = true
-//)
-//@Composable
-//fun Preview() {
-//    AlarmCompose()
-//}

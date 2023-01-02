@@ -7,37 +7,35 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.gps_alarm.data.Address
 import com.gps_alarm.ui.viewmodel.AlarmVM
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import util.Log
 
 @Composable
 fun AlarmDetailScreen(
     onNavigate: NavHostController,
-    addressId: Int,
+    longitude: String,
+    latitude: String,
     viewModel: AlarmVM = hiltViewModel()
 ) {
-    val scope = rememberCoroutineScope()
-    var address by remember { mutableStateOf<Address?>(null) }
+    if (longitude.isNotEmpty() && latitude.isNotEmpty()) {
+        val address = viewModel.findAddress.collectAsState()
 
-    if (addressId != -1) {
-        LaunchedEffect(
-            key1 = scope,
-            block = {
-                scope.launch {
-                    address = withContext(scope.coroutineContext) { viewModel.getAddress(addressId) }
-                    Log.d(address.toString())
-                }
-            })
+        viewModel.getAddress(longitude, latitude)
+
+        address.value?.let {
+            AlarmDetailCompose(it)
+        } ?: run {
+
+        }
+
+        Log.d(address.toString())
     }
-
-    AlarmDetailCompose(address)
 }
 
 @Composable

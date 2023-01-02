@@ -118,13 +118,14 @@ private fun InitNavHost(navController: NavHostController, innerPadding: PaddingV
             CreateAlarmScreen(navController)
         }
         composable(
-            route = "${NavigationScreen.AlarmDetail.route}/{addressId}",
+            route = "${NavigationScreen.AlarmDetail.route}/{longitude}/{latitude}",
             arguments = alarmDetailArgument,
             deepLinks = alarmDeepLink
         ) {
             viewModel.appBarTitle.value = "알람 세부 정보"
-            val args = it.arguments?.getInt("addressId") ?: -1
-            AlarmDetailScreen(navController, args)
+            val longitude = it.arguments?.getString("longitude") ?: ""
+            val latitude = it.arguments?.getString("latitude") ?: ""
+            AlarmDetailScreen(navController, longitude, latitude)
         }
     }
 }
