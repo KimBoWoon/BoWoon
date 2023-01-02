@@ -108,8 +108,8 @@ fun MapsCompose() {
                                 sendNoti = true
                             }
                         }
-                        moveCamera(CameraUpdate.scrollTo(coord))
-                        moveCamera(CameraUpdate.zoomTo(16.0))
+//                        moveCamera(CameraUpdate.scrollTo(coord))
+//                        moveCamera(CameraUpdate.zoomTo(16.0))
                     }
                 }
             }

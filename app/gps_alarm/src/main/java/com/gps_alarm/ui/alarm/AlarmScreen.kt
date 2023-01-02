@@ -29,7 +29,6 @@ import com.gps_alarm.paging.room.entity.Address
 import com.gps_alarm.ui.NavigationScreen
 import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.theme.Purple700
-import com.gps_alarm.ui.util.dpToSp
 import com.gps_alarm.ui.viewmodel.AlarmVM
 
 @Composable
@@ -48,18 +47,7 @@ fun AlarmCompose(
 
     Scaffold(
         scaffoldState = scaffoldState,
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "알람 리스트", color = Color.White, fontSize = dpToSp(20.dp)) },
-                backgroundColor = MaterialTheme.colors.primary,
-                contentColor = Color.White,
-                elevation = 2.dp,
-                modifier = Modifier
-                    .wrapContentHeight(Alignment.Top)
-                    .fillMaxWidth()
-            )
-        },
-        content = {
+        content = { paddingValues ->
             val geocodeList = viewModel.pager.collectAsLazyPagingItems()
             var isRefreshing by remember { mutableStateOf(false) }
             val pullRefreshState = rememberPullRefreshState(
@@ -69,7 +57,7 @@ fun AlarmCompose(
                     geocodeList.refresh()
                 })
 
-            Box(modifier = Modifier.pullRefresh(pullRefreshState), contentAlignment = Alignment.TopCenter) {
+            Box(modifier = Modifier.pullRefresh(pullRefreshState).padding(paddingValues), contentAlignment = Alignment.TopCenter) {
                 AlarmContent(onNavigate, geocodeList)
                 PullRefreshIndicator(refreshing = isRefreshing, state = pullRefreshState)
             }

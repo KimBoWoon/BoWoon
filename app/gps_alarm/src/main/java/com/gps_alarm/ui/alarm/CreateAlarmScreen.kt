@@ -1,11 +1,19 @@
 package com.gps_alarm.ui.alarm
 
 import android.graphics.Bitmap
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,7 +26,6 @@ import com.google.accompanist.web.*
 import com.gps_alarm.javascript.GpsAlarmInterface
 import com.gps_alarm.javascript.GpsAlarmInterfaceImpl
 import com.gps_alarm.ui.util.ShowSnackbar
-import com.gps_alarm.ui.util.dpToSp
 import com.gps_alarm.ui.viewmodel.AlarmVM
 import util.Log
 
@@ -40,7 +47,6 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-        topBar = { CreateAlarmTopBar() },
         bottomBar = {
             Row(
                 modifier = Modifier
@@ -73,11 +79,12 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
                 }
             }
         },
-        content = {
+        content = { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .padding(paddingValues),
                 verticalArrangement = Arrangement.Top
             ) {
                 OutlinedTextField(
@@ -101,8 +108,53 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
                     }) {
                     Text(text = "주소찾기")
                 }
-                Text(text = geocode?.addresses?.firstOrNull()?.jibunAddress ?: "")
-                Text(text = geocode?.addresses?.firstOrNull()?.roadAddress ?: "")
+                when (geocode?.status) {
+                    "OK" -> {
+                        geocode.addresses?.let {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentHeight()
+                                    .padding(horizontal = 10.dp)
+                            ) {
+                                itemsIndexed(it) { index, address ->
+                                    Text(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .wrapContentHeight()
+                                            .padding(horizontal = 10.dp),
+                                        text = address.jibunAddress ?: ""
+                                    )
+                                    Text(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .wrapContentHeight()
+                                            .padding(horizontal = 10.dp),
+                                        text = address.roadAddress ?: ""
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    "INVALID_REQUEST", "SYSTEM_ERROR" -> {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(horizontal = 10.dp),
+                            text = geocode.errorMessage ?: "something wrong..."
+                        )
+                    }
+                    else -> {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(horizontal = 10.dp),
+                            text = "검색된 주소의 리스트가 나타납니다.\n주소를 검색해보세요!"
+                        )
+                    }
+                }
             }
         }
     )
@@ -121,19 +173,6 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
 }
 
 @Composable
-fun CreateAlarmTopBar() {
-    TopAppBar(
-        title = { Text(text = "알람 추가하기", color = Color.White, fontSize = dpToSp(20.dp)) },
-        backgroundColor = MaterialTheme.colors.primary,
-        contentColor = Color.White,
-        elevation = 2.dp,
-        modifier = Modifier
-            .wrapContentHeight(Alignment.Top)
-            .fillMaxWidth()
-    )
-}
-
-@Composable
 fun AddressDialog(dismissDialogCallback: () -> Unit) {
     Dialog(onDismissRequest = { dismissDialogCallback.invoke() }) {
         FindAddressWebView(dismissDialogCallback)
@@ -143,7 +182,7 @@ fun AddressDialog(dismissDialogCallback: () -> Unit) {
 @Composable
 fun FindAddressWebView(dismissDialogCallback: () -> Unit, viewModel: AlarmVM = hiltViewModel()) {
     val local = "http://10.0.2.2/address.html"
-    val other = "http://192.168.35.128/address.html"
+    val other = "http://172.30.115.190/address.html"
     val url by remember { mutableStateOf(other) }
     val webViewState = rememberWebViewState(
         url = url,
@@ -181,12 +220,44 @@ fun FindAddressWebView(dismissDialogCallback: () -> Unit, viewModel: AlarmVM = h
                     super.onPageFinished(view, url)
                     Log.d("compose webview finish!")
                 }
+
+                override fun onReceivedError(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    error: WebResourceError?
+                ) {
+                    super.onReceivedError(view, request, error)
+                    Log.d("compose webview error! > ${error?.errorCode}, ${error?.description}")
+                }
             }
         }
         val chromeClient = remember {
             object : AccompanistWebChromeClient() {}
         }
 
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+                .background(color = Color.White)
+        ) {
+            Text(
+                text = "주소입력",
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .align(alignment = Alignment.Center),
+                color = Color.Black
+            )
+            Image(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .padding(end = 5.dp)
+                    .align(alignment = Alignment.CenterEnd)
+                    .clickable { dismissDialogCallback.invoke() },
+                imageVector = Icons.Filled.Close,
+                contentDescription = null
+            )
+        }
         WebView(
             state = webViewState,
             client = webViewClient,

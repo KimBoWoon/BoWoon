@@ -6,6 +6,7 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -18,8 +19,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -34,22 +37,34 @@ import com.gps_alarm.ui.setting.SettingScreen
 import com.gps_alarm.ui.util.alarmDeepLink
 import com.gps_alarm.ui.util.alarmDetailArgument
 import com.gps_alarm.ui.util.dpToSp
+import com.gps_alarm.ui.viewmodel.GpsAlarmVM
 import util.Log
 
 @Composable
 fun GpsMainCompose() {
+    val navController = rememberNavController()
+    val items = listOf(
+        NavigationScreen.Alarm,
+        NavigationScreen.Maps,
+        NavigationScreen.Setting
+    )
+
     CheckPermission()
 
     Scaffold(
-//        topBar = { GpsAlarmActionBar() },
-        content = { InitBottomNavigation() }
+        topBar = { GpsAlarmActionBar() },
+        content = { innerPadding -> InitNavHost(navController, innerPadding) },
+        bottomBar = { InitBottomNavigation(items, navController) }
     )
 }
 
 @Composable
 fun GpsAlarmActionBar() {
+    val viewModel: GpsAlarmVM = hiltViewModel()
+
     TopAppBar(
-        title = { Text(text = "GPS 알람", color = Color.White, fontSize = dpToSp(20.dp)) },
+        title = { Text(text = viewModel.appBarTitle.value, color = Color.White, fontSize = dpToSp(20.dp)) },
+        actions = {},
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = Color.White,
         elevation = 2.dp,
@@ -60,51 +75,56 @@ fun GpsAlarmActionBar() {
 }
 
 @Composable
-private fun InitBottomNavigation() {
-    val navController = rememberNavController()
-    val items = listOf(
-        NavigationScreen.Alarm,
-        NavigationScreen.Maps,
-        NavigationScreen.Setting
-    )
-
-    Scaffold(
-        bottomBar = {
-            BottomNavigation {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-                items.forEach { screen ->
-                    BottomNavigationItem(
-                        icon = { Icon(screen.icon, contentDescription = null) },
-                        label = { Text(stringResource(screen.resourceId)) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
-                    )
+private fun InitBottomNavigation(items: List<NavigationScreen>, navController: NavHostController) {
+    BottomNavigation {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
+        items.forEach { screen ->
+            BottomNavigationItem(
+                icon = { Icon(screen.icon, contentDescription = null) },
+                label = { Text(stringResource(screen.resourceId)) },
+                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
-            }
+            )
         }
-    ) { innerPadding ->
-        NavHost(navController, startDestination = NavigationScreen.Alarm.route, Modifier.padding(innerPadding)) {
-            composable(NavigationScreen.Alarm.route) { AlarmScreen(navController) }
-            composable(NavigationScreen.Maps.route) { MapScreen(navController) }
-            composable(NavigationScreen.Setting.route) { SettingScreen(navController) }
-            composable(NavigationScreen.CreateAlarm.route) { CreateAlarmScreen(navController) }
-            composable(
-                route = "${NavigationScreen.AlarmDetail.route}/{addressId}",
-                arguments = alarmDetailArgument,
-                deepLinks = alarmDeepLink
-            ) {
-                val args = it.arguments?.getInt("addressId") ?: -1
-                AlarmDetailScreen(navController, args)
-            }
+    }
+}
+
+@Composable
+private fun InitNavHost(navController: NavHostController, innerPadding: PaddingValues) {
+    val viewModel: GpsAlarmVM = hiltViewModel()
+
+    NavHost(navController, startDestination = NavigationScreen.Alarm.route, Modifier.padding(innerPadding)) {
+        composable(NavigationScreen.Alarm.route) {
+            viewModel.appBarTitle.value = "알람 리스트"
+            AlarmScreen(navController)
+        }
+        composable(NavigationScreen.Maps.route) {
+            viewModel.appBarTitle.value = "지도"
+            MapScreen(navController)
+        }
+        composable(NavigationScreen.Setting.route) {
+            viewModel.appBarTitle.value = "설정"
+            SettingScreen(navController)
+        }
+        composable(NavigationScreen.CreateAlarm.route) {
+            viewModel.appBarTitle.value = "알람 만들기"
+            CreateAlarmScreen(navController)
+        }
+        composable(
+            route = "${NavigationScreen.AlarmDetail.route}/{addressId}",
+            arguments = alarmDetailArgument,
+            deepLinks = alarmDeepLink
+        ) {
+            viewModel.appBarTitle.value = "알람 세부 정보"
+            val args = it.arguments?.getInt("addressId") ?: -1
+            AlarmDetailScreen(navController, args)
         }
     }
 }
