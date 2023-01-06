@@ -12,9 +12,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapVM @Inject constructor(
-    private val localDatastore: LocalDatastore
+    private val localDatastore: LocalDatastore,
+    private val json: Json
 ) : BaseVM() {
-    private val json = Json { ignoreUnknownKeys = true }
     val addressList = mutableStateOf<List<com.gps_alarm.data.Address>>(emptyList())
 
     init {
@@ -28,6 +28,7 @@ class MapVM @Inject constructor(
                     val address = json.decodeFromString<com.gps_alarm.data.Address>(it)
                     com.gps_alarm.data.Address(
                         address.name,
+                        address.isEnable,
                         address.distance,
                         address.englishAddress,
                         address.jibunAddress,

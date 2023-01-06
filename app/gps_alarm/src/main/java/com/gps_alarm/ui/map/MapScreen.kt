@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
-import android.os.Vibrator
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -22,7 +21,6 @@ import com.gps_alarm.ui.activities.GpsAlarmActivity
 import com.gps_alarm.ui.theme.circleOverlay
 import com.gps_alarm.ui.viewmodel.MapVM
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
 import com.naver.maps.map.overlay.CircleOverlay
@@ -42,18 +40,20 @@ fun MapsCompose() {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val coroutineScope = rememberCoroutineScope()
-    var sendNoti by remember { mutableStateOf(false) }
     val viewModel: MapVM = hiltViewModel()
+    var sendNoti by remember { mutableStateOf(false) }
+    var notificationId by remember { mutableStateOf<Int?>(null) }
+    val fusedLocationSource = FusedLocationSource(context as Activity, 1000)
+    val infoWindow = InfoWindow().apply {
+        adapter = object : InfoWindow.DefaultTextAdapter(context) {
+            override fun getText(infoWindow: InfoWindow): CharSequence {
+                return infoWindow.marker?.tag as? CharSequence ?: ""
+            }
+        }
+    }
     val mapView = remember {
         MapView(context).apply {
             getMapAsync { naverMap ->
-                val fusedLocationSource = FusedLocationSource(context as Activity, 1000)
-                val infoWindow = InfoWindow()
-                infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(context) {
-                    override fun getText(infoWindow: InfoWindow): CharSequence {
-                        return infoWindow.marker?.tag as? CharSequence ?: ""
-                    }
-                }
                 val myLocation = Location("")
                 val markerLocations = mutableListOf<Location>()
                 naverMap.apply {
@@ -61,7 +61,7 @@ fun MapsCompose() {
                     locationTrackingMode = LocationTrackingMode.Follow
                     uiSettings.isLocationButtonEnabled = true
                     viewModel.addressList.value.forEach {
-                        if (it.latitude != null && it.longitude != null) {
+                        if (it.isEnable == true && it.latitude != null && it.longitude != null) {
                             Marker().apply {
                                 position = LatLng(it.latitude, it.longitude)
                                 width = Marker.SIZE_AUTO
@@ -104,9 +104,14 @@ fun MapsCompose() {
                         myLocation.latitude = location.latitude
                         myLocation.longitude = location.longitude
                         markerLocations.forEach { markerLocation ->
-                            if (myLocation.distanceTo(markerLocation) <= 50) {
+                            if (myLocation.distanceTo(markerLocation) <= 50 && notificationId == null) {
+                                notificationId = 0
                                 sendNoti = true
                             }
+//                            if (myLocation.distanceTo(markerLocation) > 50 && notificationId != null) {
+//                                notificationId = null
+//                                sendNoti = true
+//                            }
                         }
 //                        moveCamera(CameraUpdate.scrollTo(coord))
 //                        moveCamera(CameraUpdate.zoomTo(16.0))
@@ -142,7 +147,7 @@ fun MapsCompose() {
 
     if (sendNoti) {
         sendNoti = false
-        SendNotification()
+        SendNotification(notificationId)
     }
 
     // 생성된 MapView 객체를 AndroidView로 Wrapping 합니다.
@@ -150,10 +155,10 @@ fun MapsCompose() {
 }
 
 @Composable
-fun SendNotification() {
-    val CHANNEL_ID = "gpsAlarm"
-    val notificationId = 0
+fun SendNotification(notificationId: Int?) {
     val context = LocalContext.current
+    val CHANNEL_ID = context.getString(R.string.notification_channel_id)
+    var message = "목적지를 확인하세요."
 
     // Create an explicit intent for an Activity in your app
     val intent = Intent(context, GpsAlarmActivity::class.java).apply {
@@ -161,17 +166,20 @@ fun SendNotification() {
     }
     val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
-    val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+    val notification = NotificationCompat.Builder(context, CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_launcher_background)
-        .setContentTitle("목적지에 거의 도착했습니다.")
-        .setContentText("목적지를 확인하세요!")
+        .setContentTitle("GPS 알람")
+        .setContentText(message)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         // Set the intent that will fire when the user taps the notification
         .setContentIntent(pendingIntent)
         .setAutoCancel(true)
+        .build().apply {
+            flags = NotificationCompat.FLAG_INSISTENT
+        }
 
     with(NotificationManagerCompat.from(context)) {
         // notificationId is a unique int for each notification that you must define
-        notify(notificationId, builder.build())
+        notify(notificationId ?: 0, notification)
     }
 }

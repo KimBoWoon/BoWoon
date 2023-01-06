@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -22,17 +21,14 @@ fun AlarmDetailScreen(
     viewModel: AlarmVM = hiltViewModel()
 ) {
     if (longitude.isNotEmpty() && latitude.isNotEmpty()) {
-        val address = viewModel.findAddress.collectAsState()
-
         viewModel.getAddress(longitude, latitude)
 
-        address.value?.let {
+        viewModel.findAddress.value?.let {
+            Log.d(it.toString())
             AlarmDetailCompose(it)
         } ?: run {
 
         }
-
-        Log.d(address.toString())
     }
 }
 

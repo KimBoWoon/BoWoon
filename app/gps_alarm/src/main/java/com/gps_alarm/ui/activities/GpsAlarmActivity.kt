@@ -34,8 +34,7 @@ class GpsAlarmActivity : BaseActivity() {
     }
 
     private fun createNotificationChannel() {
-        val CHANNEL_ID = "gpsAlarm"
-        val notificationId = 0
+        val CHANNEL_ID = getString(R.string.notification_channel_id)
 
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -45,6 +44,7 @@ class GpsAlarmActivity : BaseActivity() {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
+                enableVibration(true)
             }
             // Register the channel with the system
             val notificationManager: NotificationManager =

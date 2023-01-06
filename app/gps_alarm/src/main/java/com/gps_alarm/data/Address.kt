@@ -11,6 +11,7 @@ import kotlinx.serialization.Serializable
 @Parcelize
 data class Address(
     val name: String? = null,
+    var isEnable: Boolean? = null,
     val distance: Double? = null,
     val englishAddress: String? = null,
     val jibunAddress: String? = null,

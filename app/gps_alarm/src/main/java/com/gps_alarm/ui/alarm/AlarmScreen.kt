@@ -39,9 +39,6 @@ fun AlarmCompose(
     onNavigate: NavHostController,
     viewModel: AlarmVM = hiltViewModel()
 ) {
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
-    var showDialog by remember { mutableStateOf(false) }
-
     val geocodeList by viewModel.geocodeList.collectAsState()
     var isRefreshing by remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(
@@ -50,6 +47,8 @@ fun AlarmCompose(
             isRefreshing = true
             viewModel.setList()
         })
+
+    viewModel.setList()
 
     Box(
         modifier = Modifier
@@ -61,7 +60,6 @@ fun AlarmCompose(
         when (geocodeList) {
             is DataStatus.Loading -> {
                 Log.d("alarm list geocode data loading...")
-//                        isRefreshing = true
             }
             is DataStatus.Success -> {
                 AlarmContent(onNavigate, (geocodeList as? DataStatus.Success)?.data ?: emptyList())
@@ -69,20 +67,13 @@ fun AlarmCompose(
             }
             is DataStatus.Failure -> {
                 isRefreshing = false
-                if (!showDialog) {
-                    showDialog = true
-
-                    GpsAlarmDialog(
-                        "데이터를 가져오는대 문제가 발생했습니다.\n다시 시도하시겠습니까?",
-                        "재시도",
-                        {
-                            showDialog = false
-                            viewModel.setList()
-                        },
-                        "취소",
-                        { showDialog = false }
-                    )
-                }
+                GpsAlarmDialog(
+                    "데이터를 가져오는대 문제가 발생했습니다.\n다시 시도하시겠습니까?",
+                    "재시도",
+                    { viewModel.setList() },
+                    "취소",
+                    {}
+                )
             }
         }
         PullRefreshIndicator(refreshing = isRefreshing, state = pullRefreshState)
@@ -105,7 +96,7 @@ fun AlarmCompose(
 @Composable
 fun AlarmContent(
     onNavigate: NavHostController,
-    addressesList: List<com.gps_alarm.data.Address>
+    addresses: List<com.gps_alarm.data.Address>
 ) {
     val state = rememberLazyListState()
 
@@ -115,8 +106,8 @@ fun AlarmContent(
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
-        itemsIndexed(addressesList) { index, addresses ->
-            AddressItem(onNavigate, addresses)
+        itemsIndexed(addresses) { index, address ->
+            AddressItem(onNavigate, address)
         }
     }
 }
@@ -124,21 +115,33 @@ fun AlarmContent(
 @Composable
 fun AddressItem(
     onNavigate: NavHostController,
-    addresses: com.gps_alarm.data.Address
+    address: com.gps_alarm.data.Address
 ) {
+    val viewModel: AlarmVM = hiltViewModel()
+    var checkedState by remember { mutableStateOf(address.isEnable ?: false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(start = 10.dp, end = 10.dp, top = 10.dp)
             .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(8.dp))
-            .clickable { onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${addresses.longitude}/${addresses.latitude}") },
+            .clickable { onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${address.longitude}/${address.latitude}") },
     ) {
         Column(
             modifier = Modifier.padding(5.dp)
         ) {
-            Text(text = addresses.roadAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(text = addresses.jibunAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = address.roadAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = address.jibunAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = "알람 사용 여부", maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Switch(
+                checked = checkedState,
+                onCheckedChange = {
+                    checkedState = it
+                    address.isEnable = it
+                    viewModel.changeData(address)
+                }
+            )
         }
     }
 }
