@@ -169,30 +169,30 @@ class AlarmVM @Inject constructor(
     fun getAddress(longitude: String, latitude: String) {
         viewModelScope.launch {
             callbackFlow {
-                viewModelScope.launch {
-                    val callback = object : Callback<Set<String>> {
-                        override fun onSuccess(responseData: Set<String>?) {
-                            if (responseData.isNullOrEmpty()) {
-                                trySend("")
-                            } else {
-                                responseData.find {
-                                    val data = json.decodeFromString<Address>(it)
-                                    data.longitude == longitude.toDouble() && data.latitude == latitude.toDouble()
-                                }?.let {
-                                    trySend(it)
-                                }
+                val callback = object : Callback<Set<String>> {
+                    override fun onSuccess(responseData: Set<String>?) {
+                        if (responseData.isNullOrEmpty()) {
+                            trySend("")
+                        } else {
+                            responseData.find {
+                                val data = json.decodeFromString<Address>(it)
+                                data.longitude == longitude.toDouble() && data.latitude == latitude.toDouble()
+                            }?.let {
+                                trySend(it)
                             }
                         }
-
-                        override fun onFailure(e: Throwable?) {
-                            Log.printStackTrace(e)
-                            trySend("")
-                            close(e)
-                        }
                     }
-                    localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressSet ->
 
+                    override fun onFailure(e: Throwable?) {
+                        Log.printStackTrace(e)
+                        trySend("")
+                        close(e)
                     }
+                }
+                localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressSet ->
+                    callback.onSuccess(addressSet)
+                } ?: run {
+                    callback.onSuccess(null)
                 }
 
                 awaitClose {
@@ -212,36 +212,34 @@ class AlarmVM @Inject constructor(
     fun deleteAlarm(longitude: Double?, latitude: Double?) {
         viewModelScope.launch {
             callbackFlow {
-                viewModelScope.launch {
-                    val callback = object : Callback<Set<String>> {
-                        override fun onSuccess(responseData: Set<String>?) {
-                            val result = mutableListOf<String>()
+                val callback = object : Callback<Set<String>> {
+                    override fun onSuccess(responseData: Set<String>?) {
+                        val result = mutableListOf<String>()
 
-                            if (responseData.isNullOrEmpty()) {
-                                trySend(emptyList())
-                            } else {
-                                responseData.forEach {
-                                    val data = json.decodeFromString<Address>(it)
-
-                                    if (data.longitude == longitude && data.latitude == latitude) {
-                                        return@forEach
-                                    } else {
-                                        result.add(it)
-                                    }
-                                }
-                                trySend(result)
-                            }
-                        }
-
-                        override fun onFailure(e: Throwable?) {
-                            Log.printStackTrace(e)
+                        if (responseData.isNullOrEmpty()) {
                             trySend(emptyList())
-                            close(e)
+                        } else {
+                            responseData.forEach {
+                                val data = json.decodeFromString<Address>(it)
+
+                                if (data.longitude == longitude && data.latitude == latitude) {
+                                    return@forEach
+                                } else {
+                                    result.add(it)
+                                }
+                            }
+                            trySend(result)
                         }
                     }
-                    localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressSet ->
-                        callback.onSuccess(addressSet)
+
+                    override fun onFailure(e: Throwable?) {
+                        Log.printStackTrace(e)
+                        trySend(emptyList())
+                        close(e)
                     }
+                }
+                localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressSet ->
+                    callback.onSuccess(addressSet)
                 }
 
                 awaitClose {

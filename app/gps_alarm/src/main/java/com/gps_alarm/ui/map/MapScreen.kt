@@ -2,6 +2,7 @@ package com.gps_alarm.ui.map
 
 import android.app.Activity
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
@@ -17,6 +18,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
 import com.bowoon.android.gps_alarm.R
+import com.gps_alarm.data.Address
 import com.gps_alarm.ui.activities.GpsAlarmActivity
 import com.gps_alarm.ui.theme.circleOverlay
 import com.gps_alarm.ui.viewmodel.MapVM
@@ -29,6 +31,8 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.coroutines.launch
+import util.DataStatus
+import util.Log
 
 @Composable
 fun MapScreen(onNavigate: NavHostController) {
@@ -44,56 +48,62 @@ fun MapsCompose() {
     var sendNoti by remember { mutableStateOf(false) }
     var notificationId by remember { mutableStateOf<Int?>(null) }
     val fusedLocationSource = FusedLocationSource(context as Activity, 1000)
-    val infoWindow = InfoWindow().apply {
-        adapter = object : InfoWindow.DefaultTextAdapter(context) {
-            override fun getText(infoWindow: InfoWindow): CharSequence {
-                return infoWindow.marker?.tag as? CharSequence ?: ""
-            }
-        }
-    }
     val mapView = remember {
         MapView(context).apply {
             getMapAsync { naverMap ->
                 val myLocation = Location("")
                 val markerLocations = mutableListOf<Location>()
+                val infoWindow = InfoWindow().apply {
+                    adapter = object : InfoWindow.DefaultTextAdapter(context) {
+                        override fun getText(infoWindow: InfoWindow): CharSequence {
+                            return infoWindow.marker?.tag as? CharSequence ?: ""
+                        }
+                    }
+                }
+
                 naverMap.apply {
                     locationSource = fusedLocationSource
                     locationTrackingMode = LocationTrackingMode.Follow
                     uiSettings.isLocationButtonEnabled = true
-                    viewModel.addressList.value.forEach {
-                        if (it.isEnable == true && it.latitude != null && it.longitude != null) {
-                            Marker().apply {
-                                position = LatLng(it.latitude, it.longitude)
-                                width = Marker.SIZE_AUTO
-                                height = Marker.SIZE_AUTO
-                                tag = it.name
-                                onClickListener = Overlay.OnClickListener { overlay ->
-                                    val marker = overlay as Marker
 
-                                    if (marker.infoWindow == null) {
-                                        // 현재 마커에 정보 창이 열려있지 않을 경우 엶
-                                        infoWindow.open(marker)
-                                    } else {
-                                        // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
-                                        infoWindow.close()
-                                    }
-
-                                    true
+                    viewModel.getAddress()
+                    coroutineScope.launch {
+                        viewModel.addressList.collect {
+                            when (it) {
+                                is DataStatus.Loading -> {
+                                    Log.d("addressList Loading...")
                                 }
-                                map = naverMap
+                                is DataStatus.Success -> {
+                                    it.data.forEach { address ->
+                                        if (address.latitude != null && address.longitude != null) {
+                                            addMarker(context, infoWindow, address).apply {
+                                                map = if (address.isEnable == true) {
+                                                    naverMap
+                                                } else {
+                                                    null
+                                                }
+                                            }
+                                            addCircleOverlay(address).apply {
+                                                map = if (address.isEnable == true) {
+                                                    naverMap
+                                                } else {
+                                                    null
+                                                }
+                                            }
+                                            markerLocations.add(Location("").apply {
+                                                latitude = address.latitude
+                                                longitude = address.longitude
+                                            })
+                                        }
+                                    }
+                                }
+                                is DataStatus.Failure -> {
+                                    Log.printStackTrace(it.throwable)
+                                }
                             }
-                            CircleOverlay().apply {
-                                center = LatLng(it.latitude, it.longitude)
-                                radius = 100.0
-                                color = circleOverlay.toArgb()
-                                map = naverMap
-                            }
-                            markerLocations.add(Location("").apply {
-                                latitude = it.latitude
-                                longitude = it.longitude
-                            })
                         }
                     }
+
                     addOnLocationChangeListener { location ->
                         val coord = LatLng(location)
                         locationOverlay.apply {
@@ -152,6 +162,36 @@ fun MapsCompose() {
 
     // 생성된 MapView 객체를 AndroidView로 Wrapping 합니다.
     AndroidView(factory = { mapView })
+}
+
+fun addMarker(context: Context, infoWindow: InfoWindow, address: Address): Marker = Marker().apply {
+    if (address.isEnable == true && address.latitude != null && address.longitude != null) {
+        position = LatLng(address.latitude, address.longitude)
+        width = Marker.SIZE_AUTO
+        height = Marker.SIZE_AUTO
+        tag = address.name
+        onClickListener = Overlay.OnClickListener { overlay ->
+            val marker = overlay as Marker
+
+            if (marker.infoWindow == null) {
+                // 현재 마커에 정보 창이 열려있지 않을 경우 엶
+                infoWindow.open(marker)
+            } else {
+                // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
+                infoWindow.close()
+            }
+
+            true
+        }
+    }
+}
+
+fun addCircleOverlay(address: Address): CircleOverlay = CircleOverlay().apply {
+    if (address.isEnable == true && address.latitude != null && address.longitude != null) {
+        center = LatLng(address.latitude, address.longitude)
+        radius = 100.0
+        color = circleOverlay.toArgb()
+    }
 }
 
 @Composable

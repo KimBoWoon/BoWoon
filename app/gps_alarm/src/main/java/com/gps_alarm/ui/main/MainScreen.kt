@@ -171,12 +171,3 @@ fun CheckPermission() {
         )
     }
 }
-
-@Preview(
-    name = "main screen preview",
-    showBackground = true
-)
-@Composable
-fun Preview() {
-    GpsMainCompose()
-}

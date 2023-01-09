@@ -1,9 +1,15 @@
 package com.gps_alarm.ui.alarm
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,10 +23,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.gps_alarm.data.Address
 import com.gps_alarm.ui.NavigationScreen
 import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.theme.Purple700
@@ -41,6 +49,13 @@ fun AlarmCompose(
 ) {
     val geocodeList by viewModel.geocodeList.collectAsState()
     var isRefreshing by remember { mutableStateOf(false) }
+    val listState = rememberLazyListState()
+    val fabVisibility by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex == 0
+        }
+    }
+    val density = LocalDensity.current
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = {
@@ -48,7 +63,7 @@ fun AlarmCompose(
             viewModel.setList()
         })
 
-    viewModel.setList()
+//    viewModel.setList()
 
     Box(
         modifier = Modifier
@@ -65,14 +80,14 @@ fun AlarmCompose(
                 )
             }
             is DataStatus.Success -> {
+                isRefreshing = false
                 (geocodeList as? DataStatus.Success)?.data?.let {
                     if (it.isEmpty()) {
                         Text(text = "저장된 주소가 없습니다.")
                     } else {
-                        AlarmContent(onNavigate, it)
+                        AlarmContent(onNavigate, listState, it)
                     }
                 }
-                isRefreshing = false
             }
             is DataStatus.Failure -> {
                 isRefreshing = false
@@ -87,17 +102,29 @@ fun AlarmCompose(
         }
         PullRefreshIndicator(refreshing = isRefreshing, state = pullRefreshState)
 
-        FloatingActionButton(
+        AnimatedVisibility(
             modifier = Modifier
                 .wrapContentWidth()
                 .wrapContentHeight()
                 .padding(bottom = 10.dp, end = 10.dp)
                 .align(alignment = Alignment.BottomEnd),
-            onClick = { onNavigate.navigate(NavigationScreen.CreateAlarm.route) },
-            backgroundColor = Purple700,
-            contentColor = Color.White
+            visible = fabVisibility,
+            enter = slideInVertically {
+                with(density) { 40.dp.roundToPx() }
+            } + fadeIn(),
+            exit = fadeOut(
+                animationSpec = keyframes {
+                    this.durationMillis = 120
+                }
+            )
         ) {
-            Icon(Icons.Filled.Add, "add alarm")
+            FloatingActionButton(
+                onClick = { onNavigate.navigate(NavigationScreen.CreateAlarm.route) },
+                backgroundColor = Purple700,
+                contentColor = Color.White
+            ) {
+                Icon(Icons.Filled.Add, "add alarm")
+            }
         }
     }
 }
@@ -105,18 +132,17 @@ fun AlarmCompose(
 @Composable
 fun AlarmContent(
     onNavigate: NavHostController,
-    addresses: List<com.gps_alarm.data.Address>
+    listState: LazyListState,
+    addresses: List<Address>
 ) {
-    val state = rememberLazyListState()
-
     LazyColumn(
-        state = state,
+        state = listState,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
         itemsIndexed(addresses) { index, address ->
-            AddressItem(onNavigate, address)
+            AddressItem(onNavigate, address, addresses.lastIndex == index)
         }
     }
 }
@@ -124,7 +150,8 @@ fun AlarmContent(
 @Composable
 fun AddressItem(
     onNavigate: NavHostController,
-    address: com.gps_alarm.data.Address
+    address: Address,
+    isLast: Boolean
 ) {
     val viewModel: AlarmVM = hiltViewModel()
     var checkedState by remember { mutableStateOf(address.isEnable ?: false) }
@@ -133,7 +160,7 @@ fun AddressItem(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(start = 10.dp, end = 10.dp, top = 10.dp)
+            .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = if (isLast) 10.dp else 0.dp)
             .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(8.dp))
             .clickable { onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${address.longitude}/${address.latitude}") },
     ) {

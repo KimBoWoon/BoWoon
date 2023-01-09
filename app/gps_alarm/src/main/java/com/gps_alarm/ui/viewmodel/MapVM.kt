@@ -1,13 +1,17 @@
 package com.gps_alarm.ui.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.data.gpsAlarm.local.LocalDatastore
 import com.gps_alarm.base.BaseVM
+import com.gps_alarm.data.Address
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import util.DataStatus
+import util.Log
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,29 +19,62 @@ class MapVM @Inject constructor(
     private val localDatastore: LocalDatastore,
     private val json: Json
 ) : BaseVM() {
-    val addressList = mutableStateOf<List<com.gps_alarm.data.Address>>(emptyList())
+    val addressList = MutableStateFlow<DataStatus<List<Address>>>(DataStatus.Loading)
 
     init {
         getAddress()
     }
 
-    private fun getAddress() {
+    fun getAddress() {
         viewModelScope.launch {
-            addressList.value = localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
-                addressesSet.map {
-                    val address = json.decodeFromString<com.gps_alarm.data.Address>(it)
-                    com.gps_alarm.data.Address(
-                        address.name,
-                        address.isEnable,
-                        address.distance,
-                        address.englishAddress,
-                        address.jibunAddress,
-                        address.roadAddress,
-                        address.longitude,
-                        address.latitude
-                    )
+            callbackFlow {
+                val callback = object : AlarmVM.Callback<Set<String>> {
+                    override fun onSuccess(responseData: Set<String>?) {
+                        if (responseData.isNullOrEmpty()) {
+                            trySend(emptyList())
+                        } else {
+                            val result = responseData.map {
+                                val address = json.decodeFromString<Address>(it)
+                                Address(
+                                    address.name,
+                                    address.isEnable,
+                                    address.distance,
+                                    address.englishAddress,
+                                    address.jibunAddress,
+                                    address.roadAddress,
+                                    address.longitude,
+                                    address.latitude
+                                )
+                            }
+                            trySend(result)
+                        }
+                    }
+
+                    override fun onFailure(e: Throwable?) {
+                        Log.printStackTrace(e)
+                        close(e)
+                    }
                 }
-            } ?: emptyList()
+
+                localDatastore.get(LocalDatastore.Keys.alarmList)?.let {  addressesSet ->
+                    callback.onSuccess(addressesSet)
+                } ?: run {
+                    callback.onSuccess(emptySet())
+                }
+
+                awaitClose {
+                    Log.d("MapVM getAddress is close...")
+                    close()
+                }
+            }.onStart {
+                addressList.value = DataStatus.Loading
+            }.onEmpty {
+                addressList.value = DataStatus.Success(emptyList())
+            }.catch {
+                addressList.value = DataStatus.Failure(it)
+            }.collect {
+                addressList.value = DataStatus.Success(it)
+            }
         }
     }
 }
