@@ -13,8 +13,6 @@ import com.gps_alarm.data.Address
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -32,6 +30,7 @@ class AlarmVM @Inject constructor(
     private val json: Json
 ) : BaseVM() {
     val geocodeList = MutableStateFlow<DataStatus<List<Address>>>(DataStatus.Loading)
+    val isRefreshing = MutableStateFlow(false)
     val findAddress = MutableStateFlow<Address?>(null)
     val geocode = mutableStateOf<Geocode?>(null)
 
@@ -103,24 +102,45 @@ class AlarmVM @Inject constructor(
         }
     }
 
+    interface Callback<T> {
+        fun onSuccess(responseData: T?)
+        fun onFailure(e: Throwable?)
+    }
+
     fun setList() {
         viewModelScope.launch {
             callbackFlow {
-                val data = localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
-                    val result = mutableListOf<Address>()
-                    addressesSet.forEach {
-                        val address = json.decodeFromString<Address>(it)
-                        result.add(address)
+                val callback = object : Callback<Set<String>> {
+                    override fun onSuccess(responseData: Set<String>?) {
+                        if (responseData.isNullOrEmpty()) {
+                            trySend(emptyList())
+                        } else {
+                            val result = mutableListOf<Address>()
+                            responseData.forEach {
+                                val address = json.decodeFromString<Address>(it)
+                                result.add(address)
+                            }
+                            Log.d(result.toString())
+                            trySend(result)
+                        }
                     }
-                    Log.d(result.toString())
-                    trySend(result)
+
+                    override fun onFailure(e: Throwable?) {
+                        Log.printStackTrace(e)
+                        trySend(emptyList())
+                        close(e)
+                    }
+                }
+
+                localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
+                    callback.onSuccess(addressesSet)
                 } ?: run {
-                    trySend(emptyList())
-                    Log.d("setList is null")
+                    callback.onSuccess(null)
                 }
 
                 awaitClose {
                     Log.d("setList callbackFlow close...")
+                    close()
                 }
             }.onStart {
                 geocodeList.value = DataStatus.Loading
@@ -150,18 +170,34 @@ class AlarmVM @Inject constructor(
         viewModelScope.launch {
             callbackFlow {
                 viewModelScope.launch {
-                    localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressSet ->
-                        addressSet.find {
-                            val data = json.decodeFromString<Address>(it)
-                            data.longitude == longitude.toDouble() && data.latitude == latitude.toDouble()
-                        }?.let {
-                            trySend(it)
+                    val callback = object : Callback<Set<String>> {
+                        override fun onSuccess(responseData: Set<String>?) {
+                            if (responseData.isNullOrEmpty()) {
+                                trySend("")
+                            } else {
+                                responseData.find {
+                                    val data = json.decodeFromString<Address>(it)
+                                    data.longitude == longitude.toDouble() && data.latitude == latitude.toDouble()
+                                }?.let {
+                                    trySend(it)
+                                }
+                            }
                         }
+
+                        override fun onFailure(e: Throwable?) {
+                            Log.printStackTrace(e)
+                            trySend("")
+                            close(e)
+                        }
+                    }
+                    localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressSet ->
+
                     }
                 }
 
                 awaitClose {
                     Log.d("getAddress callbackFlow close...")
+                    close()
                 }
             }.onStart {
                 findAddress.value = null
@@ -169,6 +205,56 @@ class AlarmVM @Inject constructor(
                 json.decodeFromString<Address>(it)
             }.collect {
                 findAddress.value = it
+            }
+        }
+    }
+
+    fun deleteAlarm(longitude: Double?, latitude: Double?) {
+        viewModelScope.launch {
+            callbackFlow {
+                viewModelScope.launch {
+                    val callback = object : Callback<Set<String>> {
+                        override fun onSuccess(responseData: Set<String>?) {
+                            val result = mutableListOf<String>()
+
+                            if (responseData.isNullOrEmpty()) {
+                                trySend(emptyList())
+                            } else {
+                                responseData.forEach {
+                                    val data = json.decodeFromString<Address>(it)
+
+                                    if (data.longitude == longitude && data.latitude == latitude) {
+                                        return@forEach
+                                    } else {
+                                        result.add(it)
+                                    }
+                                }
+                                trySend(result)
+                            }
+                        }
+
+                        override fun onFailure(e: Throwable?) {
+                            Log.printStackTrace(e)
+                            trySend(emptyList())
+                            close(e)
+                        }
+                    }
+                    localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressSet ->
+                        callback.onSuccess(addressSet)
+                    }
+                }
+
+                awaitClose {
+                    Log.d("getAddress callbackFlow close...")
+                    close()
+                }
+            }.onEmpty {
+                Log.d("deleteAlarm flow onEmpty")
+            }.catch {
+                Log.printStackTrace(it)
+            }.collect {
+                localDatastore.set(LocalDatastore.Keys.alarmList, it.toSet())
+                setList()
             }
         }
     }

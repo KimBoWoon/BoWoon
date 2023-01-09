@@ -64,6 +64,7 @@ object Config {
     }
 
     object GpsAlarm {
+        const val appBundleName = "gps_alarm-v"
         const val versionCode = 1
         const val versionName = "1.0.0"
         const val applicationIdSuffix = ".gpsAlarm"

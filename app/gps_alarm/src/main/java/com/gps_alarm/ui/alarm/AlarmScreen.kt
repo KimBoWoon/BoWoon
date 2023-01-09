@@ -60,9 +60,18 @@ fun AlarmCompose(
         when (geocodeList) {
             is DataStatus.Loading -> {
                 Log.d("alarm list geocode data loading...")
+                CircularProgressIndicator(
+                    modifier = Modifier.align(alignment = Alignment.Center)
+                )
             }
             is DataStatus.Success -> {
-                AlarmContent(onNavigate, (geocodeList as? DataStatus.Success)?.data ?: emptyList())
+                (geocodeList as? DataStatus.Success)?.data?.let {
+                    if (it.isEmpty()) {
+                        Text(text = "저장된 주소가 없습니다.")
+                    } else {
+                        AlarmContent(onNavigate, it)
+                    }
+                }
                 isRefreshing = false
             }
             is DataStatus.Failure -> {
@@ -128,20 +137,36 @@ fun AddressItem(
             .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(8.dp))
             .clickable { onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${address.longitude}/${address.latitude}") },
     ) {
-        Column(
+        Box(
             modifier = Modifier.padding(5.dp)
         ) {
-            Text(text = address.roadAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(text = address.jibunAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(text = "알람 사용 여부", maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Switch(
-                checked = checkedState,
-                onCheckedChange = {
-                    checkedState = it
-                    address.isEnable = it
-                    viewModel.changeData(address)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
+                Text(text = address.roadAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(text = address.jibunAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(text = "알람 사용 여부", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Switch(
+                    checked = checkedState,
+                    onCheckedChange = {
+                        checkedState = it
+                        address.isEnable = it
+                        viewModel.changeData(address)
+                    }
+                )
+            }
+            Button(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(alignment = Alignment.BottomEnd),
+                onClick = {
+                    viewModel.deleteAlarm(address.longitude, address.latitude)
                 }
-            )
+            ) {
+                Text(text = "제거")
+            }
         }
     }
 }

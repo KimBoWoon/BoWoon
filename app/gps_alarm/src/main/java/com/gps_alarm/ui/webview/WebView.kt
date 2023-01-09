@@ -53,7 +53,7 @@ fun ShowWebView(
         if (loadingState is LoadingState.Loading) {
             LinearProgressIndicator(
                 progress = loadingState.progress,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().align(alignment = Alignment.CenterHorizontally)
             )
         }
 

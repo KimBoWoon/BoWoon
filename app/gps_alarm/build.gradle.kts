@@ -37,7 +37,7 @@ android {
     val buildTime = format.format(System.currentTimeMillis())
     setProperty(
         "archivesBaseName",
-        "${Config.Application.appBundleName}${Config.GpsAlarm.versionName}-$buildTime"
+        "${Config.GpsAlarm.appBundleName}${Config.GpsAlarm.versionName}-$buildTime"
     )
 
     signingConfigs {
