@@ -1,6 +1,5 @@
 package com.gps_alarm.ui.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.data.gpsAlarm.local.LocalDatastore
@@ -8,6 +7,7 @@ import com.data.gpsAlarm.mapper.mapper
 import com.domain.gpsAlarm.dto.Addresses
 import com.domain.gpsAlarm.dto.Geocode
 import com.domain.gpsAlarm.usecase.MapsApiUseCase
+import com.domain.gpsAlarm.utils.FlowCallback
 import com.gps_alarm.base.BaseVM
 import com.gps_alarm.data.Address
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,27 +30,26 @@ class AlarmVM @Inject constructor(
     private val json: Json
 ) : BaseVM() {
     val geocodeList = MutableStateFlow<DataStatus<List<Address>>>(DataStatus.Loading)
-    val isRefreshing = MutableStateFlow(false)
     val findAddress = MutableStateFlow<Address?>(null)
-    val geocode = mutableStateOf<Geocode?>(null)
+    val geocode = MutableStateFlow<Geocode?>(null)
+    val chooseAddress = MutableStateFlow<Addresses?>(null)
+    val alarmTitle = MutableStateFlow<String>("")
 
     init {
         setList()
     }
 
     fun getGeocode(address: String) {
-        viewModelScope.launch {
-            coroutineIOCallbackTo(
-                block = { mapsApiUseCase.getGeocode(address) },
-                success = { geocode.value = it },
-                error = { e -> Log.printStackTrace(e) }
-            )
-        }
+        coroutineIOCallbackTo(
+            block = { mapsApiUseCase.getGeocode(address) },
+            success = { geocode.value = it },
+            error = { e -> Log.printStackTrace(e) }
+        )
     }
 
-    fun setDataStore(alarmTitle: String, addresses: List<Addresses>?) {
+    fun setDataStore(addresses: Addresses?) {
         viewModelScope.launch {
-            addresses?.firstOrNull()?.let { addresses ->
+            addresses?.let { addresses ->
                 localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
                     addressesSet.find {
                         val data = json.decodeFromString<Address>(it)
@@ -58,19 +57,19 @@ class AlarmVM @Inject constructor(
                     }?.let {
                         val result = mutableSetOf<String>()
                         val decodeString = json.decodeFromString<com.data.gpsAlarm.dto.Addresses>(it)
-                        val data = json.encodeToString(dataMapper(alarmTitle, decodeString.mapper()))
+                        val data = json.encodeToString(dataMapper(alarmTitle.value, decodeString.mapper()))
                         result.addAll(addressesSet)
                         result.add(data)
                         localDatastore.set(LocalDatastore.Keys.alarmList, result)
                     } ?: run {
-                        val data = dataMapper(alarmTitle, addresses)
+                        val data = dataMapper(alarmTitle.value, addresses)
                         val result = mutableSetOf<String>()
                         result.addAll(addressesSet)
                         result.add(json.encodeToString(data))
                         localDatastore.set(LocalDatastore.Keys.alarmList, result)
                     }
                 } ?: run {
-                    val data = dataMapper(alarmTitle, addresses)
+                    val data = dataMapper(alarmTitle.value, addresses)
                     val result = mutableSetOf<String>()
                     result.add(json.encodeToString(data))
                     localDatastore.set(LocalDatastore.Keys.alarmList, result)
@@ -102,16 +101,11 @@ class AlarmVM @Inject constructor(
         }
     }
 
-    interface Callback<T> {
-        fun onSuccess(responseData: T?)
-        fun onFailure(e: Throwable?)
-    }
-
     fun setList() {
         viewModelScope.launch {
             callbackFlow {
-                val callback = object : Callback<Set<String>> {
-                    override fun onSuccess(responseData: Set<String>?) {
+                val callback = object : FlowCallback<Set<String>> {
+                    override suspend fun onSuccess(responseData: Set<String>?) {
                         if (responseData.isNullOrEmpty()) {
                             trySend(emptyList())
                         } else {
@@ -127,7 +121,6 @@ class AlarmVM @Inject constructor(
 
                     override fun onFailure(e: Throwable?) {
                         Log.printStackTrace(e)
-                        trySend(emptyList())
                         close(e)
                     }
                 }
@@ -169,8 +162,8 @@ class AlarmVM @Inject constructor(
     fun getAddress(longitude: String, latitude: String) {
         viewModelScope.launch {
             callbackFlow {
-                val callback = object : Callback<Set<String>> {
-                    override fun onSuccess(responseData: Set<String>?) {
+                val callback = object : FlowCallback<Set<String>> {
+                    override suspend fun onSuccess(responseData: Set<String>?) {
                         if (responseData.isNullOrEmpty()) {
                             trySend("")
                         } else {
@@ -185,7 +178,6 @@ class AlarmVM @Inject constructor(
 
                     override fun onFailure(e: Throwable?) {
                         Log.printStackTrace(e)
-                        trySend("")
                         close(e)
                     }
                 }
@@ -212,8 +204,8 @@ class AlarmVM @Inject constructor(
     fun deleteAlarm(longitude: Double?, latitude: Double?) {
         viewModelScope.launch {
             callbackFlow {
-                val callback = object : Callback<Set<String>> {
-                    override fun onSuccess(responseData: Set<String>?) {
+                val callback = object : FlowCallback<Set<String>> {
+                    override suspend fun onSuccess(responseData: Set<String>?) {
                         val result = mutableListOf<String>()
 
                         if (responseData.isNullOrEmpty()) {
@@ -234,7 +226,6 @@ class AlarmVM @Inject constructor(
 
                     override fun onFailure(e: Throwable?) {
                         Log.printStackTrace(e)
-                        trySend(emptyList())
                         close(e)
                     }
                 }

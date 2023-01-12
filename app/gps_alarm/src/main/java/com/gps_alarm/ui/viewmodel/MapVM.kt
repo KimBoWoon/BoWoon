@@ -2,6 +2,7 @@ package com.gps_alarm.ui.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.data.gpsAlarm.local.LocalDatastore
+import com.domain.gpsAlarm.utils.FlowCallback
 import com.gps_alarm.base.BaseVM
 import com.gps_alarm.data.Address
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,8 +29,8 @@ class MapVM @Inject constructor(
     fun getAddress() {
         viewModelScope.launch {
             callbackFlow {
-                val callback = object : AlarmVM.Callback<Set<String>> {
-                    override fun onSuccess(responseData: Set<String>?) {
+                val callback = object : FlowCallback<Set<String>> {
+                    override suspend fun onSuccess(responseData: Set<String>?) {
                         if (responseData.isNullOrEmpty()) {
                             trySend(emptyList())
                         } else {
@@ -56,7 +57,7 @@ class MapVM @Inject constructor(
                     }
                 }
 
-                localDatastore.get(LocalDatastore.Keys.alarmList)?.let {  addressesSet ->
+                localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
                     callback.onSuccess(addressesSet)
                 } ?: run {
                     callback.onSuccess(emptySet())

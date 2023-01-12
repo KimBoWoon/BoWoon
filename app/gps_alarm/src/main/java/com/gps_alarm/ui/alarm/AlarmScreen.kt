@@ -27,11 +27,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavHostController
 import com.gps_alarm.data.Address
 import com.gps_alarm.ui.NavigationScreen
 import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.theme.Purple700
+import com.gps_alarm.ui.util.OnLifecycleEvent
 import com.gps_alarm.ui.viewmodel.AlarmVM
 import util.DataStatus
 import util.Log
@@ -63,7 +65,20 @@ fun AlarmCompose(
             viewModel.setList()
         })
 
-//    viewModel.setList()
+    OnLifecycleEvent { owner, event ->
+        when (event) {
+            Lifecycle.Event.ON_START -> { Log.d("ON_START") }
+            Lifecycle.Event.ON_CREATE -> { Log.d("ON_CREATE") }
+            Lifecycle.Event.ON_RESUME -> {
+                Log.d("ON_RESUME")
+                viewModel.setList()
+            }
+            Lifecycle.Event.ON_PAUSE -> { Log.d("ON_PAUSE") }
+            Lifecycle.Event.ON_STOP -> { Log.d("ON_STOP") }
+            Lifecycle.Event.ON_DESTROY -> { Log.d("ON_DESTROY") }
+            Lifecycle.Event.ON_ANY -> { Log.d("ON_ANY") }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -174,7 +189,6 @@ fun AddressItem(
             ) {
                 Text(text = address.roadAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(text = address.jibunAddress ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(text = "알람 사용 여부", maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Switch(
                     checked = checkedState,
                     onCheckedChange = {

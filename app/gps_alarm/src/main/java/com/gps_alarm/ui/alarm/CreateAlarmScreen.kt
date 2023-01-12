@@ -1,21 +1,41 @@
 package com.gps_alarm.ui.alarm
 
+import android.app.Activity
+import android.os.Bundle
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
+import com.domain.gpsAlarm.dto.Addresses
 import com.gps_alarm.ui.util.ShowSnackbar
 import com.gps_alarm.ui.viewmodel.AlarmVM
 import com.gps_alarm.ui.webview.ShowWebView
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.LocationTrackingMode
+import com.naver.maps.map.MapView
+import com.naver.maps.map.NaverMapOptions
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.coroutines.launch
 
 @Composable
 fun CreateAlarmScreen(onNavigate: NavHostController) {
@@ -27,7 +47,7 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
     var showDialog by remember { mutableStateOf(false) }
     var showSnackbar by remember { mutableStateOf(false) }
     var alarmTitle by remember { mutableStateOf("") }
-    val geocode = viewModel.geocode.value
+    val geocode by viewModel.geocode.collectAsState()
 
     Box(
         modifier = Modifier
@@ -49,7 +69,10 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
                 maxLines = 1,
                 label = { Text(text = "알람 이름") },
                 value = alarmTitle,
-                onValueChange = { alarmTitle = it }
+                onValueChange = {
+                    viewModel.alarmTitle.value = it
+                    alarmTitle = it
+                }
             )
             Button(
                 modifier = Modifier
@@ -63,30 +86,16 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
             }
             when (geocode?.status) {
                 "OK" -> {
-                    geocode.addresses?.let {
-                        LazyColumn(
+                    if (geocode?.addresses.isNullOrEmpty()) {
+                        Text(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
-                                .padding(horizontal = 10.dp)
-                        ) {
-                            itemsIndexed(it) { index, address ->
-                                Text(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .wrapContentHeight()
-                                        .padding(horizontal = 10.dp),
-                                    text = address.jibunAddress ?: ""
-                                )
-                                Text(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .wrapContentHeight()
-                                        .padding(horizontal = 10.dp),
-                                    text = address.roadAddress ?: ""
-                                )
-                            }
-                        }
+                                .padding(horizontal = 10.dp),
+                            text = "해당 주소를 찾을 수 없습니다."
+                        )
+                    } else {
+                        CreateAddressList(geocode?.addresses)
                     }
                 }
                 "INVALID_REQUEST", "SYSTEM_ERROR" -> {
@@ -95,7 +104,7 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
                             .fillMaxWidth()
                             .wrapContentHeight()
                             .padding(horizontal = 10.dp),
-                        text = geocode.errorMessage ?: "something wrong..."
+                        text = geocode?.errorMessage ?: "something wrong..."
                     )
                 }
                 else -> {
@@ -121,8 +130,8 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
                     .weight(weight = 1f)
                     .padding(start = 10.dp, end = 5.dp),
                 onClick = {
-                    if (!geocode?.addresses.isNullOrEmpty() && alarmTitle.isNotEmpty()) {
-                        viewModel.setDataStore(alarmTitle, geocode?.addresses)
+                    if (!geocode?.addresses.isNullOrEmpty() && viewModel.alarmTitle.value.isNotEmpty()) {
+                        viewModel.setDataStore(geocode?.addresses?.firstOrNull())
                         onNavigate.navigateUp()
                     } else {
                         showSnackbar = true
@@ -151,6 +160,160 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
             message = "주소가 제대로 입력되지 않았습니다.",
             dismissSnackbarCallback = { showSnackbar = false }
         )
+    }
+}
+
+@Composable
+fun CreateAddressList(addresses: List<Addresses>?) {
+    val viewModel: AlarmVM = hiltViewModel()
+    var chooseAddress by remember { mutableStateOf<Addresses?>(null) }
+    val dismissCallback = {
+        viewModel.chooseAddress.value = null
+        chooseAddress = null
+    }
+
+    addresses?.let {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(horizontal = 10.dp)
+        ) {
+            items(it) { address ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .clickable {
+                            chooseAddress = address
+                            viewModel.chooseAddress.value = address
+                        }
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(horizontal = 10.dp),
+                        text = address.jibunAddress ?: ""
+                    )
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(horizontal = 10.dp),
+                        text = address.roadAddress ?: ""
+                    )
+                }
+            }
+        }
+    } ?: run {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(horizontal = 10.dp),
+            text = "해당 주소를 찾을 수 없습니다."
+        )
+    }
+
+    if (chooseAddress != null) {
+        MapDialog(chooseAddress, dismissCallback)
+    }
+}
+
+@Composable
+fun MapDialog(addresses: Addresses?, dismissCallback: () -> Unit) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    Dialog(
+        onDismissRequest = { dismissCallback.invoke() },
+        properties = DialogProperties(false, false)
+    ) {
+        Column(
+            modifier = Modifier.padding(10.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = Color.White)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .weight(2f)
+                        .align(alignment = Alignment.CenterVertically),
+                    text = "해당 주소가 맞는지 확인하세요."
+                )
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = { dismissCallback.invoke() }
+                ) {
+                    Text(text = "확인")
+                }
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = { dismissCallback.invoke() }
+                ) {
+                    Text(text = "취소")
+                }
+            }
+            val fusedLocationSource = FusedLocationSource(context as Activity, 1000)
+            val mapView = remember {
+                val naverMapOptions = NaverMapOptions().apply {
+                    camera(CameraPosition(LatLng(addresses?.latitude ?: 0.0, addresses?.longitude ?: 0.0), 16.0))
+                }
+                MapView(context, naverMapOptions).apply {
+                    getMapAsync { naverMap ->
+                        naverMap.apply {
+                            locationSource = fusedLocationSource
+                            locationTrackingMode = LocationTrackingMode.None
+                            isIndoorEnabled = true
+                            uiSettings.apply {
+                                isLocationButtonEnabled = false
+                                isScrollGesturesEnabled = false
+                            }
+
+                            if (addresses?.latitude != null && addresses.longitude != null) {
+                                Marker().apply {
+                                    position = LatLng(addresses.latitude ?: 0.0, addresses.longitude ?: 0.0)
+                                    width = Marker.SIZE_AUTO
+                                    height = Marker.SIZE_AUTO
+                                    map = naverMap
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            val lifecycleObserver = remember {
+                LifecycleEventObserver { source, event ->
+                    // CoroutineScope 안에서 호출해야 정상적으로 동작합니다.
+                    coroutineScope.launch {
+                        when (event) {
+                            Lifecycle.Event.ON_CREATE -> mapView.onCreate(Bundle())
+                            Lifecycle.Event.ON_START -> mapView.onStart()
+                            Lifecycle.Event.ON_RESUME -> mapView.onResume()
+                            Lifecycle.Event.ON_PAUSE -> mapView.onPause()
+                            Lifecycle.Event.ON_STOP -> mapView.onStop()
+                            Lifecycle.Event.ON_DESTROY -> mapView.onDestroy()
+                            Lifecycle.Event.ON_ANY -> TODO()
+                        }
+                    }
+                }
+            }
+
+            // 뷰가 해제될 때 이벤트 리스너를 제거합니다.
+            DisposableEffect(true) {
+                lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
+                onDispose {
+                    lifecycleOwner.lifecycle.removeObserver(lifecycleObserver)
+                }
+            }
+
+            // 생성된 MapView 객체를 AndroidView로 Wrapping 합니다.
+            AndroidView(factory = { mapView })
+        }
     }
 }
 

@@ -64,7 +64,11 @@ fun MapsCompose() {
                 naverMap.apply {
                     locationSource = fusedLocationSource
                     locationTrackingMode = LocationTrackingMode.Follow
-                    uiSettings.isLocationButtonEnabled = true
+                    isIndoorEnabled = true
+                    uiSettings.apply {
+                        isLocationButtonEnabled = true
+                        isScrollGesturesEnabled = true
+                    }
 
                     viewModel.getAddress()
                     coroutineScope.launch {
