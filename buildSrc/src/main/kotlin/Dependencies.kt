@@ -114,6 +114,13 @@ object Dependencies {
         const val lottie = "com.airbnb.android:lottie-compose:${Versions.Compose.lottie}"
     }
 
+    object Orbit{
+        const val core = "org.orbit-mvi:orbit-core:${Versions.Orbit.orbit}"
+        const val viewModel = "org.orbit-mvi:orbit-viewmodel:${Versions.Orbit.orbit}"
+        const val compose = "org.orbit-mvi:orbit-compose:${Versions.Orbit.orbit}"
+        const val test = "org.orbit-mvi:orbit-test:${Versions.Orbit.orbit}"
+    }
+
     object Accompanist {
         const val webview =  "com.google.accompanist:accompanist-webview:${Versions.Accompanist.webview}"
         const val pullToRefresh = "com.google.accompanist:accompanist-swiperefresh:${Versions.Accompanist.pullToRefresh}"

@@ -1,10 +1,7 @@
 package util
 
-import com.domain.gpsAlarm.utils.FlowCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -34,29 +31,29 @@ fun <T, R> coroutineIOCallbackTo(
     }
 }
 
-fun <T> customCallbackFlow(
-    block: suspend ((FlowCallback<T>) -> (T))
-) = callbackFlow {
-    val callback = object : FlowCallback<T> {
-        override suspend fun onSuccess(responseData: T?) {
-            Log.d("customCallbackFlow success > ${responseData.toString()}")
-            trySend(responseData)
-        }
-
-        override fun onFailure(e: Throwable?) {
-            Log.printStackTrace(e)
-            close(e)
-        }
-    }
-
-    Log.d("customCallbackFlow start")
-    block.invoke(callback)
-
-    awaitClose {
-        Log.d("customCallbackFlow is close...")
-        close()
-    }
-}
+//fun <T> customCallbackFlow(
+//    block: suspend ((FlowCallback<T>) -> (T))
+//) = callbackFlow {
+//    val callback = object : FlowCallback<T> {
+//        override suspend fun onSuccess(responseData: T?) {
+//            Log.d("customCallbackFlow success > ${responseData.toString()}")
+//            trySend(responseData)
+//        }
+//
+//        override fun onFailure(e: Throwable?) {
+//            Log.printStackTrace(e)
+//            close(e)
+//        }
+//    }
+//
+//    Log.d("customCallbackFlow start")
+//    block.invoke(callback)
+//
+//    awaitClose {
+//        Log.d("customCallbackFlow is close...")
+//        close()
+//    }
+//}
 
 /**
  * 코루틴을 사용하여 메인 스레드에서 작업을 실행할 때 사용하는 함수

@@ -8,7 +8,6 @@ object Config {
         const val applicationId = "com.bowoon"
         const val defaultProguardFile = "proguard-android-optimize.txt"
         const val proguardFile = "proguard-rules.pro"
-        const val appBundleName = "lol-v"
         const val dateFormat = "HHmmss"
     }
 
@@ -52,12 +51,14 @@ object Config {
     }
 
     object Practice {
+        const val appBundleName = "practice-v"
         const val versionCode = 1
         const val versionName = "1.0.0"
         const val applicationIdSuffix = ".practice"
     }
 
     object Lol {
+        const val appBundleName = "lol-v"
         const val versionCode = 1
         const val versionName = "1.0.0"
         const val applicationIdSuffix = ".lol"

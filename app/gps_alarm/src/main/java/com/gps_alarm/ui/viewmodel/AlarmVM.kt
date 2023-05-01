@@ -10,14 +10,22 @@ import com.domain.gpsAlarm.usecase.MapsApiUseCase
 import com.domain.gpsAlarm.utils.FlowCallback
 import com.gps_alarm.base.BaseVM
 import com.gps_alarm.data.Address
+import com.gps_alarm.data.AlarmData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import util.DataStatus
+import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
 import util.Log
 import util.coroutineIOCallbackTo
 import javax.inject.Inject
@@ -28,15 +36,39 @@ class AlarmVM @Inject constructor(
     private val mapsApiUseCase: MapsApiUseCase,
     private val localDatastore: LocalDatastore,
     private val json: Json
-) : BaseVM() {
-    val geocodeList = MutableStateFlow<DataStatus<List<Address>>>(DataStatus.Loading)
+) : ContainerHost<AlarmData, String>, BaseVM() {
     val findAddress = MutableStateFlow<Address?>(null)
     val geocode = MutableStateFlow<Geocode?>(null)
     val chooseAddress = MutableStateFlow<Addresses?>(null)
     val alarmTitle = MutableStateFlow<String>("")
 
+    override val container: Container<AlarmData, String> = container(AlarmData())
+
     init {
-        setList()
+        fetchAlarmList()
+    }
+
+    fun fetchAlarmList() {
+        intent {
+            viewModelScope.launch {
+                reduce { state.copy(loading = true) }
+                val alarmList = localDatastore.get(LocalDatastore.Keys.alarmList)?.run {
+                    if (this.isEmpty()) {
+                        emptyList()
+                    } else {
+                        val result = mutableListOf<Address>()
+                        this.forEach {
+                            val address = json.decodeFromString<Address>(it)
+                            result.add(address)
+                        }
+                        Log.d(result.toString())
+                        result
+                    }
+                } ?: emptyList()
+                reduce { state.copy(alarmList = alarmList, loading = false) }
+                postSideEffect("${alarmList.size} data loaded")
+            }
+        }
     }
 
     fun getGeocode(address: String) {
@@ -75,6 +107,7 @@ class AlarmVM @Inject constructor(
                     localDatastore.set(LocalDatastore.Keys.alarmList, result)
                 }
             }
+            this@AlarmVM.chooseAddress.value = null
         }
     }
 
@@ -97,52 +130,6 @@ class AlarmVM @Inject constructor(
                     }
                     localDatastore.set(LocalDatastore.Keys.alarmList, result)
                 }
-            }
-        }
-    }
-
-    fun setList() {
-        viewModelScope.launch {
-            callbackFlow {
-                val callback = object : FlowCallback<Set<String>> {
-                    override suspend fun onSuccess(responseData: Set<String>?) {
-                        if (responseData.isNullOrEmpty()) {
-                            trySend(emptyList())
-                        } else {
-                            val result = mutableListOf<Address>()
-                            responseData.forEach {
-                                val address = json.decodeFromString<Address>(it)
-                                result.add(address)
-                            }
-                            Log.d(result.toString())
-                            trySend(result)
-                        }
-                    }
-
-                    override fun onFailure(e: Throwable?) {
-                        Log.printStackTrace(e)
-                        close(e)
-                    }
-                }
-
-                localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
-                    callback.onSuccess(addressesSet)
-                } ?: run {
-                    callback.onSuccess(null)
-                }
-
-                awaitClose {
-                    Log.d("setList callbackFlow close...")
-                    close()
-                }
-            }.onStart {
-                geocodeList.value = DataStatus.Loading
-            }.onEmpty {
-                geocodeList.value = DataStatus.Success(emptyList())
-            }.catch {
-                geocodeList.value = DataStatus.Failure(it)
-            }.collect {
-                geocodeList.value = DataStatus.Success(it)
             }
         }
     }
@@ -243,7 +230,7 @@ class AlarmVM @Inject constructor(
                 Log.printStackTrace(it)
             }.collect {
                 localDatastore.set(LocalDatastore.Keys.alarmList, it.toSet())
-                setList()
+                fetchAlarmList()
             }
         }
     }

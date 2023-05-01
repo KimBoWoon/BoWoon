@@ -1,5 +1,6 @@
 package com.gps_alarm.ui.alarm
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.fadeIn
@@ -23,11 +24,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import com.gps_alarm.data.Address
 import com.gps_alarm.ui.NavigationScreen
@@ -35,7 +38,8 @@ import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.theme.Purple700
 import com.gps_alarm.ui.util.OnLifecycleEvent
 import com.gps_alarm.ui.viewmodel.AlarmVM
-import util.DataStatus
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import util.Log
 
 @Composable
@@ -49,29 +53,34 @@ fun AlarmCompose(
     onNavigate: NavHostController,
     viewModel: AlarmVM = hiltViewModel()
 ) {
-    val geocodeList by viewModel.geocodeList.collectAsState()
-    var isRefreshing by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
+    var isRefreshing by remember { mutableStateOf(false) }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = {
+            isRefreshing = true
+            viewModel.fetchAlarmList()
+        })
     val fabVisibility by remember {
         derivedStateOf {
             listState.firstVisibleItemIndex == 0
         }
     }
     val density = LocalDensity.current
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = {
-            isRefreshing = true
-            viewModel.setList()
-        })
+    val context = LocalContext.current
 
     OnLifecycleEvent { owner, event ->
         when (event) {
             Lifecycle.Event.ON_START -> { Log.d("ON_START") }
-            Lifecycle.Event.ON_CREATE -> { Log.d("ON_CREATE") }
+            Lifecycle.Event.ON_CREATE -> {
+                Log.d("ON_CREATE")
+                viewModel.container.sideEffectFlow
+                    .onEach { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+                    .launchIn(owner.lifecycleScope)
+            }
             Lifecycle.Event.ON_RESUME -> {
                 Log.d("ON_RESUME")
-                viewModel.setList()
+                viewModel.fetchAlarmList()
             }
             Lifecycle.Event.ON_PAUSE -> { Log.d("ON_PAUSE") }
             Lifecycle.Event.ON_STOP -> { Log.d("ON_STOP") }
@@ -80,6 +89,7 @@ fun AlarmCompose(
         }
     }
 
+    val state = viewModel.container.stateFlow.collectAsState().value
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -87,29 +97,26 @@ fun AlarmCompose(
             .pullRefresh(pullRefreshState),
         contentAlignment = Alignment.TopCenter
     ) {
-        when (geocodeList) {
-            is DataStatus.Loading -> {
+        when {
+            state.loading -> {
                 Log.d("alarm list geocode data loading...")
                 CircularProgressIndicator(
                     modifier = Modifier.align(alignment = Alignment.Center)
                 )
             }
-            is DataStatus.Success -> {
+            state.alarmList.isEmpty() && state.error == null -> {
                 isRefreshing = false
-                (geocodeList as? DataStatus.Success)?.data?.let {
-                    if (it.isEmpty()) {
-                        Text(text = "저장된 주소가 없습니다.")
-                    } else {
-                        AlarmContent(onNavigate, listState, it)
-                    }
-                }
+                Text(text = "저장된 주소가 없습니다.")
             }
-            is DataStatus.Failure -> {
+            state.alarmList.isNotEmpty() && state.error == null -> {
                 isRefreshing = false
+                AlarmContent(onNavigate, listState, state.alarmList)
+            }
+            else -> {
                 GpsAlarmDialog(
                     "데이터를 가져오는대 문제가 발생했습니다.\n다시 시도하시겠습니까?",
                     "재시도",
-                    { viewModel.setList() },
+                    { viewModel.fetchAlarmList() },
                     "취소",
                     {}
                 )

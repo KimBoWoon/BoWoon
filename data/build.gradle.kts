@@ -102,6 +102,7 @@ android {
             }
         }
     }
+    namespace = "com.data"
 }
 
 dependencies {

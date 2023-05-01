@@ -57,6 +57,7 @@ android {
     buildTypes {
         getByName(Config.BuildType.release) {
             isMinifyEnabled = true
+            isShrinkResources = true
             isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile(Config.Application.defaultProguardFile),
@@ -133,7 +134,7 @@ dependencies {
         Dependencies.Jetpack.core,
         Dependencies.Jetpack.datastore,
         Dependencies.Jetpack.workManager,
-        Dependencies.Jetpack.splash,
+//        Dependencies.Jetpack.splash,
         Dependencies.Google.location,
         Dependencies.Hilt.hiltAndroid,
         Dependencies.Hilt.hiltNavigation,
@@ -145,6 +146,9 @@ dependencies {
         Dependencies.Naver.map,
         Dependencies.Serialization.kotlin,
         Dependencies.Serialization.converter,
+        Dependencies.Orbit.core,
+        Dependencies.Orbit.viewModel,
+        Dependencies.Orbit.compose,
         platform(Dependencies.Compose.bom),
         platform(Dependencies.Firebase.bom),
         project(Dependencies.InnerModules.data),
@@ -169,7 +173,8 @@ dependencies {
     }
 
     arrayOf(
-        Dependencies.Test.junit
+        Dependencies.Test.junit,
+        Dependencies.Orbit.test
     ).forEach {
         testImplementation(it)
     }

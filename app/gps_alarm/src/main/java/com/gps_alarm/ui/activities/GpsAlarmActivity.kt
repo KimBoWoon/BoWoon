@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.material.Surface
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.bowoon.android.gps_alarm.R
 import com.gps_alarm.base.BaseActivity
 import com.gps_alarm.ui.main.GpsMainCompose
@@ -19,7 +18,7 @@ class GpsAlarmActivity : BaseActivity() {
     private val TAG = this.javaClass.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+//        installSplashScreen()
         super.onCreate(savedInstanceState)
 
         createNotificationChannel()

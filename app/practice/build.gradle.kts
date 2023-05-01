@@ -25,7 +25,7 @@ android {
 
     val format = SimpleDateFormat(Config.Application.dateFormat)
     val buildTime = format.format(System.currentTimeMillis())
-    setProperty("archivesBaseName", "${Config.Application.appBundleName}${Config.Practice.versionName}-$buildTime")
+    setProperty("archivesBaseName", "${Config.Practice.appBundleName}${Config.Practice.versionName}-$buildTime")
 
     signingConfigs {
         create(Config.Sign.Release.name) {
@@ -96,6 +96,7 @@ android {
             )
         )
     }
+    namespace = "com.practice"
 }
 
 dependencies {

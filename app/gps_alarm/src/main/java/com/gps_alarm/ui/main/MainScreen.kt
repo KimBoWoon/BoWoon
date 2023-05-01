@@ -1,7 +1,9 @@
 package com.gps_alarm.ui.main
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -11,14 +13,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -132,42 +137,71 @@ private fun InitNavHost(navController: NavHostController, innerPadding: PaddingV
 
 @Composable
 fun CheckPermission() {
-    var showDialog by remember { mutableStateOf(false) }
+    val permissionList = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.POST_NOTIFICATIONS)
     val context = LocalContext.current
-    val permissions = Manifest.permission.ACCESS_FINE_LOCATION
-
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { permissionGranted ->
-            if (permissionGranted) {
-                Log.d("permission true")
-            } else {
-                Log.d("permission false")
-                showDialog = true
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { permissions ->
+            permissions.keys.forEach {
+                if (permissions[it] == true) {
+                    Log.d("permission granted")
+                } else if (permissions[it] == false) {
+                    Log.d("permission denied")
+//                    ShowDialog()
+                } else {
+                    Log.d("permission null")
+                }
             }
         }
     )
 
-    if (!showDialog) {
-        SideEffect { launcher.launch(permissions) }
+    val showDialogList = mutableListOf<String>()
+    var permissionDenied = 0
+
+    permissionList.forEach {
+        if (shouldShowRequestPermissionRationale(context as Activity, it)) {
+            showDialogList.add(it)
+        } else if (ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_DENIED) {
+            permissionDenied++
+        }
     }
 
-    if (showDialog) {
-        GpsAlarmDialog(
-            message = "권한설정을 위해 환경설정으로 이동하시겠습니까?",
-            confirmText = "이동",
-            confirmCallback = {
-                Log.d("권한 확인을 위해 환경설정 이동")
-                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).run {
-                    data = Uri.parse("package:${context.packageName}")
-                    addCategory(Intent.CATEGORY_DEFAULT)
-                    context.startActivity(this)
-                }
-            },
-            dismissText = "취소",
-            dismissCallback = {
-                Log.d("환경설정으로 이동 안함")
-            }
-        )
+    Log.i("permission denied > ${permissionDenied}, show dialog > ${showDialogList.size}")
+
+    when {
+        showDialogList.size > 0 -> {
+            //Some permissions are denied and can be asked again.
+            SideEffect { launcher.launch(permissionList) }
+        }
+        permissionDenied > 0 -> {
+            //Show alert dialog
+            ShowDialog()
+        }
+        else -> {
+            //All permissions granted. Do your stuff 🤞
+            Log.d("all permission granted")
+        }
     }
+}
+
+@Composable
+fun ShowDialog() {
+    val context = LocalContext.current
+
+    GpsAlarmDialog(
+        message = "앱을 사용하기위해 위치와 알림 권한이 필요합니다.\n권한설정을 위해 환경설정으로 이동하시겠습니까?",
+        confirmText = "이동",
+        confirmCallback = {
+            Log.d("권한 확인을 위해 환경설정 이동")
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).run {
+                data = Uri.parse("package:${context.packageName}")
+                addCategory(Intent.CATEGORY_DEFAULT)
+                context.startActivity(this)
+            }
+        },
+        dismissText = "취소",
+        dismissCallback = {
+            Log.d("환경설정으로 이동 안함")
+        }
+    )
 }

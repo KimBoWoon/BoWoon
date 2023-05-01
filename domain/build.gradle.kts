@@ -90,6 +90,7 @@ android {
             }
         }
     }
+    namespace = "com.domain"
 }
 
 dependencies {

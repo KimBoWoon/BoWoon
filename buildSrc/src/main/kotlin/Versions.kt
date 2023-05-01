@@ -1,6 +1,6 @@
 object Versions {
     object Kotlin {
-        const val kotlin = "1.7.20"
+        const val kotlin = "1.8.10"
     }
 
     object Google {
@@ -30,7 +30,7 @@ object Versions {
     }
 
     object Gradle {
-        const val gradle = "7.3.1"
+        const val gradle = "7.4.2"
         const val plugin = "1.6.0"
     }
 
@@ -61,15 +61,19 @@ object Versions {
     }
 
     object Hilt {
-        const val hilt = "2.42"
+        const val hilt = "2.45"
         const val compiler = "1.0.0"
         const val hiltNavigation = "1.0.0"
         const val hiltWorkManager = "1.0.0"
     }
 
+    object Orbit {
+        const val orbit = "4.6.1"
+    }
+
     object Compose {
         const val bom = "2022.10.00"
-        const val compose = "1.3.2"
+        const val compose = "1.4.3"
         const val activity = "1.5.1"
         const val viewModel = "2.5.1"
         const val navigation = "2.5.3"

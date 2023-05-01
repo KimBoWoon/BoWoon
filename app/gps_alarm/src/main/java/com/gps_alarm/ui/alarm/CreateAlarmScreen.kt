@@ -130,8 +130,8 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
                     .weight(weight = 1f)
                     .padding(start = 10.dp, end = 5.dp),
                 onClick = {
-                    if (!geocode?.addresses.isNullOrEmpty() && viewModel.alarmTitle.value.isNotEmpty()) {
-                        viewModel.setDataStore(geocode?.addresses?.firstOrNull())
+                    if (viewModel.chooseAddress.value != null && viewModel.alarmTitle.value.isNotEmpty()) {
+                        viewModel.setDataStore(viewModel.chooseAddress.value)
                         onNavigate.navigateUp()
                     } else {
                         showSnackbar = true
@@ -167,6 +167,10 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
 fun CreateAddressList(addresses: List<Addresses>?) {
     val viewModel: AlarmVM = hiltViewModel()
     var chooseAddress by remember { mutableStateOf<Addresses?>(null) }
+    val confirmCallback: (Addresses?) -> (Unit) = {
+        viewModel.chooseAddress.value = it
+        chooseAddress = null
+    }
     val dismissCallback = {
         viewModel.chooseAddress.value = null
         chooseAddress = null
@@ -217,12 +221,12 @@ fun CreateAddressList(addresses: List<Addresses>?) {
     }
 
     if (chooseAddress != null) {
-        MapDialog(chooseAddress, dismissCallback)
+        MapDialog(chooseAddress, confirmCallback, dismissCallback)
     }
 }
 
 @Composable
-fun MapDialog(addresses: Addresses?, dismissCallback: () -> Unit) {
+fun MapDialog(addresses: Addresses?, confirmCallback: (Addresses?) -> Unit, dismissCallback: () -> Unit) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -247,7 +251,7 @@ fun MapDialog(addresses: Addresses?, dismissCallback: () -> Unit) {
                 )
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { dismissCallback.invoke() }
+                    onClick = { confirmCallback.invoke(addresses) }
                 ) {
                     Text(text = "확인")
                 }
@@ -312,7 +316,10 @@ fun MapDialog(addresses: Addresses?, dismissCallback: () -> Unit) {
             }
 
             // 생성된 MapView 객체를 AndroidView로 Wrapping 합니다.
-            AndroidView(factory = { mapView })
+            AndroidView(
+                modifier = Modifier.fillMaxWidth().height(500.dp),
+                factory = { mapView }
+            )
         }
     }
 }
@@ -321,7 +328,6 @@ fun MapDialog(addresses: Addresses?, dismissCallback: () -> Unit) {
 fun AddressDialog(dismissDialogCallback: () -> Unit) {
     Dialog(onDismissRequest = { dismissDialogCallback.invoke() }) {
         val local = "http://10.0.2.2/address.html"
-        val other = "http://192.168.35.128/address.html"
-        ShowWebView(other, dismissDialogCallback)
+        ShowWebView(local, dismissDialogCallback)
     }
 }
