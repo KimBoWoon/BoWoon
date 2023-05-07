@@ -20,10 +20,6 @@ android {
 
         testInstrumentationRunner = Config.Application.testInstrumentationRunner
         consumerProguardFiles("consumer-rules.pro")
-
-//        buildConfigField("String", "riotApiKey", getProp("riot_api_key"))
-        buildConfigField("String", "NAVER_MAPS_CLIENT_KEY", getProp("naver_maps_client_key"))
-        buildConfigField("String", "NAVER_MAPS_CLIENT_SECRET_KEY", getProp("naver_maps_client_secret_key"))
     }
 
     buildTypes {
@@ -42,17 +38,25 @@ android {
     productFlavors {
         create(Config.Flavors.lol) {
             dimension = Config.Dimensions.mode
+
+            buildConfigField("String", "riotApiKey", getProp("riot_api_key"))
         }
         create(Config.Flavors.practice) {
             dimension = Config.Dimensions.mode
         }
         create(Config.Flavors.gpsAlarm) {
             dimension = Config.Dimensions.mode
+
+            buildConfigField("String", "NAVER_MAPS_CLIENT_KEY", getProp("naver_maps_client_key"))
+            buildConfigField("String", "NAVER_MAPS_CLIENT_SECRET_KEY", getProp("naver_maps_client_secret_key"))
+        }
+        create(Config.Flavors.rssReader) {
+            dimension = Config.Dimensions.mode
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = Config.Application.jvmVersion
@@ -86,6 +90,10 @@ android {
                 manifest.srcFile("src/gpsAlarm/AndroidManifest.xml")
                 java.setSrcDirs(listOf("src/base/java", "src/gpsAlarm/java"))
             }
+            getByName(Config.Flavors.rssReader) {
+                manifest.srcFile("src/rssReader/AndroidManifest.xml")
+                java.setSrcDirs(listOf("src/base/java", "src/rssReader/java"))
+            }
         }
         getByName(Config.SourceSet.debug) {
             getByName(Config.Flavors.lol) {
@@ -99,6 +107,10 @@ android {
             getByName(Config.Flavors.gpsAlarm) {
                 manifest.srcFile("src/gpsAlarm/AndroidManifest.xml")
                 java.setSrcDirs(listOf("src/base/java", "src/gpsAlarm/java"))
+            }
+            getByName(Config.Flavors.rssReader) {
+                manifest.srcFile("src/rssReader/AndroidManifest.xml")
+                java.setSrcDirs(listOf("src/base/java", "src/rssReader/java"))
             }
         }
     }
@@ -119,6 +131,9 @@ dependencies {
         Dependencies.OkHttp.profiler,
         Dependencies.Serialization.kotlin,
         Dependencies.Serialization.converter,
+        Dependencies.TikXml.annotation,
+        Dependencies.TikXml.retrofitConverter,
+        Dependencies.TikXml.core,
         Dependencies.Hilt.hiltAndroid,
         Dependencies.Coroutine.core,
         Dependencies.Glide.glide,
@@ -130,6 +145,7 @@ dependencies {
     arrayOf(
         Dependencies.Hilt.hiltAndroidCompiler,
         Dependencies.Hilt.hiltCompiler,
+        Dependencies.TikXml.processor,
         Dependencies.Glide.glideCompiler,
         Dependencies.Jetpack.roomCompiler
     ).forEach {

@@ -16,8 +16,8 @@ object Versions {
     }
 
     object Jetpack {
-        const val core = "1.8.0"
-        const val appcompat = "1.5.0"
+        const val core = "1.10.0"
+        const val appcompat = "1.6.1"
         const val lifecycle = "2.4.1"
         const val activity = "1.4.0"
         const val fragment = "1.4.1"
@@ -30,7 +30,7 @@ object Versions {
     }
 
     object Gradle {
-        const val gradle = "7.4.2"
+        const val gradle = "8.0.1"
         const val plugin = "1.6.0"
     }
 
@@ -101,9 +101,13 @@ object Versions {
         const val core = "1.4.0"
     }
 
+    object TikXml {
+        const val core = "0.8.13"
+    }
+
     object Test {
         const val junit = "4.13.2"
-        const val junitExt = "1.1.3"
-        const val espresso = "3.4.0"
+        const val junitExt = "1.1.5"
+        const val espresso = "3.5.1"
     }
 }

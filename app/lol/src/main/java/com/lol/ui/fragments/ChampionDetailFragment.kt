@@ -5,7 +5,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.domain.lol.dto.ChampionInfo
+import com.domain.rssReader.dto.ChampionInfo
 import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.FragmentChampionDetailBinding

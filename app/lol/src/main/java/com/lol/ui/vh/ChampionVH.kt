@@ -1,7 +1,7 @@
 package com.lol.ui.vh
 
 import androidx.databinding.ViewDataBinding
-import com.domain.lol.dto.ChampionInfo
+import com.domain.rssReader.dto.ChampionInfo
 import com.lol.base.BaseFragment
 import com.lol.base.BaseVH
 import com.lol.databinding.VhChampionBinding

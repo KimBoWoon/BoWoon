@@ -2,6 +2,8 @@ package di
 
 import com.data.BuildConfig
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,4 +45,11 @@ object BaseRetrofitModule {
     fun provideInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
+
+    @Provides
+    fun provideTikXmlFactory(tikXml: TikXml): TikXmlConverterFactory =
+        TikXmlConverterFactory.create(tikXml)
+
+    @Provides
+    fun provideTikXml(): TikXml = TikXml.Builder().exceptionOnUnreadXml(false).build()
 }

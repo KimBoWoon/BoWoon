@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="rss"
+            type="com.rss_reader.dto.Article" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="5dp"
+        tools:cardBackgroundColor="#ffff00">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_rss_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{rss.title}"
+                android:textSize="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_rss_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{rss.feed}"
+                android:textSize="13dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_rss_title"
+                tools:text="feed" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_rss_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{rss.summary}"
+                android:textSize="15dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_rss_description"
+                tools:text="summary" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

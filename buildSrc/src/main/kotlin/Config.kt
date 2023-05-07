@@ -4,7 +4,7 @@ object Config {
         const val minSdk = 23
         const val targetSdk = 33
         const val testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        const val jvmVersion = "11"
+        const val jvmVersion = "17"
         const val applicationId = "com.bowoon"
         const val defaultProguardFile = "proguard-android-optimize.txt"
         const val proguardFile = "proguard-rules.pro"
@@ -48,6 +48,7 @@ object Config {
         const val lol = "lol"
         const val practice = "practice"
         const val gpsAlarm = "gpsAlarm"
+        const val rssReader = "rssReader"
     }
 
     object Practice {
@@ -72,5 +73,13 @@ object Config {
         const val namespace = "com.bowoon.android.gps_alarm"
         const val naverMapsClientName = "NAVER_MAPS_CLIENT_KEY"
         const val naverMapsClientKey = "naver_maps_client_key"
+    }
+
+    object RssReader {
+        const val appBundleName = "Rss_Reader-v"
+        const val versionCode = 1
+        const val versionName = "1.0.0"
+        const val applicationIdSuffix = ".RssReader"
+        const val namespace = "com.rss_reader"
     }
 }

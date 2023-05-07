@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.domain.lol.dto.*
+import com.domain.rssReader.dto.ChampionInfo
 import com.lol.R
 import com.lol.base.BaseFragment
 import com.lol.databinding.*
-import com.lol.ui.fragments.ChampionListFragment
 import com.lol.ui.vh.*
 import util.Log
 

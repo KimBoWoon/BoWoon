@@ -138,6 +138,13 @@ object Dependencies {
         const val core = "com.jakewharton.threetenabp:threetenabp:${Versions.ThreeTenABP.core}"
     }
 
+    object TikXml {
+        const val annotation = "com.tickaroo.tikxml:annotation:${Versions.TikXml.core}"
+        const val retrofitConverter = "com.tickaroo.tikxml:retrofit-converter:${Versions.TikXml.core}"
+        const val core = "com.tickaroo.tikxml:core:${Versions.TikXml.core}"
+        const val processor = "com.tickaroo.tikxml:processor:${Versions.TikXml.core}"
+    }
+
     object Test {
         const val junit = "junit:junit:${Versions.Test.junit}"
         const val junitExt = "androidx.test.ext:junit:${Versions.Test.junitExt}"

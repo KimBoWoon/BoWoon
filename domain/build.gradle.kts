@@ -40,10 +40,13 @@ android {
         create(Config.Flavors.gpsAlarm) {
             dimension = Config.Dimensions.mode
         }
+        create(Config.Flavors.rssReader) {
+            dimension = Config.Dimensions.mode
+        }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = Config.Application.jvmVersion
@@ -74,6 +77,10 @@ android {
                 manifest.srcFile("src/gpsAlarm/AndroidManifest.xml")
                 java.setSrcDirs(listOf("src/base/java", "src/gpsAlarm/java"))
             }
+            getByName(Config.Flavors.rssReader) {
+                manifest.srcFile("src/rssReader/AndroidManifest.xml")
+                java.setSrcDirs(listOf("src/base/java", "src/rssReader/java"))
+            }
         }
         getByName(Config.SourceSet.debug) {
             getByName(Config.Flavors.lol) {
@@ -87,6 +94,10 @@ android {
             getByName(Config.Flavors.gpsAlarm) {
                 manifest.srcFile("src/gpsAlarm/AndroidManifest.xml")
                 java.setSrcDirs(listOf("src/base/java", "src/gpsAlarm/java"))
+            }
+            getByName(Config.Flavors.rssReader) {
+                manifest.srcFile("src/rssReader/AndroidManifest.xml")
+                java.setSrcDirs(listOf("src/base/java", "src/rssReader/java"))
             }
         }
     }
