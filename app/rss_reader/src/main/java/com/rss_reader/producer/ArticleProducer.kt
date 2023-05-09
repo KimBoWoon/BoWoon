@@ -19,6 +19,7 @@ object ArticleProducer {
 //        Feed("inv", "afasldkfj")
     )
     val factory = DocumentBuilderFactory.newInstance()
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val producer = CoroutineScope(Dispatchers.IO).produce(Dispatchers.IO) {
         feeds.forEach {
@@ -26,7 +27,7 @@ object ArticleProducer {
         }
     }
 
-    fun fetchArticles(feed: Feed): List<Article> {
+    private fun fetchArticles(feed: Feed): List<Article> {
         val factory = factory.newDocumentBuilder()
         val xml = factory.parse(feed.url)
         val news = xml.getElementsByTagName(CHANNEL).item(0)

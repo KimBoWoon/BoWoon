@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         override suspend fun loadMore() {
             val producer = ArticleProducer.producer
 
+            @OptIn(ExperimentalCoroutinesApi::class)
             Log.d("isClosedForReceive > ${!producer.isClosedForReceive}")
             @OptIn(ExperimentalCoroutinesApi::class)
             if (!producer.isClosedForReceive) {
