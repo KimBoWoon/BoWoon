@@ -1,5 +1,6 @@
-package com.rss_reader
+package com.rss_reader.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,8 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.rss_reader.R
+import com.rss_reader.activities.vm.MainVM
 import com.rss_reader.adapter.ArticleAdapter
 import com.rss_reader.adapter.ArticleLoader
 import com.rss_reader.adapter.StickyHeaderItemDecoration
@@ -21,6 +24,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import util.DataStatus
 import util.Log
+import util.ViewAdapter.onDebounceClickListener
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -40,8 +44,6 @@ class MainActivity : AppCompatActivity() {
             runCatching {
                 val producer = ArticleProducer.producer
 
-                @OptIn(ExperimentalCoroutinesApi::class)
-                Log.d("isClosedForReceive > ${!producer.isClosedForReceive}")
                 @OptIn(ExperimentalCoroutinesApi::class)
                 if (!producer.isClosedForReceive) {
                     val articles = producer.receive()
@@ -68,7 +70,8 @@ class MainActivity : AppCompatActivity() {
     }
     private val callback = object : StickyHeaderItemDecoration.SectionCallback {
         override fun isHeader(position: Int): Boolean =
-            (binding.rvRssList.adapter as? ArticleAdapter)?.currentList?.get(position)?.isHeader ?: false
+            (binding.rvRssList.adapter as? ArticleAdapter)?.currentList?.get(position)?.isHeader
+                ?: false
 
         override fun getHeaderLayoutView(list: RecyclerView, position: Int): View? =
             (list.adapter as? ArticleAdapter)?.currentList?.get(position)?.let {
@@ -100,36 +103,10 @@ class MainActivity : AppCompatActivity() {
                 adapter = ArticleAdapter(loadMore)
                 if (itemDecorationCount == 0) {
                     addItemDecoration(StickyHeaderItemDecoration(callback))
-//                    addItemDecoration(object : RecyclerView.ItemDecoration() {
-//                        override fun getItemOffsets(
-//                            outRect: Rect,
-//                            view: View,
-//                            parent: RecyclerView,
-//                            state: RecyclerView.State
-//                        ) {
-//                            val position = parent.getChildLayoutPosition(view)
-//                            val size = parent.adapter?.itemCount ?: 0
-//                            if (position in 0 .. size) {
-//                                when (position) {
-//                                    0 -> {
-//                                        outRect.top = 10.dp
-//                                        outRect.bottom = 5.dp
-//                                    }
-//                                    state.itemCount - 1 -> {
-//                                        outRect.top = 5.dp
-//                                        outRect.bottom = 10.dp
-//                                    }
-//                                    else -> {
-//                                        outRect.top = 5.dp
-//                                        outRect.bottom = 5.dp
-//                                    }
-//                                }
-//                            }
-//                            outRect.left = 10.dp
-//                            outRect.right = 10.dp
-//                        }
-//                    })
                 }
+            }
+            bGoToSearch.onDebounceClickListener {
+                startActivity(Intent(this@MainActivity, SearchActivity::class.java))
             }
         }
     }
@@ -141,12 +118,10 @@ class MainActivity : AppCompatActivity() {
                     is DataStatus.Loading -> {
                         binding.pbLoading.isVisible = true
                     }
-
                     is DataStatus.Success -> {
                         binding.pbLoading.isVisible = false
                         (binding.rvRssList.adapter as? ArticleAdapter)?.submitList(it.data)
                     }
-
                     is DataStatus.Failure -> {
                         binding.pbLoading.isVisible = false
                         AlertDialog.Builder(this@MainActivity)

@@ -19,12 +19,12 @@
             android:id="@+id/mcv_article_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:background="@drawable/ripple_effect"
             android:clickable="true"
             android:focusable="true"
             app:cardCornerRadius="8dp"
             app:cardElevation="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:cardBackgroundColor="#ffff00">
 
@@ -49,6 +49,7 @@
                     android:id="@+id/tv_rss_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
                     android:ellipsize="end"
                     android:maxLines="2"
@@ -76,8 +77,9 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_rss_content"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
                     android:ellipsize="end"
                     android:lines="3"
                     android:maxLines="3"

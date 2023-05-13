@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ArticleAdapter(
-    private val loader: ArticleLoader
+    private val loader: ArticleLoader? = null
 ) : ListAdapter<Article, ArticleVH>(diff) {
     companion object {
         val diff = object : DiffUtil.ItemCallback<Article>() {
@@ -31,10 +31,10 @@ class ArticleAdapter(
 
     override fun onBindViewHolder(holder: ArticleVH, position: Int) {
         currentList[position]?.let {
-            holder.bind(it)
+            holder.bind(it, currentList.lastIndex)
         }
 
-        if (!loading && position >= currentList.size - 2) {
+        if (loader != null && !loading && position >= currentList.size - 2) {
             loading = true
 
             CoroutineScope(Dispatchers.IO).launch {

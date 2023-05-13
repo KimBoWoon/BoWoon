@@ -7,8 +7,10 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat.getSystemService
 import com.google.android.material.snackbar.Snackbar
 import kotlin.math.roundToInt
 
@@ -21,7 +23,13 @@ object ContextUtils {
         Toast.makeText(this, message, duration).show()
     }
 
-    fun Context?.showSnackBar(view: View, message: String, duration: Int, actionText: String? = null, action: View.OnClickListener? = null) {
+    fun Context?.showSnackBar(
+        view: View,
+        message: String,
+        duration: Int,
+        actionText: String? = null,
+        action: View.OnClickListener? = null
+    ) {
         this?.let { context ->
             Snackbar.make(context, view, message, duration).run {
                 ifNotNull(actionText, action) { actionMessage, action ->
@@ -32,7 +40,13 @@ object ContextUtils {
         }
     }
 
-    fun Context?.showSnackBar(view: View, message: String, duration: Int, @StringRes actionResId: Int? = null, action: View.OnClickListener? = null) {
+    fun Context?.showSnackBar(
+        view: View,
+        message: String,
+        duration: Int,
+        @StringRes actionResId: Int? = null,
+        action: View.OnClickListener? = null
+    ) {
         this?.let { context ->
             Snackbar.make(context, view, message, duration).run {
                 ifNotNull(actionResId, action) { actionMessage, action ->
@@ -93,7 +107,12 @@ object ContextUtils {
 }
 
 object ViewUtils {
-    fun View?.showSnackBar(message: String, duration: Int, actionText: String? = null, action: View.OnClickListener? = null) {
+    fun View?.showSnackBar(
+        message: String,
+        duration: Int,
+        actionText: String? = null,
+        action: View.OnClickListener? = null
+    ) {
         this?.let { view ->
             Snackbar.make(view, message, duration).run {
                 ifNotNull(actionText, action) { actionMessage, action ->
@@ -104,7 +123,12 @@ object ViewUtils {
         }
     }
 
-    fun View?.showSnackBar(message: String, duration: Int, @StringRes actionResId: Int? = null, action: View.OnClickListener? = null) {
+    fun View?.showSnackBar(
+        message: String,
+        duration: Int,
+        @StringRes actionResId: Int? = null,
+        action: View.OnClickListener? = null
+    ) {
         this?.let { view ->
             Snackbar.make(view, message, duration).run {
                 ifNotNull(actionResId, action) { actionMessage, action ->
@@ -115,7 +139,12 @@ object ViewUtils {
         }
     }
 
-    fun View?.showSnackBar(@StringRes resId: Int, duration: Int, actionText: String? = null, action: View.OnClickListener? = null) {
+    fun View?.showSnackBar(
+        @StringRes resId: Int,
+        duration: Int,
+        actionText: String? = null,
+        action: View.OnClickListener? = null
+    ) {
         this?.let { view ->
             Snackbar.make(view, resId, duration).run {
                 ifNotNull(actionText, action) { actionMessage, action ->
@@ -126,7 +155,12 @@ object ViewUtils {
         }
     }
 
-    fun View?.showSnackBar(@StringRes resId: Int, duration: Int, @StringRes actionResId: Int? = null, action: View.OnClickListener? = null) {
+    fun View?.showSnackBar(
+        @StringRes resId: Int,
+        duration: Int,
+        @StringRes actionResId: Int? = null,
+        action: View.OnClickListener? = null
+    ) {
         this?.let { view ->
             Snackbar.make(view, resId, duration).run {
                 ifNotNull(actionResId, action) { actionMessage, action ->
@@ -135,6 +169,26 @@ object ViewUtils {
                 show()
             }
         }
+    }
+
+    fun View?.hideSoftKeyboard() {
+        this ?: run {
+            Log.e("hideSoftKeyboard view is null")
+            return
+        }
+
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+    fun View?.showSoftKeyboard() {
+        this ?: run {
+            Log.e("hideSoftKeyboard view is null")
+            return
+        }
+
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.showSoftInput(this, 0)
     }
 }
 
