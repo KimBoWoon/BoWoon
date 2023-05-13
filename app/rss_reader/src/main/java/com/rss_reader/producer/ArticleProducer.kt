@@ -2,6 +2,7 @@ package com.rss_reader.producer
 
 import com.rss_reader.dto.Article
 import com.rss_reader.dto.Feed
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,14 +15,19 @@ object ArticleProducer {
     private const val CHANNEL = "channel"
     val feeds = listOf(
         Feed("npr", "https://feeds.npr.org/1001/rss.xml"),
-        Feed("cnn", "http://rss.cnn.com/rss/cnn_topstories.rss"),
+//        Feed("cnn", "http://rss.cnn.com/rss/cnn_topstories.rss"),
+        Feed("nasa", "https://www.nasa.gov/rss/dyn/breaking_news.rss"),
         Feed("fox", "https://moxie.foxnews.com/google-publisher/politics.xml?format=xml"),
 //        Feed("inv", "afasldkfj")
     )
-    val factory = DocumentBuilderFactory.newInstance()
+    private val factory = DocumentBuilderFactory.newInstance()
+    private val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        println("Error captured in $coroutineContext")
+        println("Message: ${throwable.message}")
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val producer = CoroutineScope(Dispatchers.IO).produce(Dispatchers.IO) {
+    val producer = CoroutineScope(Dispatchers.IO).produce(handler) {
         feeds.forEach {
             send(fetchArticles(it))
         }
@@ -37,10 +43,10 @@ object ArticleProducer {
             .filter { Node.ELEMENT_NODE == it.nodeType }
             .map { it as Element }
             .filter { "item" == it.tagName }
-            .map {
-                val title = it.getElementsByTagName("title").item(0).textContent
-                val summary = it.getElementsByTagName("description").item(0).textContent
-                Article(feed.name, title, summary)
+            .mapIndexed { index, element ->
+                val title = element.getElementsByTagName("title").item(0).textContent
+                val summary = element.getElementsByTagName("description").item(0).textContent
+                Article(index == 0, feed.name, title, summary)
             }
     }
 }

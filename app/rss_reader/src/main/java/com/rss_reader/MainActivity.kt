@@ -1,7 +1,7 @@
 package com.rss_reader
 
-import android.graphics.Rect
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -12,20 +12,22 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.rss_reader.adapter.ArticleAdapter
 import com.rss_reader.adapter.ArticleLoader
+import com.rss_reader.adapter.StickyHeaderItemDecoration
 import com.rss_reader.databinding.ActivityMainBinding
+import com.rss_reader.databinding.VhFeedNameBinding
 import com.rss_reader.producer.ArticleProducer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import util.DataStatus
 import util.Log
-import util.ScreenUtils.dp
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "MainActivity"
     }
+
     private val binding: ActivityMainBinding by lazy {
         DataBindingUtil.setContentView(
             this@MainActivity,
@@ -35,20 +37,45 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainVM>()
     private val loadMore = object : ArticleLoader {
         override suspend fun loadMore() {
-            val producer = ArticleProducer.producer
+            runCatching {
+                val producer = ArticleProducer.producer
 
-            @OptIn(ExperimentalCoroutinesApi::class)
-            Log.d("isClosedForReceive > ${!producer.isClosedForReceive}")
-            @OptIn(ExperimentalCoroutinesApi::class)
-            if (!producer.isClosedForReceive) {
-                val articles = producer.receive()
+                @OptIn(ExperimentalCoroutinesApi::class)
+                Log.d("isClosedForReceive > ${!producer.isClosedForReceive}")
+                @OptIn(ExperimentalCoroutinesApi::class)
+                if (!producer.isClosedForReceive) {
+                    val articles = producer.receive()
 
-                lifecycleScope.launch {
-                    binding.pbLoading.isVisible = false
-                    (binding.rvRssList.adapter as? ArticleAdapter)?.submitList(articles)
+                    lifecycleScope.launch {
+                        binding.pbLoading.isVisible = false
+                        (binding.rvRssList.adapter as? ArticleAdapter)?.let {
+                            val newList = it.currentList + articles
+                            it.submitList(newList)
+                        }
+                    }
                 }
+            }.onFailure {
+                Log.e(it.message ?: "something wrong...")
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle("Error!")
+                    .setMessage(it.message ?: "잠시후에 다시 시도해주세요.")
+                    /*.setPositiveButton("재시도", { dialog, which ->
+                    })*/.setNegativeButton("취소", { dialog, which ->
+                        dialog?.dismiss()
+                    }).create().show()
             }
         }
+    }
+    private val callback = object : StickyHeaderItemDecoration.SectionCallback {
+        override fun isHeader(position: Int): Boolean =
+            (binding.rvRssList.adapter as? ArticleAdapter)?.currentList?.get(position)?.isHeader ?: false
+
+        override fun getHeaderLayoutView(list: RecyclerView, position: Int): View? =
+            (list.adapter as? ArticleAdapter)?.currentList?.get(position)?.let {
+                VhFeedNameBinding.inflate(LayoutInflater.from(list.context), list, false).apply {
+                    tvFeedName.text = it.feed
+                }.root
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,35 +99,36 @@ class MainActivity : AppCompatActivity() {
             rvRssList.apply {
                 adapter = ArticleAdapter(loadMore)
                 if (itemDecorationCount == 0) {
-                    addItemDecoration(object : RecyclerView.ItemDecoration() {
-                        override fun getItemOffsets(
-                            outRect: Rect,
-                            view: View,
-                            parent: RecyclerView,
-                            state: RecyclerView.State
-                        ) {
-                            val position = parent.getChildLayoutPosition(view)
-                            val size = parent.adapter?.itemCount ?: 0
-                            if (position in 0 .. size) {
-                                when (position) {
-                                    0 -> {
-                                        outRect.top = 10.dp
-                                        outRect.bottom = 5.dp
-                                    }
-                                    state.itemCount - 1 -> {
-                                        outRect.top = 5.dp
-                                        outRect.bottom = 10.dp
-                                    }
-                                    else -> {
-                                        outRect.top = 5.dp
-                                        outRect.bottom = 5.dp
-                                    }
-                                }
-                            }
-                            outRect.left = 10.dp
-                            outRect.right = 10.dp
-                        }
-                    })
+                    addItemDecoration(StickyHeaderItemDecoration(callback))
+//                    addItemDecoration(object : RecyclerView.ItemDecoration() {
+//                        override fun getItemOffsets(
+//                            outRect: Rect,
+//                            view: View,
+//                            parent: RecyclerView,
+//                            state: RecyclerView.State
+//                        ) {
+//                            val position = parent.getChildLayoutPosition(view)
+//                            val size = parent.adapter?.itemCount ?: 0
+//                            if (position in 0 .. size) {
+//                                when (position) {
+//                                    0 -> {
+//                                        outRect.top = 10.dp
+//                                        outRect.bottom = 5.dp
+//                                    }
+//                                    state.itemCount - 1 -> {
+//                                        outRect.top = 5.dp
+//                                        outRect.bottom = 10.dp
+//                                    }
+//                                    else -> {
+//                                        outRect.top = 5.dp
+//                                        outRect.bottom = 5.dp
+//                                    }
+//                                }
+//                            }
+//                            outRect.left = 10.dp
+//                            outRect.right = 10.dp
+//                        }
+//                    })
                 }
             }
         }
@@ -113,10 +141,12 @@ class MainActivity : AppCompatActivity() {
                     is DataStatus.Loading -> {
                         binding.pbLoading.isVisible = true
                     }
+
                     is DataStatus.Success -> {
                         binding.pbLoading.isVisible = false
                         (binding.rvRssList.adapter as? ArticleAdapter)?.submitList(it.data)
                     }
+
                     is DataStatus.Failure -> {
                         binding.pbLoading.isVisible = false
                         AlertDialog.Builder(this@MainActivity)

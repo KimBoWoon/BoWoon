@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.rssReader.usecase.RssDataUseCase
 import com.rss_reader.dto.Article
-import com.rss_reader.dto.Feed
 import com.rss_reader.producer.ArticleProducer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import util.DataStatus
 import javax.inject.Inject
@@ -57,7 +55,14 @@ class MainVM @Inject constructor(
                 rss.value = DataStatus.Failure(it)
             }.map { rss ->
                 rss.flatMapIndexed { index, it ->
-                    it.channel?.items?.map { item -> Article(ArticleProducer.feeds[index].name, item.title, item.description) } ?: emptyList()
+                    it.channel?.items?.map { item ->
+                        Article(
+                            item == it.channel?.items?.first(),
+                            ArticleProducer.feeds[index].name,
+                            item.title,
+                            item.description
+                        )
+                    } ?: emptyList()
                 }
             }.collect {
                 rss.value = DataStatus.Success(it)

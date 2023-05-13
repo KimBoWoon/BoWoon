@@ -5,9 +5,8 @@ import android.text.Html
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.Target
 import util.ViewAdapter.DebounceClickValues.MIN_CLICK_INTERVAL
 
 object ViewAdapter {
@@ -78,5 +77,25 @@ object ViewAdapter {
     private object DebounceClickValues {
         var globalSingleLastClickTime: Long = 0
         const val MIN_CLICK_INTERVAL: Long = 300
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:visibleIf")
+    fun View?.visibleIf(value: Boolean) {
+        this ?: run {
+            Log.e("visibleIf > view is null")
+            return
+        }
+        isVisible = value
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:goneIf")
+    fun View?.goneIf(value: Boolean) {
+        this ?: run {
+            Log.e("visibleIf > view is null")
+            return
+        }
+        isVisible = !value
     }
 }

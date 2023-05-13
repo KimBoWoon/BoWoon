@@ -1,5 +1,6 @@
 package com.rss_reader.vh
 
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.rss_reader.databinding.VhRssBinding
 import com.rss_reader.dto.Article
@@ -11,6 +12,7 @@ class ArticleVH(
         item?.let {
             binding.apply {
                 rss = it
+                tvFeedName.isVisible = it.isHeader
             }
         }
     }
