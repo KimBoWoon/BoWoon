@@ -70,8 +70,7 @@ class MainActivity : AppCompatActivity() {
     }
     private val callback = object : StickyHeaderItemDecoration.SectionCallback {
         override fun isHeader(position: Int): Boolean =
-            (binding.rvRssList.adapter as? ArticleAdapter)?.currentList?.get(position)?.isHeader
-                ?: false
+            (binding.rvRssList.adapter as? ArticleAdapter)?.currentList?.get(position)?.isHeader ?: false
 
         override fun getHeaderLayoutView(list: RecyclerView, position: Int): View? =
             (list.adapter as? ArticleAdapter)?.currentList?.get(position)?.let {
