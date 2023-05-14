@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="rss"
+            type="com.rss_reader.dto.Article" />
+
+        <variable
+            name="vh"
+            type="com.rss_reader.vh.ArticleVH" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_feed_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{rss.feed}"
+            android:textSize="30dp"
+            android:visibleIf="@{rss.header}"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="NPR" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

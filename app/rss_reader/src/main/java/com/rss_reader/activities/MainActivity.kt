@@ -14,14 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rss_reader.R
 import com.rss_reader.activities.vm.MainVM
 import com.rss_reader.adapter.ArticleAdapter
-import com.rss_reader.adapter.ArticleLoader
 import com.rss_reader.adapter.StickyHeaderItemDecoration
 import com.rss_reader.databinding.ActivityMainBinding
-import com.rss_reader.databinding.VhFeedNameBinding
-import com.rss_reader.producer.ArticleProducer
+import com.rss_reader.databinding.VhFeedHeaderBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import util.DataStatus
 import util.Log
 import util.ViewAdapter.onDebounceClickListener
@@ -39,44 +35,27 @@ class MainActivity : AppCompatActivity() {
         )
     }
     private val viewModel by viewModels<MainVM>()
-    private val loadMore = object : ArticleLoader {
-        override suspend fun loadMore() {
-            runCatching {
-                val producer = ArticleProducer.producer
-
-                @OptIn(ExperimentalCoroutinesApi::class)
-                if (!producer.isClosedForReceive) {
-                    val articles = producer.receive()
-
-                    lifecycleScope.launch {
-                        binding.pbLoading.isVisible = false
-                        (binding.rvRssList.adapter as? ArticleAdapter)?.let {
-                            val newList = it.currentList + articles
-                            it.submitList(newList)
-                        }
-                    }
-                }
-            }.onFailure {
-                Log.e(it.message ?: "something wrong...")
-                AlertDialog.Builder(this@MainActivity)
-                    .setTitle("Error!")
-                    .setMessage(it.message ?: "잠시후에 다시 시도해주세요.")
-                    /*.setPositiveButton("재시도", { dialog, which ->
-                    })*/.setNegativeButton("취소", { dialog, which ->
-                        dialog?.dismiss()
-                    }).create().show()
-            }
-        }
-    }
+    private var headerView: View? = null
     private val callback = object : StickyHeaderItemDecoration.SectionCallback {
         override fun isHeader(position: Int): Boolean =
             (binding.rvRssList.adapter as? ArticleAdapter)?.currentList?.get(position)?.isHeader ?: false
 
         override fun getHeaderLayoutView(list: RecyclerView, position: Int): View? =
-            (list.adapter as? ArticleAdapter)?.currentList?.get(position)?.let {
-                VhFeedNameBinding.inflate(LayoutInflater.from(list.context), list, false).apply {
-                    tvFeedName.text = it.feed
-                }.root
+            when ((list.adapter as? ArticleAdapter)?.currentList?.get(position)?.isHeader) {
+                true -> {
+                    Log.d("header view true > $position")
+                    (list.adapter as? ArticleAdapter)?.currentList?.get(position)?.let {
+                        headerView = VhFeedHeaderBinding.inflate(LayoutInflater.from(list.context), list, false).apply {
+                            rss = it
+                            executePendingBindings()
+                        }.root
+                        headerView
+                    }
+                }
+                else -> {
+                    Log.d("header view false > $position")
+                    headerView
+                }
             }
     }
 
@@ -89,17 +68,13 @@ class MainActivity : AppCompatActivity() {
         lifecycle.addObserver(viewModel)
 
         initBinding()
-//        initFlow()
-
-        lifecycleScope.launch {
-            loadMore.loadMore()
-        }
+        initFlow()
     }
 
     private fun initBinding() {
         binding.apply {
             rvRssList.apply {
-                adapter = ArticleAdapter(loadMore)
+                adapter = ArticleAdapter()
                 if (itemDecorationCount == 0) {
                     addItemDecoration(StickyHeaderItemDecoration(callback))
                 }

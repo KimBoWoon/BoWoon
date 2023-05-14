@@ -15,12 +15,9 @@ import com.rss_reader.activities.vm.SearchVM
 import com.rss_reader.adapter.ArticleAdapter
 import com.rss_reader.adapter.StickyHeaderItemDecoration
 import com.rss_reader.databinding.ActivitySearchBinding
-import com.rss_reader.databinding.VhFeedNameBinding
+import com.rss_reader.databinding.VhFeedHeaderBinding
 import com.rss_reader.producer.ArticleProducer
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import util.DataStatus
 import util.ViewAdapter.onDebounceClickListener
 import util.ViewUtils.hideSoftKeyboard
@@ -40,11 +37,12 @@ class SearchActivity : AppCompatActivity() {
 
         override fun getHeaderLayoutView(list: RecyclerView, position: Int): View? =
             (list.adapter as? ArticleAdapter)?.currentList?.get(position)?.let {
-                VhFeedNameBinding.inflate(LayoutInflater.from(list.context), list, false).apply {
-                    tvFeedName.text = it.feed
+                VhFeedHeaderBinding.inflate(LayoutInflater.from(list.context), list, false).apply {
+                    rss = it
                 }.root
             }
     }
+//    private var counter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +51,10 @@ class SearchActivity : AppCompatActivity() {
             lifecycleOwner = this@SearchActivity
         }
         lifecycle.addObserver(viewModel)
+
+        lifecycleScope.launchWhenStarted {
+//            updateCounter()
+        }
 
         initBinding()
         initFlow()
@@ -67,12 +69,12 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
             bDoSearch.onDebounceClickListener {
+                root.hideSoftKeyboard()
+                binding.pbLoading.isVisible = true
+                (binding.rvSearchList.adapter as? ArticleAdapter)?.submitList(emptyList())
+                viewModel.fetchRss(binding.etInputKeyword.text.toString())
                 lifecycleScope.launchWhenStarted {
-                    binding.pbLoading.isVisible = true
-                    (binding.rvSearchList.adapter as? ArticleAdapter)?.submitList(emptyList())
-                    root.hideSoftKeyboard()
-                    viewModel.fetchRss(binding.etInputKeyword.text.toString())
-//                    search()
+                    ArticleProducer.reset()
                 }
             }
         }
@@ -83,11 +85,12 @@ class SearchActivity : AppCompatActivity() {
             viewModel.rss.collect {
                 when (it) {
                     is DataStatus.Loading -> {
-//                        binding.pbLoading.isVisible = true
+                        binding.tvArticleCount.text = "Results: 0"
                     }
                     is DataStatus.Success -> {
                         binding.pbLoading.isVisible = false
                         (binding.rvSearchList.adapter as? ArticleAdapter)?.submitList(it.data)
+                        binding.tvArticleCount.text = "Results: ${it.data.size}"
                     }
                     is DataStatus.Failure -> {
                         binding.pbLoading.isVisible = false
@@ -105,22 +108,19 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun search() {
-        val query = binding.etInputKeyword.text.toString()
-
-        val channel = ArticleProducer.search(query)
-
-        @OptIn(ExperimentalCoroutinesApi::class)
-        while (!channel.isClosedForReceive) {
-            val articles = channel.receive()
-
-            lifecycleScope.launch(Dispatchers.Main) {
-                binding.pbLoading.isVisible = false
-                (binding.rvSearchList.adapter as? ArticleAdapter)?.let {
-                    val newList = it.currentList + articles
-                    it.submitList(newList)
-                }
-            }
-        }
-    }
+//    private suspend fun updateCounter() {
+//        val notifications = ArticleProducer.getNotificationChannel()
+//
+//        while (!notifications.isClosedForReceive) {
+//            val action = notifications.receive()
+//
+//            withContext(Dispatchers.Main) {
+//                when (action) {
+//                    ArticleProducer.Action.INCREASE -> counter++
+//                    ArticleProducer.Action.RESET -> counter = 0
+//                }
+//                binding.tvArticleCount.text = "Results: $counter"
+//            }
+//        }
+//    }
 }

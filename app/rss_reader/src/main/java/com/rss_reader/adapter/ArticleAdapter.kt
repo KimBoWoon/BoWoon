@@ -4,16 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.rss_reader.R
+import com.rss_reader.databinding.VhFeedHeaderBinding
 import com.rss_reader.databinding.VhRssBinding
 import com.rss_reader.dto.Article
 import com.rss_reader.vh.ArticleVH
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.rss_reader.vh.FeedHeaderVH
 
-class ArticleAdapter(
-    private val loader: ArticleLoader? = null
-) : ListAdapter<Article, ArticleVH>(diff) {
+class ArticleAdapter : ListAdapter<Article, RecyclerView.ViewHolder>(diff) {
     companion object {
         val diff = object : DiffUtil.ItemCallback<Article>() {
             override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean =
@@ -24,27 +23,28 @@ class ArticleAdapter(
         }
     }
 
-    private var loading = false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
+        R.layout.vh_feed_header -> FeedHeaderVH(VhFeedHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        R.layout.vh_rss -> ArticleVH(VhRssBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        else -> throw RuntimeException("viewholder not found")
+    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleVH =
-        ArticleVH(VhRssBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-
-    override fun onBindViewHolder(holder: ArticleVH, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         currentList[position]?.let {
-            holder.bind(it, currentList.lastIndex)
-        }
-
-        if (loader != null && !loading && position >= currentList.size - 2) {
-            loading = true
-
-            CoroutineScope(Dispatchers.IO).launch {
-                loader.loadMore()
-                loading = false
+            when (holder) {
+                is FeedHeaderVH -> holder.bind(it)
+                is ArticleVH -> holder.bind(it, currentList.lastIndex)
             }
         }
     }
-}
 
-interface ArticleLoader {
-    suspend fun loadMore()
+    override fun getItemViewType(position: Int): Int {
+        currentList[position]?.let {
+            return when (it.isHeader) {
+                true -> R.layout.vh_feed_header
+                false -> R.layout.vh_rss
+            }
+        }
+        throw RuntimeException("not supported viewtype")
+    }
 }

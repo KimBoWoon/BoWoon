@@ -8,6 +8,10 @@
         <variable
             name="rss"
             type="com.rss_reader.dto.Article" />
+
+        <variable
+            name="vh"
+            type="com.rss_reader.vh.ArticleVH" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,17 +35,17 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent">
+                android:background="@android:color/transparent"
+                app:onDebounceClickListener="@{() -> vh.articleClick(rss)}">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_feed_name"
-                    android:layout_width="50dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
+                    android:gravity="center"
                     android:text="@{rss.feed}"
+                    android:textSize="30dp"
                     android:visibleIf="@{rss.isHeader}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="NPR" />
 
@@ -49,15 +53,15 @@
                     android:id="@+id/tv_rss_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:text="@{rss.title}"
                     android:textSize="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tv_feed_name"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_feed_name"
                     app:layout_goneMarginStart="50dp"
                     tools:text="title" />
 
@@ -65,19 +69,20 @@
                     android:id="@+id/v_separate_line"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
                     android:background="#eeeeee"
                     app:layout_constraintBottom_toTopOf="@id/tv_rss_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/tv_rss_title"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_rss_title" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_rss_content"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
                     android:ellipsize="end"
@@ -86,8 +91,7 @@
                     android:text="@{rss.summary}"
                     android:textSize="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tv_feed_name"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/v_separate_line"
                     app:layout_goneMarginStart="50dp"
                     tools:text="summary" />

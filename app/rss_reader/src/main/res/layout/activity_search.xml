@@ -25,6 +25,14 @@
             app:layout_constraintStart_toEndOf="@id/et_input_keyword"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_article_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@id/rv_search_list"
+            app:layout_constraintTop_toBottomOf="@id/et_input_keyword" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_search_list"
             android:layout_width="match_parent"
@@ -32,7 +40,7 @@
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_input_keyword"
+            app:layout_constraintTop_toBottomOf="@id/tv_article_count"
             tools:listitem="@layout/vh_rss" />
 
         <ProgressBar

@@ -54,7 +54,8 @@ class SearchVM @Inject constructor(
                             item == it.channel?.items?.first(),
                             ArticleProducer.feeds[index].name,
                             item.title,
-                            item.description
+                            item.description,
+                            item.link
                         )
                     } ?: emptyList()
                 }

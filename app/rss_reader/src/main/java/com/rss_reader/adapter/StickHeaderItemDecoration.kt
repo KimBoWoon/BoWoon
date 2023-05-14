@@ -1,11 +1,9 @@
 package com.rss_reader.adapter
 
 import android.graphics.Canvas
-import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import util.ScreenUtils.dp
 
 class StickyHeaderItemDecoration(
     private val sectionCallback: SectionCallback
@@ -21,7 +19,8 @@ class StickyHeaderItemDecoration(
         }
 
         /* 헤더 */
-        val currentHeader: View = sectionCallback.getHeaderLayoutView(parent, topChildPosition) ?: return
+        val currentHeader: View =
+            sectionCallback.getHeaderLayoutView(parent, topChildPosition) ?: return
 
         /* View의 레이아웃 설정 */
         fixLayoutSize(parent, currentHeader, topChild.measuredHeight)
@@ -31,14 +30,18 @@ class StickyHeaderItemDecoration(
         val childInContact: View = getChildInContact(parent, contactPoint) ?: return
 
         val childAdapterPosition = parent.getChildAdapterPosition(childInContact)
-        if (childAdapterPosition == -1)
+        if (childAdapterPosition == -1) {
             return
+        }
 
         when {
-            sectionCallback.isHeader(childAdapterPosition) ->
-                moveHeader(c, currentHeader, childInContact)
-            else ->
-                drawHeader(c, currentHeader)
+            sectionCallback.isHeader(childAdapterPosition) -> moveHeader(
+                c,
+                currentHeader,
+                childInContact
+            )
+
+            else -> drawHeader(c, currentHeader)
         }
     }
 
@@ -91,39 +94,12 @@ class StickyHeaderItemDecoration(
         val childHeight: Int = ViewGroup.getChildMeasureSpec(
             heightSpec,
             parent.paddingTop + parent.paddingBottom,
-            height
+//            height
+            view.layoutParams.height
         )
         view.measure(childWidth, childHeight)
         view.layout(0, 0, view.measuredWidth, view.measuredHeight)
     }
-
-//    override fun getItemOffsets(
-//        outRect: Rect,
-//        view: View,
-//        parent: RecyclerView,
-//        state: RecyclerView.State
-//    ) {
-//        val position = parent.getChildLayoutPosition(view)
-//        val size = parent.adapter?.itemCount ?: 0
-//        if (position in 0 .. size) {
-//            when (position) {
-//                0 -> {
-//                    outRect.top = 10.dp
-//                    outRect.bottom = 5.dp
-//                }
-//                state.itemCount - 1 -> {
-//                    outRect.top = 5.dp
-//                    outRect.bottom = 10.dp
-//                }
-//                else -> {
-//                    outRect.top = 5.dp
-//                    outRect.bottom = 5.dp
-//                }
-//            }
-//        }
-//        outRect.left = 10.dp
-//        outRect.right = 10.dp
-//    }
 
     interface SectionCallback {
         fun isHeader(position: Int): Boolean

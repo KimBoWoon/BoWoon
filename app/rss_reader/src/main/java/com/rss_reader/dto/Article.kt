@@ -4,5 +4,6 @@ data class Article(
     val isHeader: Boolean = false,
     val feed: String? = null,
     val title: String? = null,
-    val summary: String? = null
+    val summary: String? = null,
+    val linkUrl: String? = null
 )
