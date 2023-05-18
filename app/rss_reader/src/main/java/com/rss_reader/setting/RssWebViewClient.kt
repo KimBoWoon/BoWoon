@@ -14,13 +14,17 @@ class RssWebViewClient(
     private val binding: ViewDataBinding? = null
 ) : WebViewClient() {
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-//        super.onPageStarted(view, url, favicon)
+        super.onPageStarted(view, url, favicon)
+
+        Log.d("onPageStarted")
 
         (binding as? ActivityArticleDetailBinding)?.pbArticleDetailLoading?.isVisible = true
     }
 
     override fun onPageFinished(view: WebView?, url: String?) {
-//        super.onPageFinished(view, url)
+        super.onPageFinished(view, url)
+
+        Log.d("onPageFinished")
 
         (binding as? ActivityArticleDetailBinding)?.pbArticleDetailLoading?.isVisible = false
     }

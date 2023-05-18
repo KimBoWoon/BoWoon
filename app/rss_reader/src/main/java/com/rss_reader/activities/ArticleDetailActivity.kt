@@ -32,7 +32,7 @@ class ArticleDetailActivity : AppCompatActivity() {
     private fun initBinding() {
         binding.apply {
             wvArticleDetail.apply {
-                webViewClient = RssWebViewClient()
+                webViewClient = RssWebViewClient(binding)
                 webChromeClient = RssWebChromeClient()
                 settings.apply {
                     setSupportZoom(false)
