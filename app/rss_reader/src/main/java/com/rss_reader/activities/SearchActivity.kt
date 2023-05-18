@@ -31,18 +31,25 @@ class SearchActivity : AppCompatActivity() {
         )
     }
     private val viewModel by viewModels<SearchVM>()
+//    private val callback = object : StickyHeaderItemDecoration.SectionCallback {
+//        override fun isHeader(position: Int): Boolean =
+//            (binding.rvSearchList.adapter as? ArticleAdapter)?.currentList?.get(position)?.isHeader ?: false
+//
+//        override fun getHeaderLayoutView(list: RecyclerView, position: Int): View? =
+//            (list.adapter as? ArticleAdapter)?.currentList?.get(position)?.let {
+//                VhFeedHeaderBinding.inflate(LayoutInflater.from(list.context), list, false).apply {
+//                    rss = it
+//                }.root
+//            }
+//    }
     private val callback = object : StickyHeaderItemDecoration.SectionCallback {
         override fun isHeader(position: Int): Boolean =
-            (binding.rvSearchList.adapter as? ArticleAdapter)?.currentList?.get(position)?.isHeader ?: false
+            (binding.rvSearchList.adapter as? ArticleAdapter)?.isHeader(position) ?: false
 
         override fun getHeaderLayoutView(list: RecyclerView, position: Int): View? =
-            (list.adapter as? ArticleAdapter)?.currentList?.get(position)?.let {
-                VhFeedHeaderBinding.inflate(LayoutInflater.from(list.context), list, false).apply {
-                    rss = it
-                }.root
-            }
+            (binding.rvSearchList.adapter as? ArticleAdapter)?.getHeaderLayout(list, position)
     }
-//    private var counter = 0
+    private var counter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +78,7 @@ class SearchActivity : AppCompatActivity() {
             bDoSearch.onDebounceClickListener {
                 root.hideSoftKeyboard()
                 binding.pbLoading.isVisible = true
-                (binding.rvSearchList.adapter as? ArticleAdapter)?.submitList(emptyList())
+//                (binding.rvSearchList.adapter as? ArticleAdapter)?.submitList(emptyList())
                 viewModel.fetchRss(binding.etInputKeyword.text.toString())
                 lifecycleScope.launchWhenStarted {
                     ArticleProducer.reset()
@@ -89,7 +96,7 @@ class SearchActivity : AppCompatActivity() {
                     }
                     is DataStatus.Success -> {
                         binding.pbLoading.isVisible = false
-                        (binding.rvSearchList.adapter as? ArticleAdapter)?.submitList(it.data)
+//                        (binding.rvSearchList.adapter as? ArticleAdapter)?.submitList(it.data)
                         binding.tvArticleCount.text = "Results: ${it.data.size}"
                     }
                     is DataStatus.Failure -> {

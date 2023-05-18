@@ -160,4 +160,4 @@ fun getProp(propertyKey: String): String =
         }
 
         prop.getProperty(propertyKey)
-    }.getOrDefault("")
+    }.getOrDefault("key not found")

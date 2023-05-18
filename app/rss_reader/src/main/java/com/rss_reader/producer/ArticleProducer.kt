@@ -2,9 +2,11 @@ package com.rss_reader.producer
 
 import com.rss_reader.dto.Feed
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
-import javax.xml.parsers.DocumentBuilderFactory
+import kotlinx.coroutines.channels.produce
 
 object ArticleProducer {
     private const val CHANNEL = "channel"
@@ -15,12 +17,14 @@ object ArticleProducer {
         Feed("fox", "https://moxie.foxnews.com/google-publisher/politics.xml?format=xml"),
 //        Feed("inv", "afasldkfj")
     )
-    private val factory = DocumentBuilderFactory.newInstance()
     private val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
         println("Error captured in $coroutineContext")
         println("Message: ${throwable.message}")
     }
     private val notifications = Channel<Action>(Channel.CONFLATED)
+    val produce = CoroutineScope(Dispatchers.IO + handler).produce {
+        feeds.forEach { send(it) }
+    }
 
     enum class Action {
         INCREASE, RESET

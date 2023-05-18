@@ -29,7 +29,12 @@ class MainVM @Inject constructor(
 
     init {
         viewModelScope.launch {
-            fetchRss()
+//            fetchRss()
+            if (!ArticleProducer.produce.isClosedForReceive) {
+                val feed = ArticleProducer.produce.receive()
+
+                fetchRss(feed.url ?: "")
+            }
         }
     }
 
@@ -68,6 +73,44 @@ class MainVM @Inject constructor(
                         )
                     } ?: emptyList())
                 }
+                result
+            }.collect {
+                rss.value = DataStatus.Success(it)
+            }
+        }
+    }
+
+    fun fetchRss(url: String) {
+        viewModelScope.launch {
+            callbackFlow {
+                runCatching {
+                    async { rssDataUseCase.getRssData(url) }.await()
+                }.onSuccess {
+                    trySend(it)
+                }.onFailure { e ->
+                    close(e)
+                }
+
+                awaitClose {
+                    close()
+                }
+            }.onStart {
+                rss.value = DataStatus.Loading
+            }.catch {
+                rss.value = DataStatus.Failure(it)
+            }.map { rss ->
+                val result = mutableListOf<Article>()
+
+                result.add(Article(true, ArticleProducer.feeds.find { it.url == url }?.name))
+                result.addAll(rss.channel?.items?.map { item ->
+                    Article(
+                        false,
+                        ArticleProducer.feeds.find { it.url == url }?.name,
+                        item.title,
+                        item.description,
+                        item.link
+                    )
+                } ?: emptyList())
                 result
             }.collect {
                 rss.value = DataStatus.Success(it)
