@@ -73,8 +73,8 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(R.layout.activity_sea
                         binding.pbLoading.isVisible = false
                         (binding.rvSearchList.adapter as? ArticleAdapter)?.submitList(it.data)
 //                        (binding.rvSearchList.adapter as? ArticleAdapter)?.addItems(it.data)
-//                        binding.tvArticleCount.text = String.format("Results: %d", counter)
                         binding.tvArticleCount.text = String.format("Results: %d", it.data.filter { !it.isHeader }.size)
+//                        binding.tvArticleCount.text = String.format("Results: %d", counter)
                     }
                     is DataStatus.Failure -> {
                         binding.pbLoading.isVisible = false

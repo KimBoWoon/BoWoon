@@ -11,6 +11,7 @@ import kotlinx.coroutines.channels.produce
 object ArticleProducer {
     private const val CHANNEL = "channel"
     val feeds = listOf(
+        Feed("JTBC", "https://fs.jtbc.co.kr/RSS/newsflash.xml"),
         Feed("npr", "https://feeds.npr.org/1001/rss.xml"),
         Feed("cnn", "http://rss.cnn.com/rss/cnn_topstories.rss"),
         Feed("nasa", "https://www.nasa.gov/rss/dyn/breaking_news.rss"),
