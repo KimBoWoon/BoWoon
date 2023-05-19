@@ -37,7 +37,6 @@ object Config {
 
     object Dimensions {
         const val mode = "mode"
-        const val rssMode = "rssMode"
     }
     
     object SourceSet {

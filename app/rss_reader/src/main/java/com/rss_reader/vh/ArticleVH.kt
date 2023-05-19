@@ -2,7 +2,6 @@ package com.rss_reader.vh
 
 import android.content.Intent
 import android.view.ViewGroup.MarginLayoutParams
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.rss_reader.activities.ArticleDetailActivity
 import com.rss_reader.databinding.VhRssBinding
@@ -17,7 +16,6 @@ class ArticleVH(
             binding.apply {
                 vh = this@ArticleVH
                 rss = it
-                tvFeedName.isVisible = it.isHeader
 
                 (mcvArticleRoot.layoutParams as? MarginLayoutParams)?.apply {
                     leftMargin = 10.dp
@@ -28,12 +26,10 @@ class ArticleVH(
                             topMargin = 10.dp
                             bottomMargin = 5.dp
                         }
-
                         last -> {
                             topMargin = 5.dp
                             bottomMargin = 10.dp
                         }
-
                         else -> {
                             topMargin = 5.dp
                             bottomMargin = 5.dp

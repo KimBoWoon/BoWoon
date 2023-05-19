@@ -50,10 +50,10 @@ android {
 //            signingConfig = signingConfigs.getByName(Config.Sign.Debug.name)
         }
     }
-    flavorDimensions.addAll(listOf(Config.Dimensions.rssMode))
+    flavorDimensions.addAll(listOf(Config.Dimensions.mode))
     productFlavors {
         create(Config.Flavors.rssReader) {
-            dimension = Config.Dimensions.rssMode
+            dimension = Config.Dimensions.mode
         }
     }
     compileOptions {
