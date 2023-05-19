@@ -1,4 +1,4 @@
-package com.rss_reader.adapter
+package util
 
 import android.graphics.Canvas
 import android.view.View
@@ -94,7 +94,6 @@ class StickyHeaderItemDecoration(
         val childHeight: Int = ViewGroup.getChildMeasureSpec(
             heightSpec,
             parent.paddingTop + parent.paddingBottom,
-//            height
             view.layoutParams.height
         )
         view.measure(childWidth, childHeight)

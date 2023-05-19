@@ -23,7 +23,6 @@
             android:id="@+id/mcv_article_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ripple_effect"
             android:clickable="true"
             android:focusable="true"
             app:cardCornerRadius="8dp"
@@ -35,7 +34,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
+                android:background="@drawable/ripple_effect"
                 app:onDebounceClickListener="@{() -> vh.articleClick(rss)}">
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -60,6 +59,7 @@
                     android:maxLines="2"
                     android:text="@{rss.title}"
                     android:textSize="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_feed_name"
                     app:layout_goneMarginStart="50dp"
@@ -75,6 +75,7 @@
                     android:layout_marginBottom="5dp"
                     android:background="#eeeeee"
                     app:layout_constraintBottom_toTopOf="@id/tv_rss_content"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_rss_title" />
 
@@ -86,11 +87,13 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
                     android:ellipsize="end"
+                    android:goneIf="@{rss.summary.empty || rss.summary == null}"
                     android:lines="3"
                     android:maxLines="3"
                     android:text="@{rss.summary}"
                     android:textSize="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/v_separate_line"
                     app:layout_goneMarginStart="50dp"

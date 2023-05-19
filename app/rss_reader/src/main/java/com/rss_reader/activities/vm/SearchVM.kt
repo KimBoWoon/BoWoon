@@ -48,17 +48,32 @@ class SearchVM @Inject constructor(
             }.catch {
                 rss.value = DataStatus.Failure(it)
             }.map { rss ->
-                rss.flatMapIndexed { index, it ->
-                    it.channel?.items?.takeIf { it.any { it.title?.contains(query) == true || it.description?.contains(query) == true } }?.map { item ->
+//                rss.flatMapIndexed { index, it ->
+//                    it.channel?.items?.takeIf { it.any { it.title?.contains(query) == true || it.description?.contains(query) == true } }?.map { item ->
+//                        Article(
+//                            item == it.channel?.items?.first(),
+//                            ArticleProducer.feeds[index].name,
+//                            item.title,
+//                            item.description,
+//                            item.link
+//                        )
+//                    } ?: emptyList()
+//                }
+                val result = mutableListOf<Article>()
+
+                rss.forEachIndexed { index, it ->
+                    result.add(Article(true, ArticleProducer.feeds[index].name))
+                    result.addAll(it.channel?.items?.map { item ->
                         Article(
-                            item == it.channel?.items?.first(),
+                            false,
                             ArticleProducer.feeds[index].name,
                             item.title,
                             item.description,
                             item.link
                         )
-                    } ?: emptyList()
+                    } ?: emptyList())
                 }
+                result
             }.collect {
                 rss.value = DataStatus.Success(it)
             }
