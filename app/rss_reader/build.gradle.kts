@@ -34,6 +34,7 @@ android {
             isMinifyEnabled = true
             isJniDebuggable = false
             isShrinkResources = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile(Config.Application.defaultProguardFile),
                 Config.Application.proguardFile
@@ -41,6 +42,7 @@ android {
         }
         debug {
             isMinifyEnabled = false
+            isDebuggable = true
         }
         create(Config.BuildType.beta) {
             isMinifyEnabled = false
@@ -48,10 +50,10 @@ android {
 //            signingConfig = signingConfigs.getByName(Config.Sign.Debug.name)
         }
     }
-    flavorDimensions.addAll(listOf(Config.Dimensions.mode))
+    flavorDimensions.addAll(listOf(Config.Dimensions.rssMode))
     productFlavors {
         create(Config.Flavors.rssReader) {
-            dimension = Config.Dimensions.mode
+            dimension = Config.Dimensions.rssMode
         }
     }
     compileOptions {

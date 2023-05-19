@@ -3,14 +3,13 @@ package com.rss_reader.activities
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.rss_reader.R
 import com.rss_reader.activities.vm.SearchVM
 import com.rss_reader.adapter.ArticleAdapter
 import com.rss_reader.adapter.StickyDecoration
+import com.rss_reader.base.BaseActivity
 import com.rss_reader.databinding.ActivitySearchBinding
 import com.rss_reader.producer.ArticleProducer
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,13 +21,7 @@ import util.ViewAdapter.onDebounceClickListener
 import util.ViewUtils.hideSoftKeyboard
 
 @AndroidEntryPoint
-class SearchActivity : AppCompatActivity() {
-    private val binding: ActivitySearchBinding by lazy {
-        DataBindingUtil.setContentView(
-            this@SearchActivity,
-            R.layout.activity_search
-        )
-    }
+class SearchActivity : BaseActivity<ActivitySearchBinding>(R.layout.activity_search) {
     private val viewModel by viewModels<SearchVM>()
     private var counter = 0
 

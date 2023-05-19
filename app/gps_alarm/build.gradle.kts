@@ -1,6 +1,6 @@
 import java.io.FileInputStream
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Properties
 
 plugins {
     id(Dependencies.BuildPlugins.application)

@@ -4,14 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.rss_reader.R
 import com.rss_reader.activities.vm.MainVM
 import com.rss_reader.adapter.ArticleAdapter
 import com.rss_reader.adapter.StickyDecoration
+import com.rss_reader.base.BaseActivity
 import com.rss_reader.databinding.ActivityMainBinding
 import com.rss_reader.producer.ArticleProducer
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,17 +24,11 @@ import util.StickyHeaderItemDecoration
 import util.ViewAdapter.onDebounceClickListener
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     companion object {
         private const val TAG = "MainActivity"
     }
 
-    private val binding: ActivityMainBinding by lazy {
-        DataBindingUtil.setContentView(
-            this@MainActivity,
-            R.layout.activity_main
-        )
-    }
     private val viewModel by viewModels<MainVM>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

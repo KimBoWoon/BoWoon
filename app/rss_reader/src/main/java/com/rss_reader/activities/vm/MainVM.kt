@@ -1,10 +1,9 @@
 package com.rss_reader.activities.vm
 
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.rssReader.usecase.RssDataUseCase
+import com.rss_reader.base.BaseVM
 import com.rss_reader.dto.Article
 import com.rss_reader.producer.ArticleProducer
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +23,7 @@ import javax.inject.Inject
 class MainVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val rssDataUseCase: RssDataUseCase
-) : ViewModel(), LifecycleObserver {
+) : BaseVM() {
     val rss = MutableStateFlow<DataStatus<List<Article>>>(DataStatus.Loading)
 
     init {
@@ -59,21 +58,20 @@ class MainVM @Inject constructor(
             }.catch {
                 rss.value = DataStatus.Failure(it)
             }.map { rss ->
-                val result = mutableListOf<Article>()
-
-                rss.forEachIndexed { index, it ->
-                    result.add(Article(true, ArticleProducer.feeds[index].name))
-                    result.addAll(it.channel?.items?.map { item ->
-                        Article(
-                            false,
-                            ArticleProducer.feeds[index].name,
-                            item.title,
-                            item.description,
-                            item.link
-                        )
-                    } ?: emptyList())
+                mutableListOf<Article>().apply {
+                    rss.forEachIndexed { index, it ->
+                        add(Article(true, ArticleProducer.feeds[index].name))
+                        addAll(it.channel?.items?.map { item ->
+                            Article(
+                                false,
+                                ArticleProducer.feeds[index].name,
+                                item.title,
+                                item.description,
+                                item.link
+                            )
+                        } ?: emptyList())
+                    }
                 }
-                result
             }.collect {
                 rss.value = DataStatus.Success(it)
             }
@@ -99,19 +97,18 @@ class MainVM @Inject constructor(
             }.catch {
                 rss.value = DataStatus.Failure(it)
             }.map { rss ->
-                val result = mutableListOf<Article>()
-
-                result.add(Article(true, ArticleProducer.feeds.find { it.url == url }?.name))
-                result.addAll(rss.channel?.items?.map { item ->
-                    Article(
-                        false,
-                        ArticleProducer.feeds.find { it.url == url }?.name,
-                        item.title,
-                        item.description,
-                        item.link
-                    )
-                } ?: emptyList())
-                result
+                mutableListOf<Article>().apply {
+                    add(Article(true, ArticleProducer.feeds.find { it.url == url }?.name))
+                    addAll(rss.channel?.items?.map { item ->
+                        Article(
+                            false,
+                            ArticleProducer.feeds.find { it.url == url }?.name,
+                            item.title,
+                            item.description,
+                            item.link
+                        )
+                    } ?: emptyList())
+                }
             }.collect {
                 rss.value = DataStatus.Success(it)
             }

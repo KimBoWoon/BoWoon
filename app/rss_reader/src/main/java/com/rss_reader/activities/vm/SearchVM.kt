@@ -48,32 +48,20 @@ class SearchVM @Inject constructor(
             }.catch {
                 rss.value = DataStatus.Failure(it)
             }.map { rss ->
-//                rss.flatMapIndexed { index, it ->
-//                    it.channel?.items?.takeIf { it.any { it.title?.contains(query) == true || it.description?.contains(query) == true } }?.map { item ->
-//                        Article(
-//                            item == it.channel?.items?.first(),
-//                            ArticleProducer.feeds[index].name,
-//                            item.title,
-//                            item.description,
-//                            item.link
-//                        )
-//                    } ?: emptyList()
-//                }
-                val result = mutableListOf<Article>()
-
-                rss.forEachIndexed { index, it ->
-                    result.add(Article(true, ArticleProducer.feeds[index].name))
-                    result.addAll(it.channel?.items?.map { item ->
-                        Article(
-                            false,
-                            ArticleProducer.feeds[index].name,
-                            item.title,
-                            item.description,
-                            item.link
-                        )
-                    } ?: emptyList())
+                mutableListOf<Article>().apply {
+                    rss.forEachIndexed { index, it ->
+                        add(Article(true, ArticleProducer.feeds[index].name))
+                        addAll(it.channel?.items?.map { item ->
+                            Article(
+                                false,
+                                ArticleProducer.feeds[index].name,
+                                item.title,
+                                item.description,
+                                item.link
+                            )
+                        } ?: emptyList())
+                    }
                 }
-                result
             }.collect {
                 rss.value = DataStatus.Success(it)
             }
