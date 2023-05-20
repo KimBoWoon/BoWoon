@@ -122,6 +122,8 @@ fun ShowWebView(
                     loadWithOverviewMode = true
                     builtInZoomControls = false
                     cacheMode = WebSettings.LOAD_NO_CACHE
+                    allowContentAccess = true
+                    allowFileAccess = true
                     setSupportZoom(false)
                     setSupportMultipleWindows(true)
                 }

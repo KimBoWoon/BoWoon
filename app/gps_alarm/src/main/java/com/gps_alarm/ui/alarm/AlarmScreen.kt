@@ -38,8 +38,6 @@ import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.theme.Purple700
 import com.gps_alarm.ui.util.OnLifecycleEvent
 import com.gps_alarm.ui.viewmodel.AlarmVM
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import util.Log
 
 @Composable
@@ -74,9 +72,30 @@ fun AlarmCompose(
             Lifecycle.Event.ON_START -> { Log.d("ON_START") }
             Lifecycle.Event.ON_CREATE -> {
                 Log.d("ON_CREATE")
-                viewModel.container.sideEffectFlow
-                    .onEach { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
-                    .launchIn(owner.lifecycleScope)
+                owner.lifecycleScope.launchWhenCreated {
+                    viewModel.container.sideEffectFlow.collect {
+                        when (it) {
+                            is AlarmVM.AlarmSideEffect.DeleteAlarm -> {
+//                                viewModel.removeAlarm(it.longitude, it.latitude)
+                            }
+                            is AlarmVM.AlarmSideEffect.ShowToast -> {
+                                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                            }
+                            is AlarmVM.AlarmSideEffect.SaveListToDataStore -> {
+                                viewModel.saveToDataStore(it.data)
+                            }
+                            is AlarmVM.AlarmSideEffect.ModifyAddress -> {
+                                viewModel.changeData(it.data)
+                            }
+                            is AlarmVM.AlarmSideEffect.GoToDetail -> {
+                                onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${it.longitude}/${it.latitude}")
+                            }
+                            else -> {
+                                Log.d("AlarmScreen > not support $it")
+                            }
+                        }
+                    }
+                }
             }
             Lifecycle.Event.ON_RESUME -> {
                 Log.d("ON_RESUME")
@@ -184,7 +203,9 @@ fun AddressItem(
             .wrapContentHeight()
             .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = if (isLast) 10.dp else 0.dp)
             .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(8.dp))
-            .clickable { onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${address.longitude}/${address.latitude}") },
+            .clickable {
+                viewModel.goToDetail(address.longitude.toString(), address.latitude.toString())
+            }
     ) {
         Box(
             modifier = Modifier.padding(5.dp)
@@ -201,7 +222,7 @@ fun AddressItem(
                     onCheckedChange = {
                         checkedState = it
                         address.isEnable = it
-                        viewModel.changeData(address)
+                        viewModel.modifyAddress(address)
                     }
                 )
             }
@@ -210,7 +231,7 @@ fun AddressItem(
                     .wrapContentSize()
                     .align(alignment = Alignment.BottomEnd),
                 onClick = {
-                    viewModel.deleteAlarm(address.longitude, address.latitude)
+                    viewModel.removeAlarm(address.longitude, address.latitude)
                 }
             ) {
                 Text(text = "제거")

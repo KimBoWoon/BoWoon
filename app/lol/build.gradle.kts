@@ -52,6 +52,7 @@ android {
         getByName(Config.BuildType.debug) {
             isMinifyEnabled = false
             isDebuggable = true
+            signingConfig = signingConfigs.getByName(Config.Sign.Debug.name)
         }
         create(Config.BuildType.beta) {
             isMinifyEnabled = false
@@ -64,12 +65,6 @@ android {
         create(Config.Flavors.lol) {
             dimension = Config.Dimensions.mode
         }
-//        create(Config.Flavors.practice) {
-//            dimension = Config.Dimensions.mode
-//        }
-//        create(Config.Flavors.gpsAlarm) {
-//            dimension = Config.Dimensions.mode
-//        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -160,4 +155,4 @@ fun getProp(propertyKey: String): String =
         }
 
         prop.getProperty(propertyKey)
-    }.getOrDefault("key not found")
+    }.getOrDefault("\"key not found\"")

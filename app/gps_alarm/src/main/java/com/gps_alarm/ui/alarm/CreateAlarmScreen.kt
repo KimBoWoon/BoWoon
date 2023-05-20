@@ -4,13 +4,28 @@ import android.app.Activity
 import android.os.Bundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,8 +38,10 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import com.domain.gpsAlarm.dto.Addresses
+import com.gps_alarm.ui.util.OnLifecycleEvent
 import com.gps_alarm.ui.util.ShowSnackbar
 import com.gps_alarm.ui.viewmodel.AlarmVM
 import com.gps_alarm.ui.webview.ShowWebView
@@ -36,6 +53,7 @@ import com.naver.maps.map.NaverMapOptions
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.coroutines.launch
+import util.Log
 
 @Composable
 fun CreateAlarmScreen(onNavigate: NavHostController) {
@@ -48,6 +66,32 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
     var showSnackbar by remember { mutableStateOf(false) }
     var alarmTitle by remember { mutableStateOf("") }
     val geocode by viewModel.geocode.collectAsState()
+
+    OnLifecycleEvent { owner, event ->
+        when (event) {
+            Lifecycle.Event.ON_START -> { Log.d("ON_START") }
+            Lifecycle.Event.ON_CREATE -> {
+                Log.d("ON_CREATE")
+                owner.lifecycleScope.launchWhenCreated {
+                    viewModel.container.sideEffectFlow.collect {
+                        when (it) {
+                            is AlarmVM.AlarmSideEffect.AddAlarm -> {
+                                viewModel.setDataStore(it.data)
+                            }
+                            else -> {
+                                Log.d("CreateAlarmScreen > not support $it")
+                            }
+                        }
+                    }
+                }
+            }
+            Lifecycle.Event.ON_RESUME -> { Log.d("ON_RESUME") }
+            Lifecycle.Event.ON_PAUSE -> { Log.d("ON_PAUSE") }
+            Lifecycle.Event.ON_STOP -> { Log.d("ON_STOP") }
+            Lifecycle.Event.ON_DESTROY -> { Log.d("ON_DESTROY") }
+            Lifecycle.Event.ON_ANY -> { Log.d("ON_ANY") }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -131,7 +175,7 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
                     .padding(start = 10.dp, end = 5.dp),
                 onClick = {
                     if (viewModel.chooseAddress.value != null && viewModel.alarmTitle.value.isNotEmpty()) {
-                        viewModel.setDataStore(viewModel.chooseAddress.value)
+                        viewModel.addAlarm(viewModel.alarmTitle.value, viewModel.chooseAddress.value)
                         onNavigate.navigateUp()
                     } else {
                         showSnackbar = true
@@ -327,7 +371,8 @@ fun MapDialog(addresses: Addresses?, confirmCallback: (Addresses?) -> Unit, dism
 @Composable
 fun AddressDialog(dismissDialogCallback: () -> Unit) {
     Dialog(onDismissRequest = { dismissDialogCallback.invoke() }) {
-        val local = "http://10.0.2.2/address.html"
+        val local = "file:///android_asset/address.html"
+//        val local = "http://10.0.2.2/address.html"
         ShowWebView(local, dismissDialogCallback)
     }
 }
