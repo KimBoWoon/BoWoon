@@ -2,16 +2,18 @@ package com.gps_alarm.ui.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.data.gpsAlarm.local.LocalDatastore
-import com.domain.gpsAlarm.utils.FlowCallback
 import com.gps_alarm.base.BaseVM
 import com.gps_alarm.data.Address
+import com.gps_alarm.data.AlarmData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import util.DataStatus
+import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
 import util.Log
 import javax.inject.Inject
 
@@ -19,62 +21,28 @@ import javax.inject.Inject
 class MapVM @Inject constructor(
     private val localDatastore: LocalDatastore,
     private val json: Json
-) : BaseVM() {
-    val addressList = MutableStateFlow<DataStatus<List<Address>>>(DataStatus.Loading)
+) : ContainerHost<AlarmData, MapVM.MapSideEffect>, BaseVM() {
+    override val container: Container<AlarmData, MapSideEffect> = container(AlarmData())
 
-    init {
-        getAddress()
+    sealed class MapSideEffect {
+
     }
 
-    fun getAddress() {
-        viewModelScope.launch {
-            callbackFlow {
-                val callback = object : FlowCallback<Set<String>> {
-                    override suspend fun onSuccess(responseData: Set<String>?) {
-                        if (responseData.isNullOrEmpty()) {
-                            trySend(emptyList())
-                        } else {
-                            val result = responseData.map {
-                                val address = json.decodeFromString<Address>(it)
-                                Address(
-                                    address.name,
-                                    address.isEnable,
-                                    address.distance,
-                                    address.englishAddress,
-                                    address.jibunAddress,
-                                    address.roadAddress,
-                                    address.longitude,
-                                    address.latitude
-                                )
-                            }
-                            trySend(result)
+    fun fetchAlarmList() {
+        intent {
+            viewModelScope.launch {
+                reduce { state.copy(loading = true) }
+                val alarmList = localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
+                    if (alarmList.isEmpty()) {
+                        emptyList()
+                    } else {
+                        mutableListOf<Address>().apply {
+                            alarmList.forEach { add(json.decodeFromString(it)) }
+                            Log.d(toString())
                         }
                     }
-
-                    override fun onFailure(e: Throwable?) {
-                        Log.printStackTrace(e)
-                        close(e)
-                    }
-                }
-
-                localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
-                    callback.onSuccess(addressesSet)
-                } ?: run {
-                    callback.onSuccess(emptySet())
-                }
-
-                awaitClose {
-                    Log.d("MapVM getAddress is close...")
-                    close()
-                }
-            }.onStart {
-                addressList.value = DataStatus.Loading
-            }.onEmpty {
-                addressList.value = DataStatus.Success(emptyList())
-            }.catch {
-                addressList.value = DataStatus.Failure(it)
-            }.collect {
-                addressList.value = DataStatus.Success(it)
+                } ?: emptyList()
+                reduce { state.copy(alarmList = alarmList, loading = false) }
             }
         }
     }

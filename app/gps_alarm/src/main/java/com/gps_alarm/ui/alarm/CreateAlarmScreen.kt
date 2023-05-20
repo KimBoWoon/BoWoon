@@ -371,8 +371,9 @@ fun MapDialog(addresses: Addresses?, confirmCallback: (Addresses?) -> Unit, dism
 @Composable
 fun AddressDialog(dismissDialogCallback: () -> Unit) {
     Dialog(onDismissRequest = { dismissDialogCallback.invoke() }) {
-        val local = "file:///android_asset/address.html"
+//        val local = "file:///android_asset/address.html"
 //        val local = "http://10.0.2.2/address.html"
+        val local = "http://172.30.50.236/address.html"
         ShowWebView(local, dismissDialogCallback)
     }
 }

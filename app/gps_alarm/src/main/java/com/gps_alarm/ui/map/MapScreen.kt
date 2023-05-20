@@ -6,7 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -31,7 +38,6 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.coroutines.launch
-import util.DataStatus
 import util.Log
 
 @Composable
@@ -48,6 +54,7 @@ fun MapsCompose() {
     var sendNoti by remember { mutableStateOf(false) }
     var notificationId by remember { mutableStateOf<Int?>(null) }
     val fusedLocationSource = FusedLocationSource(context as Activity, 1000)
+    val state = viewModel.container.stateFlow.collectAsState().value
     val mapView = remember {
         MapView(context).apply {
             getMapAsync { naverMap ->
@@ -70,41 +77,39 @@ fun MapsCompose() {
                         isScrollGesturesEnabled = true
                     }
 
-                    viewModel.getAddress()
-                    coroutineScope.launch {
-                        viewModel.addressList.collect {
-                            when (it) {
-                                is DataStatus.Loading -> {
-                                    Log.d("addressList Loading...")
-                                }
-                                is DataStatus.Success -> {
-                                    it.data.forEach { address ->
-                                        if (address.latitude != null && address.longitude != null) {
-                                            addMarker(context, infoWindow, address).apply {
-                                                map = if (address.isEnable == true) {
-                                                    naverMap
-                                                } else {
-                                                    null
-                                                }
-                                            }
-                                            addCircleOverlay(address).apply {
-                                                map = if (address.isEnable == true) {
-                                                    naverMap
-                                                } else {
-                                                    null
-                                                }
-                                            }
-                                            markerLocations.add(Location("").apply {
-                                                latitude = address.latitude
-                                                longitude = address.longitude
-                                            })
+                    viewModel.fetchAlarmList()
+                    when {
+                        state.loading -> {
+                            Log.d("addressList Loading...")
+                        }
+                        state.alarmList.isEmpty() && state.error == null -> {
+                        }
+                        state.alarmList.isNotEmpty() && state.error == null -> {
+                            state.alarmList.forEach { address ->
+                                if (address.latitude != null && address.longitude != null) {
+                                    addMarker(context, infoWindow, address).apply {
+                                        map = if (address.isEnable == true) {
+                                            naverMap
+                                        } else {
+                                            null
                                         }
                                     }
-                                }
-                                is DataStatus.Failure -> {
-                                    Log.printStackTrace(it.throwable)
+                                    addCircleOverlay(address).apply {
+                                        map = if (address.isEnable == true) {
+                                            naverMap
+                                        } else {
+                                            null
+                                        }
+                                    }
+                                    markerLocations.add(Location("").apply {
+                                        latitude = address.latitude
+                                        longitude = address.longitude
+                                    })
                                 }
                             }
+                        }
+                        else -> {
+                            Log.printStackTrace(state.error)
                         }
                     }
 

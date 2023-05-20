@@ -40,7 +40,7 @@ fun CheckPermission() {
     when {
         showDialogList.size > 0 -> {
             //Some permissions are denied and can be asked again.
-            askForPermissions(permissionList)
+            AskForPermissions(permissionList)
         }
         permissionDenied > 0 -> {
             //Show alert dialog
@@ -54,7 +54,7 @@ fun CheckPermission() {
 }
 
 @Composable
-private fun askForPermissions(permissionsList: Array<String>) {
+private fun AskForPermissions(permissionsList: Array<String>) {
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { permissions ->
