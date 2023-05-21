@@ -2,6 +2,7 @@ package com.gps_alarm.ui.alarm
 
 import android.app.Activity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,7 +41,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import com.domain.gpsAlarm.dto.Addresses
 import com.gps_alarm.ui.util.OnLifecycleEvent
-import com.gps_alarm.ui.util.ShowSnackbar
 import com.gps_alarm.ui.viewmodel.AlarmVM
 import com.gps_alarm.ui.webview.ShowWebView
 import com.naver.maps.geometry.LatLng
@@ -203,10 +203,7 @@ fun CreateAlarmScreen(onNavigate: NavHostController) {
     }
 
     if (showSnackbar) {
-        ShowSnackbar(
-            message = "주소가 제대로 입력되지 않았습니다.",
-            dismissSnackbarCallback = { showSnackbar = false }
-        )
+        Toast.makeText(LocalContext.current, "주소가 제대로 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
     }
 }
 
