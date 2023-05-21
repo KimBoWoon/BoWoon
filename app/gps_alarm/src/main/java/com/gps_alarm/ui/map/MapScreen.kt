@@ -7,7 +7,6 @@ import android.content.Intent
 import android.location.Location
 import android.os.Bundle
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +19,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
@@ -28,6 +26,7 @@ import com.bowoon.android.gps_alarm.R
 import com.gps_alarm.data.Address
 import com.gps_alarm.ui.activities.GpsAlarmActivity
 import com.gps_alarm.ui.theme.circleOverlay
+import com.gps_alarm.ui.util.OnLifecycleEvent
 import com.gps_alarm.ui.viewmodel.MapVM
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
@@ -134,31 +133,21 @@ fun MapScreen(onNavigate: NavHostController) {
             }
         }
     }
-    val lifecycleObserver = remember {
-        LifecycleEventObserver { source, event ->
-            // CoroutineScope 안에서 호출해야 정상적으로 동작합니다.
-            source.lifecycleScope.launchWhenCreated {
-                when (event) {
-                    Lifecycle.Event.ON_CREATE -> mapView.onCreate(Bundle())
-                    Lifecycle.Event.ON_START -> {
-                        mapView.onStart()
-                        viewModel.fetchAlarmList()
-                    }
-                    Lifecycle.Event.ON_RESUME -> mapView.onResume()
-                    Lifecycle.Event.ON_PAUSE -> mapView.onPause()
-                    Lifecycle.Event.ON_STOP -> mapView.onStop()
-                    Lifecycle.Event.ON_DESTROY -> mapView.onDestroy()
-                    Lifecycle.Event.ON_ANY -> TODO()
+    OnLifecycleEvent { source, event ->
+        // CoroutineScope 안에서 호출해야 정상적으로 동작합니다.
+        source.lifecycleScope.launchWhenCreated {
+            when (event) {
+                Lifecycle.Event.ON_CREATE -> mapView.onCreate(Bundle())
+                Lifecycle.Event.ON_START -> {
+                    mapView.onStart()
+                    viewModel.fetchAlarmList()
                 }
+                Lifecycle.Event.ON_RESUME -> mapView.onResume()
+                Lifecycle.Event.ON_PAUSE -> mapView.onPause()
+                Lifecycle.Event.ON_STOP -> mapView.onStop()
+                Lifecycle.Event.ON_DESTROY -> mapView.onDestroy()
+                Lifecycle.Event.ON_ANY -> TODO()
             }
-        }
-    }
-
-    // 뷰가 해제될 때 이벤트 리스너를 제거합니다.
-    DisposableEffect(true) {
-        lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(lifecycleObserver)
         }
     }
 

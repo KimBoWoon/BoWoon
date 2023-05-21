@@ -19,7 +19,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +36,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import com.domain.gpsAlarm.dto.Addresses
@@ -339,32 +337,21 @@ fun MapDialog(addresses: Addresses?, confirmCallback: (Addresses?) -> Unit, dism
                     }
                 }
             }
-            val lifecycleObserver = remember {
-                LifecycleEventObserver { source, event ->
-                    // CoroutineScope 안에서 호출해야 정상적으로 동작합니다.
-                    coroutineScope.launch {
-                        when (event) {
-                            Lifecycle.Event.ON_CREATE -> mapView.onCreate(Bundle())
-                            Lifecycle.Event.ON_START -> mapView.onStart()
-                            Lifecycle.Event.ON_RESUME -> mapView.onResume()
-                            Lifecycle.Event.ON_PAUSE -> mapView.onPause()
-                            Lifecycle.Event.ON_STOP -> mapView.onStop()
-                            Lifecycle.Event.ON_DESTROY -> mapView.onDestroy()
-                            Lifecycle.Event.ON_ANY -> TODO()
-                        }
+            OnLifecycleEvent { source, event ->
+                // CoroutineScope 안에서 호출해야 정상적으로 동작합니다.
+                source.lifecycleScope.launch {
+                    when (event) {
+                        Lifecycle.Event.ON_CREATE -> mapView.onCreate(Bundle())
+                        Lifecycle.Event.ON_START -> mapView.onStart()
+                        Lifecycle.Event.ON_RESUME -> mapView.onResume()
+                        Lifecycle.Event.ON_PAUSE -> mapView.onPause()
+                        Lifecycle.Event.ON_STOP -> mapView.onStop()
+                        Lifecycle.Event.ON_DESTROY -> mapView.onDestroy()
+                        Lifecycle.Event.ON_ANY -> TODO()
                     }
                 }
             }
 
-            // 뷰가 해제될 때 이벤트 리스너를 제거합니다.
-            DisposableEffect(true) {
-                lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
-                onDispose {
-                    lifecycleOwner.lifecycle.removeObserver(lifecycleObserver)
-                }
-            }
-
-            // 생성된 MapView 객체를 AndroidView로 Wrapping 합니다.
             AndroidView(
                 modifier = Modifier
                     .fillMaxWidth()
