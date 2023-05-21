@@ -203,6 +203,7 @@ fun CreateAlarmScreen(onNavigate: NavHostController) {
     }
 
     if (showSnackbar) {
+        showSnackbar = false
         Toast.makeText(LocalContext.current, "주소가 제대로 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
     }
 }

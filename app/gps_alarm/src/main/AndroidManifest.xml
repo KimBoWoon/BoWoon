@@ -16,11 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BoWoon"
         android:usesCleartextTraffic="true">
-        <!--        android:theme="@style/Theme.GpsAlarm.Splash"-->
         <activity
             android:name="com.gps_alarm.ui.activities.GpsAlarmActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

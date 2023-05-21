@@ -18,7 +18,6 @@ class GpsAlarmActivity : BaseActivity() {
     private val TAG = this.javaClass.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
-//        installSplashScreen()
         super.onCreate(savedInstanceState)
 
         createNotificationChannel()
