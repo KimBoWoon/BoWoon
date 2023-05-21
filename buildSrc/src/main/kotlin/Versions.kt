@@ -72,7 +72,7 @@ object Versions {
     }
 
     object Compose {
-        const val bom = "2022.10.00"
+        const val bom = "2023.01.00"
         const val compose = "1.4.3"
         const val activity = "1.5.1"
         const val viewModel = "2.5.1"
