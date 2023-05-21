@@ -41,7 +41,6 @@ class AlarmVM @Inject constructor(
     override val container: Container<AlarmData, AlarmSideEffect> = container(AlarmData())
 
     sealed class AlarmSideEffect {
-        data class DeleteAlarm(val longitude: Double?, val latitude: Double?) : AlarmSideEffect()
         data class ShowToast(val message: String) : AlarmSideEffect()
         data class SaveListToDataStore(val data: List<Address>) : AlarmSideEffect()
         data class AddAlarm(val data: Address) : AlarmSideEffect()
@@ -56,18 +55,19 @@ class AlarmVM @Inject constructor(
     fun fetchAlarmList() {
         intent {
             viewModelScope.launch {
-                reduce { state.copy(loading = true) }
-                val alarmList = localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
-                    if (alarmList.isEmpty()) {
-                        emptyList()
-                    } else {
-                        mutableListOf<Address>().apply {
-                            alarmList.forEach { add(json.decodeFromString(it)) }
-                            Log.d(toString())
-                        }
+                reduce { state.copy(alarmList = emptyList(), loading = true) }
+                localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
+                    reduce {
+                        state.copy(
+                            alarmList = if (alarmList.isEmpty()) {
+                                emptyList()
+                            } else {
+                                alarmList.map { json.decodeFromString(it) }
+                            },
+                            loading = false
+                        )
                     }
-                } ?: emptyList()
-                reduce { state.copy(alarmList = alarmList, loading = false) }
+                }
             }
         }
     }
@@ -75,15 +75,32 @@ class AlarmVM @Inject constructor(
     fun removeAlarm(longitude: Double?, latitude: Double?) {
         intent {
             viewModelScope.launch {
-                localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
-                    val list = alarmList.filter { alarm ->
-                        json.decodeFromString<Address>(alarm).run {
-                            this.longitude != longitude && this.latitude != latitude
+                if (longitude == null || latitude == null) {
+                    postSideEffect(AlarmSideEffect.ShowToast("정상적인 데이터가 아닙니다!"))
+                } else {
+                    reduce { state.copy(loading = true) }
+                    localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
+                        val noData = alarmList.map { alarm ->
+                            json.decodeFromString<Address>(alarm)
+                        }.none {
+                            it.longitude == longitude && it.latitude == latitude
                         }
-                    }.map { json.decodeFromString<Address>(it) }
-                    reduce { state.copy(alarmList = list, loading = false) }
-                    postSideEffect(AlarmSideEffect.SaveListToDataStore(list))
-                    postSideEffect(AlarmSideEffect.ShowToast("데이터를 제거했습니다."))
+
+                        if (noData) {
+                            postSideEffect(AlarmSideEffect.ShowToast("데이터가 존재하지 않습니다!"))
+                        } else {
+                            val list = alarmList.filter { alarm ->
+                                json.decodeFromString<Address>(alarm).run {
+                                    this.longitude != longitude && this.latitude != latitude
+                                }
+                            }.map { json.decodeFromString<Address>(it) }
+                            reduce { state.copy(alarmList = list, loading = false) }
+                            postSideEffect(AlarmSideEffect.SaveListToDataStore(list))
+                            postSideEffect(AlarmSideEffect.ShowToast("데이터를 제거했습니다."))
+                        }
+                    } ?: run {
+                        postSideEffect(AlarmSideEffect.ShowToast("저장된 데이터가 없습니다!"))
+                    }
                 }
             }
         }
@@ -94,6 +111,8 @@ class AlarmVM @Inject constructor(
             addresses?.let {
                 val address = dataMapper(title, addresses)
                 postSideEffect(AlarmSideEffect.AddAlarm(address))
+            } ?: run {
+                postSideEffect(AlarmSideEffect.ShowToast("데이터를 확인해주세요!"))
             }
         }
     }

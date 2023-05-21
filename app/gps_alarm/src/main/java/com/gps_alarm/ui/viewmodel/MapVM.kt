@@ -28,10 +28,14 @@ class MapVM @Inject constructor(
 
     }
 
+    init {
+        fetchAlarmList()
+    }
+
     fun fetchAlarmList() {
         intent {
             viewModelScope.launch {
-                reduce { state.copy(loading = true) }
+                reduce { state.copy(alarmList = emptyList(), loading = true) }
                 val alarmList = localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
                     if (alarmList.isEmpty()) {
                         emptyList()

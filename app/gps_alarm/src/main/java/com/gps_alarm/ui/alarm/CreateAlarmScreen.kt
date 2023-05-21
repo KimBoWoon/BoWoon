@@ -78,8 +78,17 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
                             is AlarmVM.AlarmSideEffect.AddAlarm -> {
                                 viewModel.setDataStore(it.data)
                             }
-                            else -> {
-                                Log.d("CreateAlarmScreen > not support $it")
+                            is AlarmVM.AlarmSideEffect.GoToDetail -> {
+                                Log.d("CreateAlarmScreen > not support GoToDetail")
+                            }
+                            is AlarmVM.AlarmSideEffect.ModifyAddress -> {
+                                Log.d("CreateAlarmScreen > not support ModifyAddress")
+                            }
+                            is AlarmVM.AlarmSideEffect.SaveListToDataStore -> {
+                                Log.d("CreateAlarmScreen > not support SaveListToDataStore")
+                            }
+                            is AlarmVM.AlarmSideEffect.ShowToast -> {
+                                Log.d("CreateAlarmScreen > not support ShowToast")
                             }
                         }
                     }
@@ -371,9 +380,7 @@ fun MapDialog(addresses: Addresses?, confirmCallback: (Addresses?) -> Unit, dism
 @Composable
 fun AddressDialog(dismissDialogCallback: () -> Unit) {
     Dialog(onDismissRequest = { dismissDialogCallback.invoke() }) {
-//        val local = "file:///android_asset/address.html"
-//        val local = "http://10.0.2.2/address.html"
-        val local = "http://172.30.50.236/address.html"
+        val local = "http://172.30.50.8/address.html"
         ShowWebView(local, dismissDialogCallback)
     }
 }

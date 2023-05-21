@@ -75,9 +75,6 @@ fun AlarmCompose(
                 owner.lifecycleScope.launchWhenCreated {
                     viewModel.container.sideEffectFlow.collect {
                         when (it) {
-                            is AlarmVM.AlarmSideEffect.DeleteAlarm -> {
-//                                viewModel.removeAlarm(it.longitude, it.latitude)
-                            }
                             is AlarmVM.AlarmSideEffect.ShowToast -> {
                                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                             }
@@ -90,17 +87,14 @@ fun AlarmCompose(
                             is AlarmVM.AlarmSideEffect.GoToDetail -> {
                                 onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${it.longitude}/${it.latitude}")
                             }
-                            else -> {
-                                Log.d("AlarmScreen > not support $it")
+                            is AlarmVM.AlarmSideEffect.AddAlarm -> {
+                                Log.e("AlarmScreen > not support AddAlarm")
                             }
                         }
                     }
                 }
             }
-            Lifecycle.Event.ON_RESUME -> {
-                Log.d("ON_RESUME")
-                viewModel.fetchAlarmList()
-            }
+            Lifecycle.Event.ON_RESUME -> { Log.d("ON_RESUME") }
             Lifecycle.Event.ON_PAUSE -> { Log.d("ON_PAUSE") }
             Lifecycle.Event.ON_STOP -> { Log.d("ON_STOP") }
             Lifecycle.Event.ON_DESTROY -> { Log.d("ON_DESTROY") }
