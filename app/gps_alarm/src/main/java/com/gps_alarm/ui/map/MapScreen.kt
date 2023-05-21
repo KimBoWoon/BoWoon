@@ -11,7 +11,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -22,6 +21,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import com.bowoon.android.gps_alarm.R
@@ -37,20 +37,13 @@ import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
-import kotlinx.coroutines.launch
 import util.Log
 
 @Composable
 fun MapScreen(onNavigate: NavHostController) {
-    MapsCompose()
-}
-
-@Composable
-fun MapsCompose() {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val coroutineScope = rememberCoroutineScope()
-    val viewModel: MapVM = hiltViewModel()
+    val viewModel = hiltViewModel<MapVM>()
     var sendNoti by remember { mutableStateOf(false) }
     var notificationId by remember { mutableStateOf<Int?>(null) }
     val fusedLocationSource = FusedLocationSource(context as Activity, 1000)
@@ -77,7 +70,7 @@ fun MapsCompose() {
                     }
 
                     lifecycleOwner.lifecycleScope.launchWhenStarted {
-                        viewModel.container.stateFlow.collect { state ->
+                        viewModel.container.stateFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).collect { state ->
                             when {
                                 state.loading -> {
                                     Log.d("addressList Loading...")
@@ -144,10 +137,13 @@ fun MapsCompose() {
     val lifecycleObserver = remember {
         LifecycleEventObserver { source, event ->
             // CoroutineScope 안에서 호출해야 정상적으로 동작합니다.
-            coroutineScope.launch {
+            source.lifecycleScope.launchWhenCreated {
                 when (event) {
                     Lifecycle.Event.ON_CREATE -> mapView.onCreate(Bundle())
-                    Lifecycle.Event.ON_START -> mapView.onStart()
+                    Lifecycle.Event.ON_START -> {
+                        mapView.onStart()
+                        viewModel.fetchAlarmList()
+                    }
                     Lifecycle.Event.ON_RESUME -> mapView.onResume()
                     Lifecycle.Event.ON_PAUSE -> mapView.onPause()
                     Lifecycle.Event.ON_STOP -> mapView.onStop()

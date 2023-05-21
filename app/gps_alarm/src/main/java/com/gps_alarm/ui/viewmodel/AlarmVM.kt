@@ -48,25 +48,19 @@ class AlarmVM @Inject constructor(
         data class GoToDetail(val longitude: String, val latitude: String) : AlarmSideEffect()
     }
 
-    init {
-        fetchAlarmList()
-    }
-
     fun fetchAlarmList() {
         intent {
-            viewModelScope.launch {
-                reduce { state.copy(alarmList = emptyList(), loading = true) }
-                localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
-                    reduce {
-                        state.copy(
-                            alarmList = if (alarmList.isEmpty()) {
-                                emptyList()
-                            } else {
-                                alarmList.map { json.decodeFromString(it) }
-                            },
-                            loading = false
-                        )
-                    }
+            reduce { state.copy(alarmList = emptyList(), loading = true) }
+            localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
+                reduce {
+                    state.copy(
+                        alarmList = if (alarmList.isEmpty()) {
+                            emptyList()
+                        } else {
+                            alarmList.map { json.decodeFromString(it) }
+                        },
+                        loading = false
+                    )
                 }
             }
         }
@@ -74,33 +68,31 @@ class AlarmVM @Inject constructor(
 
     fun removeAlarm(longitude: Double?, latitude: Double?) {
         intent {
-            viewModelScope.launch {
-                if (longitude == null || latitude == null) {
-                    postSideEffect(AlarmSideEffect.ShowToast("정상적인 데이터가 아닙니다!"))
-                } else {
-                    reduce { state.copy(loading = true) }
-                    localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
-                        val noData = alarmList.map { alarm ->
-                            json.decodeFromString<Address>(alarm)
-                        }.none {
-                            it.longitude == longitude && it.latitude == latitude
-                        }
-
-                        if (noData) {
-                            postSideEffect(AlarmSideEffect.ShowToast("데이터가 존재하지 않습니다!"))
-                        } else {
-                            val list = alarmList.filter { alarm ->
-                                json.decodeFromString<Address>(alarm).run {
-                                    this.longitude != longitude && this.latitude != latitude
-                                }
-                            }.map { json.decodeFromString<Address>(it) }
-                            reduce { state.copy(alarmList = list, loading = false) }
-                            postSideEffect(AlarmSideEffect.SaveListToDataStore(list))
-                            postSideEffect(AlarmSideEffect.ShowToast("데이터를 제거했습니다."))
-                        }
-                    } ?: run {
-                        postSideEffect(AlarmSideEffect.ShowToast("저장된 데이터가 없습니다!"))
+            if (longitude == null || latitude == null) {
+                postSideEffect(AlarmSideEffect.ShowToast("정상적인 데이터가 아닙니다!"))
+            } else {
+                reduce { state.copy(loading = true) }
+                localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
+                    val noData = alarmList.map { alarm ->
+                        json.decodeFromString<Address>(alarm)
+                    }.none {
+                        it.longitude == longitude && it.latitude == latitude
                     }
+
+                    if (noData) {
+                        postSideEffect(AlarmSideEffect.ShowToast("데이터가 존재하지 않습니다!"))
+                    } else {
+                        val list = alarmList.filter { alarm ->
+                            json.decodeFromString<Address>(alarm).run {
+                                this.longitude != longitude && this.latitude != latitude
+                            }
+                        }.map { json.decodeFromString<Address>(it) }
+                        reduce { state.copy(alarmList = list, loading = false) }
+                        postSideEffect(AlarmSideEffect.SaveListToDataStore(list))
+                        postSideEffect(AlarmSideEffect.ShowToast("데이터를 제거했습니다."))
+                    }
+                } ?: run {
+                    postSideEffect(AlarmSideEffect.ShowToast("저장된 데이터가 없습니다!"))
                 }
             }
         }

@@ -29,9 +29,9 @@ import util.Log
 @Composable
 fun ShowWebView(
     url: String,
-    dismissDialogCallback: () -> Unit,
-    viewModel: AlarmVM = hiltViewModel()
+    dismissDialogCallback: () -> Unit
 ) {
+    val viewModel = hiltViewModel<AlarmVM>()
     val webViewState = rememberWebViewState(
         url = url,
         additionalHttpHeaders = emptyMap()

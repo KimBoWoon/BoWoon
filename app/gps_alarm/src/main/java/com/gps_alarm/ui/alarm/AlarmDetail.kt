@@ -17,9 +17,9 @@ import util.Log
 fun AlarmDetailScreen(
     onNavigate: NavHostController,
     longitude: String,
-    latitude: String,
-    viewModel: AlarmVM = hiltViewModel()
+    latitude: String
 ) {
+    val viewModel = hiltViewModel<AlarmVM>()
     if (longitude.isNotEmpty() && latitude.isNotEmpty()) {
         viewModel.getAddress(longitude, latitude)
 

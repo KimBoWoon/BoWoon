@@ -58,7 +58,7 @@ fun GpsMainCompose() {
 
 @Composable
 fun GpsAlarmActionBar() {
-    val viewModel: GpsAlarmVM = hiltViewModel()
+    val viewModel = hiltViewModel<GpsAlarmVM>()
 
     TopAppBar(
         title = { Text(text = viewModel.appBarTitle.value, color = Color.White, fontSize = dpToSp(20.dp)) },
@@ -96,7 +96,7 @@ private fun InitBottomNavigation(items: List<NavigationScreen>, navController: N
 
 @Composable
 private fun InitNavHost(navController: NavHostController, innerPadding: PaddingValues) {
-    val viewModel: GpsAlarmVM = hiltViewModel()
+    val viewModel = hiltViewModel<GpsAlarmVM>()
 
     NavHost(navController, startDestination = NavigationScreen.Alarm.route, Modifier.padding(innerPadding)) {
         composable(NavigationScreen.Alarm.route) {

@@ -57,11 +57,7 @@ import util.Log
 
 @Composable
 fun CreateAlarmScreen(onNavigate: NavHostController) {
-    CreateAlarmCompose(onNavigate)
-}
-
-@Composable
-fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltViewModel()) {
+    val viewModel = hiltViewModel<AlarmVM>()
     var showDialog by remember { mutableStateOf(false) }
     var showSnackbar by remember { mutableStateOf(false) }
     var alarmTitle by remember { mutableStateOf("") }
@@ -218,7 +214,7 @@ fun CreateAlarmCompose(onNavigate: NavHostController, viewModel: AlarmVM = hiltV
 
 @Composable
 fun CreateAddressList(addresses: List<Addresses>?) {
-    val viewModel: AlarmVM = hiltViewModel()
+    val viewModel = hiltViewModel<AlarmVM>()
     var chooseAddress by remember { mutableStateOf<Addresses?>(null) }
     val confirmCallback: (Addresses?) -> (Unit) = {
         viewModel.chooseAddress.value = it
@@ -370,7 +366,9 @@ fun MapDialog(addresses: Addresses?, confirmCallback: (Addresses?) -> Unit, dism
 
             // 생성된 MapView 객체를 AndroidView로 Wrapping 합니다.
             AndroidView(
-                modifier = Modifier.fillMaxWidth().height(500.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(500.dp),
                 factory = { mapView }
             )
         }

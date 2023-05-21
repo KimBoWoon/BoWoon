@@ -26,13 +26,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import com.gps_alarm.data.Address
+import com.gps_alarm.data.AlarmData
 import com.gps_alarm.ui.NavigationScreen
 import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.theme.Purple700
@@ -40,17 +43,10 @@ import com.gps_alarm.ui.util.OnLifecycleEvent
 import com.gps_alarm.ui.viewmodel.AlarmVM
 import util.Log
 
-@Composable
-fun AlarmScreen(onNavigate: NavHostController) {
-    AlarmCompose(onNavigate)
-}
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AlarmCompose(
-    onNavigate: NavHostController,
-    viewModel: AlarmVM = hiltViewModel()
-) {
+fun AlarmScreen(onNavigate: NavHostController) {
+    val viewModel = hiltViewModel<AlarmVM>()
     val listState = rememberLazyListState()
     var isRefreshing by remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(
@@ -66,12 +62,14 @@ fun AlarmCompose(
     }
     val density = LocalDensity.current
     val context = LocalContext.current
+    val lifecycle = LocalLifecycleOwner.current
 
     OnLifecycleEvent { owner, event ->
         when (event) {
             Lifecycle.Event.ON_START -> { Log.d("ON_START") }
             Lifecycle.Event.ON_CREATE -> {
                 Log.d("ON_CREATE")
+                viewModel.fetchAlarmList()
                 owner.lifecycleScope.launchWhenCreated {
                     viewModel.container.sideEffectFlow.collect {
                         when (it) {
@@ -94,7 +92,10 @@ fun AlarmCompose(
                     }
                 }
             }
-            Lifecycle.Event.ON_RESUME -> { Log.d("ON_RESUME") }
+            Lifecycle.Event.ON_RESUME -> {
+                Log.d("ON_RESUME")
+                viewModel.fetchAlarmList()
+            }
             Lifecycle.Event.ON_PAUSE -> { Log.d("ON_PAUSE") }
             Lifecycle.Event.ON_STOP -> { Log.d("ON_STOP") }
             Lifecycle.Event.ON_DESTROY -> { Log.d("ON_DESTROY") }
@@ -102,7 +103,7 @@ fun AlarmCompose(
         }
     }
 
-    val state = viewModel.container.stateFlow.collectAsState().value
+    val state = viewModel.container.stateFlow.flowWithLifecycle(lifecycle.lifecycle, Lifecycle.State.STARTED).collectAsState(AlarmData()).value
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -188,7 +189,7 @@ fun AddressItem(
     address: Address,
     isLast: Boolean
 ) {
-    val viewModel: AlarmVM = hiltViewModel()
+    val viewModel = hiltViewModel<AlarmVM>()
     var checkedState by remember { mutableStateOf(address.isEnable ?: false) }
 
     Card(
