@@ -11,11 +11,14 @@ import kotlinx.coroutines.channels.produce
 object ArticleProducer {
     private const val CHANNEL = "channel"
     val feeds = listOf(
+        Feed("SBS", "https://news.sbs.co.kr/news/ReplayRssFeed.do?prog_cd=R1&plink=RSSREADER"),
+        Feed("비디오머그", "https://news.sbs.co.kr/news/VideoMug_RssFeed.do?plink=RSSREADER"),
+        Feed("연합", "http://www.yonhapnewstv.co.kr/browse/feed/"),
         Feed("JTBC", "https://fs.jtbc.co.kr/RSS/newsflash.xml"),
-        Feed("npr", "https://feeds.npr.org/1001/rss.xml"),
-        Feed("cnn", "http://rss.cnn.com/rss/cnn_topstories.rss"),
-        Feed("nasa", "https://www.nasa.gov/rss/dyn/breaking_news.rss"),
-        Feed("fox", "https://moxie.foxnews.com/google-publisher/politics.xml?format=xml"),
+        Feed("NPR", "https://feeds.npr.org/1001/rss.xml"),
+        Feed("CNN", "http://rss.cnn.com/rss/cnn_topstories.rss"),
+        Feed("NASA", "https://www.nasa.gov/rss/dyn/breaking_news.rss"),
+        Feed("FOX", "https://moxie.foxnews.com/google-publisher/politics.xml?format=xml"),
 //        Feed("inv", "afasldkfj")
     )
     private val handler = CoroutineExceptionHandler { coroutineContext, throwable ->

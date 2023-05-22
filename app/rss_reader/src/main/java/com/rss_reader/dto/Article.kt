@@ -1,5 +1,7 @@
 package com.rss_reader.dto
 
+import com.rss_reader.util.encodeString
+
 data class Article(
     val isHeader: Boolean = false,
     val feed: String? = null,
@@ -8,19 +10,7 @@ data class Article(
     val linkUrl: String? = null
 ) {
     val encodeTitle: String?
-        get() = title?.replace(" ", "\u00A0")
-            ?.replace("&lt;", "<")
-            ?.replace("&gt;", ">")
-            ?.replace("&amp;", "&")
-            ?.replace("&apos;", "'")
-            ?.replace("&quot;", "\"")
-            ?.replace("&middot;", "．")
+        get() = title?.encodeString()
     val encodeSummary: String?
-        get() = summary?.replace(" ", "\u00A0")
-            ?.replace("&lt;", "<")
-            ?.replace("&gt;", ">")
-            ?.replace("&amp;", "&")
-            ?.replace("&apos;", "'")
-            ?.replace("&quot;", "\"")
-            ?.replace("&middot;", "．")
+        get() = summary?.encodeString()
 }

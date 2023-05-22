@@ -50,8 +50,15 @@ class SearchVM @Inject constructor(
             }.map { rss ->
                 mutableListOf<Article>().apply {
                     rss.forEachIndexed { index, it ->
-                        add(Article(true, ArticleProducer.feeds[index].name))
-                        addAll(it.channel?.items?.map { item ->
+                        val filterItem = it.channel?.items?.filter { item ->
+                            item.title?.contains(query, true) == true || item.description?.contains(query, true) == true
+                        } ?: emptyList()
+
+                        if (!filterItem.none()) {
+                            add(Article(true, ArticleProducer.feeds[index].name))
+                        }
+
+                        addAll(filterItem.map { item ->
                             Article(
                                 false,
                                 ArticleProducer.feeds[index].name,
@@ -59,7 +66,7 @@ class SearchVM @Inject constructor(
                                 item.description,
                                 item.link
                             )
-                        } ?: emptyList())
+                        })
                     }
                 }
             }.collect {
