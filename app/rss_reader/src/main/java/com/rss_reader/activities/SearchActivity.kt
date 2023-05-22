@@ -1,6 +1,7 @@
 package com.rss_reader.activities
 
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
@@ -16,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import util.DataStatus
+import util.Log
 import util.StickyHeaderItemDecoration
 import util.ViewAdapter.onDebounceClickListener
 import util.ViewUtils.hideSoftKeyboard
@@ -47,6 +49,18 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(R.layout.activity_sea
                 adapter = ArticleAdapter()
                 if (itemDecorationCount == 0) {
                     addItemDecoration(StickyHeaderItemDecoration(StickyDecoration(adapter)))
+                }
+            }
+            etInputKeyword.setOnKeyListener { v, keyCode, event ->
+                when {
+                    event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER -> {
+                        bDoSearch.performClick()
+                        true
+                    }
+                    else -> {
+                        Log.d("not yet key event -> ${event.action}, net yet key code -> $keyCode")
+                        false
+                    }
                 }
             }
             bDoSearch.onDebounceClickListener {
