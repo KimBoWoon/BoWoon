@@ -20,7 +20,7 @@ class ArticleAdapter : ListAdapter<Article, RecyclerView.ViewHolder>(diff) {
                 oldItem.feed == newItem.feed
 
             override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
-                oldItem.title == newItem.title && oldItem.summary == newItem.summary
+                oldItem.encodeTitle == newItem.encodeTitle && oldItem.encodeSummary == newItem.encodeSummary
         }
     }
 
