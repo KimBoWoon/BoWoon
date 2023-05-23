@@ -1,9 +1,8 @@
-package di
+package com.data.gpsAlarm.di
 
 import com.data.BuildConfig
+import com.data.gpsAlarm.service.AppInterceptor
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
-import com.tickaroo.tikxml.TikXml
-import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,9 +22,7 @@ object BaseRetrofitModule {
         interceptor: HttpLoggingInterceptor
     ): OkHttpClient = OkHttpClient().newBuilder().apply {
         addNetworkInterceptor(interceptor)
-        if (BuildConfig.FLAVOR.equals("gpsAlarm", true)) {
-            addInterceptor(AppInterceptor())
-        }
+        addInterceptor(AppInterceptor())
         if (BuildConfig.DEBUG) {
             addInterceptor(OkHttpProfilerInterceptor())
             addInterceptor(NetworkLogInterceptor())
@@ -45,11 +42,4 @@ object BaseRetrofitModule {
     fun provideInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
-
-    @Provides
-    fun provideTikXmlFactory(tikXml: TikXml): TikXmlConverterFactory =
-        TikXmlConverterFactory.create(tikXml)
-
-    @Provides
-    fun provideTikXml(): TikXml = TikXml.Builder().exceptionOnUnreadXml(false).build()
 }
