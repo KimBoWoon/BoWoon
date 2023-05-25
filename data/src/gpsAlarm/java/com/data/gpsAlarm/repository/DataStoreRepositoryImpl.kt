@@ -7,9 +7,9 @@ import com.domain.gpsAlarm.repository.DataStoreRepository
 class DataStoreRepositoryImpl(
     private val dataStore: LocalDatastore
 ) : DataStoreRepository {
-    override suspend fun <T> setDatastore(key: Preferences.Key<T>, value: T) {
+    override suspend fun <T> setDataStore(key: Preferences.Key<T>, value: T) {
         dataStore.set(key, value)
     }
 
-    override suspend fun <T> getDatastore(key: Preferences.Key<T>): T? = dataStore.get(key)
+    override suspend fun <T> getDataStore(key: Preferences.Key<T>): T? = dataStore.get(key)
 }

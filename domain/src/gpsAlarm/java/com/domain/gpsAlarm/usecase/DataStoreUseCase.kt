@@ -7,9 +7,9 @@ class DataStoreUseCase(
     private val dataStoreRepository: DataStoreRepository
 ) {
     suspend fun <T> set(key: Preferences.Key<T>, value: T) {
-        dataStoreRepository.setDatastore(key, value)
+        dataStoreRepository.setDataStore(key, value)
     }
 
     suspend fun <T> get(key: Preferences.Key<T>): T? =
-        dataStoreRepository.getDatastore(key)
+        dataStoreRepository.getDataStore(key)
 }
