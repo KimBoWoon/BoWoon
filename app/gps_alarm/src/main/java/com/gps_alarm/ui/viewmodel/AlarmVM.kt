@@ -10,6 +10,7 @@ import com.domain.gpsAlarm.usecase.MapsApiUseCase
 import com.gps_alarm.base.BaseVM
 import com.gps_alarm.data.Address
 import com.gps_alarm.data.AlarmData
+import com.gps_alarm.ui.util.dataMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -30,7 +31,7 @@ import javax.inject.Inject
 class AlarmVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val mapsApiUseCase: MapsApiUseCase,
-    private val localDatastore: LocalDatastore,
+    private val localDataStore: LocalDatastore,
     private val json: Json
 ) : ContainerHost<AlarmData, AlarmVM.AlarmSideEffect>, BaseVM() {
     val findAddress = MutableStateFlow<Address?>(null)
@@ -51,7 +52,7 @@ class AlarmVM @Inject constructor(
     fun fetchAlarmList() {
         intent {
             reduce { state.copy(alarmList = emptyList(), loading = true) }
-            localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
+            localDataStore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
                 reduce {
                     state.copy(
                         alarmList = if (alarmList.isEmpty()) {
@@ -72,7 +73,7 @@ class AlarmVM @Inject constructor(
                 postSideEffect(AlarmSideEffect.ShowToast("정상적인 데이터가 아닙니다!"))
             } else {
                 reduce { state.copy(loading = true) }
-                localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
+                localDataStore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
                     val noData = alarmList.map { alarm ->
                         json.decodeFromString<Address>(alarm)
                     }.none {
@@ -125,7 +126,7 @@ class AlarmVM @Inject constructor(
         val saveData = data.map {
             json.encodeToString(it)
         }.toSet()
-        localDatastore.set(LocalDatastore.Keys.alarmList, saveData)
+        localDataStore.set(LocalDatastore.Keys.alarmList, saveData)
     }
 
     fun getGeocode(address: String) {
@@ -138,7 +139,7 @@ class AlarmVM @Inject constructor(
 
     fun setDataStore(address: Address) {
         viewModelScope.launch {
-            localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
+            localDataStore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
                 addressesSet.find {
                     json.decodeFromString<Address>(it).run {
                         longitude == address.longitude && latitude == address.latitude
@@ -149,19 +150,19 @@ class AlarmVM @Inject constructor(
                         val data = json.encodeToString(dataMapper(alarmTitle.value, decodeString.mapper()))
                         addAll(addressesSet)
                         add(data)
-                        localDatastore.set(LocalDatastore.Keys.alarmList, this)
+                        localDataStore.set(LocalDatastore.Keys.alarmList, this)
                     }
                 } ?: run {
                     mutableSetOf<String>().apply {
                         addAll(addressesSet)
                         add(json.encodeToString(address))
-                        localDatastore.set(LocalDatastore.Keys.alarmList, this)
+                        localDataStore.set(LocalDatastore.Keys.alarmList, this)
                     }
                 }
             } ?: run {
                 mutableSetOf<String>().apply {
                     add(json.encodeToString(address))
-                    localDatastore.set(LocalDatastore.Keys.alarmList, this)
+                    localDataStore.set(LocalDatastore.Keys.alarmList, this)
                 }
             }
             this@AlarmVM.chooseAddress.value = null
@@ -170,7 +171,7 @@ class AlarmVM @Inject constructor(
 
     fun changeData(address: Address) {
         viewModelScope.launch {
-            localDatastore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
+            localDataStore.get(LocalDatastore.Keys.alarmList)?.let { addressesSet ->
                 addressesSet.find {
                     json.decodeFromString<Address>(it).run {
                         longitude == address.longitude && latitude == address.latitude
@@ -189,29 +190,17 @@ class AlarmVM @Inject constructor(
                                 )
                             }
                         }
-                        localDatastore.set(LocalDatastore.Keys.alarmList, this)
+                        localDataStore.set(LocalDatastore.Keys.alarmList, this)
                     }
                 }
             }
         }
     }
 
-    private fun dataMapper(alarmTitle: String, addresses: Addresses): Address =
-        Address(
-            alarmTitle,
-            false,
-            addresses.distance,
-            addresses.englishAddress,
-            addresses.jibunAddress,
-            addresses.roadAddress,
-            addresses.longitude,
-            addresses.latitude
-        )
-
     fun getAddress(longitude: String, latitude: String) {
         viewModelScope.launch {
             runCatching {
-                localDatastore.get(LocalDatastore.Keys.alarmList)
+                localDataStore.get(LocalDatastore.Keys.alarmList)
             }.onSuccess { alarmList ->
                 if (alarmList.isNullOrEmpty()) {
                     findAddress.value = null

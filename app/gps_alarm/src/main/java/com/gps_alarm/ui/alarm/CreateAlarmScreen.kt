@@ -55,11 +55,13 @@ import util.Log
 
 @Composable
 fun CreateAlarmScreen(onNavigate: NavHostController) {
+    InitLifecycle()
+    InitCreateAlarmScreen(onNavigate)
+}
+
+@Composable
+fun InitLifecycle() {
     val viewModel = hiltViewModel<AlarmVM>()
-    var showDialog by remember { mutableStateOf(false) }
-    var showSnackbar by remember { mutableStateOf(false) }
-    var alarmTitle by remember { mutableStateOf("") }
-    val geocode by viewModel.geocode.collectAsState()
 
     OnLifecycleEvent { owner, event ->
         when (event) {
@@ -95,6 +97,15 @@ fun CreateAlarmScreen(onNavigate: NavHostController) {
             Lifecycle.Event.ON_ANY -> { Log.d("ON_ANY") }
         }
     }
+}
+
+@Composable
+fun InitCreateAlarmScreen(onNavigate: NavHostController) {
+    val viewModel = hiltViewModel<AlarmVM>()
+    var showDialog by remember { mutableStateOf(false) }
+    var showSnackbar by remember { mutableStateOf(false) }
+    var alarmTitle by remember { mutableStateOf("") }
+    val geocode by viewModel.geocode.collectAsState()
 
     Box(
         modifier = Modifier
@@ -363,7 +374,8 @@ fun MapDialog(addresses: Addresses?, confirmCallback: (Addresses?) -> Unit, dism
 @Composable
 fun AddressDialog(dismissDialogCallback: () -> Unit) {
     Dialog(onDismissRequest = { dismissDialogCallback.invoke() }) {
-        val local = "http://172.30.50.8/address.html"
+//        val local = "http://172.30.50.8/address.html"
+        val local = "http://192.168.35.56/address.html"
         ShowWebView(local, dismissDialogCallback)
     }
 }

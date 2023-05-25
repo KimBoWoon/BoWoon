@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapVM @Inject constructor(
-    private val localDatastore: LocalDatastore,
+    private val localDataStore: LocalDatastore,
     private val json: Json
 ) : ContainerHost<AlarmData, MapVM.MapSideEffect>, BaseVM() {
     override val container: Container<AlarmData, MapSideEffect> = container(AlarmData())
@@ -27,7 +27,7 @@ class MapVM @Inject constructor(
     fun fetchAlarmList() {
         intent {
             reduce { state.copy(alarmList = emptyList(), loading = true) }
-            localDatastore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
+            localDataStore.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
                 reduce {
                     state.copy(
                         alarmList = if (alarmList.isEmpty()) {
