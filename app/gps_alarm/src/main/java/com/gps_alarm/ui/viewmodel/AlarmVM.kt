@@ -25,7 +25,6 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import util.Log
-import util.coroutineIOCallbackTo
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,6 +39,19 @@ class AlarmVM @Inject constructor(
     val chooseAddress = MutableStateFlow<Addresses?>(null)
     val alarmTitle = MutableStateFlow<String>("")
 
+    val expandedAddressItem = MutableStateFlow(-1)
+
+    fun onCardArrowClicked(index: Int) {
+        if (expandedAddressItem.value == -1) {
+            expandedAddressItem.value = index
+        } else if (expandedAddressItem.value == index) {
+            expandedAddressItem.value = -1
+        } else if (expandedAddressItem.value > -1) {
+            expandedAddressItem.value = -1
+            expandedAddressItem.value = index
+        }
+    }
+
     override val container: Container<AlarmData, AlarmSideEffect> = container(AlarmData())
 
     sealed class AlarmSideEffect {
@@ -48,6 +60,8 @@ class AlarmVM @Inject constructor(
         data class AddAlarm(val data: Address) : AlarmSideEffect()
         data class ModifyAddress(val data: Address) : AlarmSideEffect()
         data class GoToDetail(val longitude: String, val latitude: String) : AlarmSideEffect()
+        data class GetGeocode(val geocode: Geocode) : AlarmSideEffect()
+        data class GetAddress(val address: Address?) : AlarmSideEffect()
     }
 
     fun fetchAlarmList() {
@@ -131,11 +145,16 @@ class AlarmVM @Inject constructor(
     }
 
     fun getGeocode(address: String) {
-        coroutineIOCallbackTo(
-            block = { mapsApiUseCase.getGeocode(address) },
-            success = { geocode.value = it },
-            error = { e -> Log.printStackTrace(e) }
-        )
+        intent {
+            runCatching {
+                mapsApiUseCase.getGeocode(address)
+            }.onSuccess {
+                postSideEffect(AlarmSideEffect.GetGeocode(it))
+            }.onFailure { e ->
+                Log.printStackTrace(e)
+                postSideEffect(AlarmSideEffect.ShowToast("주소를 찾지 못 했습니다."))
+            }
+        }
     }
 
     fun setDataStore(address: Address) {
@@ -199,25 +218,21 @@ class AlarmVM @Inject constructor(
     }
 
     fun getAddress(longitude: String, latitude: String) {
-        viewModelScope.launch {
-            runCatching {
-                dataStoreUseCase.get(LocalDatastore.Keys.alarmList)
-            }.onSuccess { alarmList ->
-                if (alarmList.isNullOrEmpty()) {
-                    findAddress.value = null
-                } else {
-                    alarmList.find {
-                        it.decode<Address>(json).run {
-                            longitude == this.longitude.toString() && latitude == this.latitude.toString()
-                        }
-                    }?.let {
-                        findAddress.value = it.decode(json)
-                    } ?: run {
-                        findAddress.value = null
+        intent {
+            val address = dataStoreUseCase.get(LocalDatastore.Keys.alarmList)
+
+            if (address.isNullOrEmpty()) {
+                postSideEffect(AlarmSideEffect.ShowToast("데이터가 없습니다!"))
+            } else {
+                address.find {
+                    it.decode<Address>(json).run {
+                        longitude == this.longitude.toString() && latitude == this.latitude.toString()
                     }
+                }?.let {
+                    postSideEffect(AlarmSideEffect.GetAddress(it.decode(json)))
+                } ?: run {
+                    postSideEffect(AlarmSideEffect.GetAddress(null))
                 }
-            }.onFailure { e ->
-                Log.printStackTrace(e)
             }
         }
     }

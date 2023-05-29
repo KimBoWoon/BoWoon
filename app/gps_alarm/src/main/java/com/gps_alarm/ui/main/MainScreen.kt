@@ -41,18 +41,13 @@ import com.gps_alarm.ui.viewmodel.GpsAlarmVM
 @Composable
 fun GpsMainCompose() {
     val navController = rememberNavController()
-    val items = listOf(
-        NavigationScreen.Alarm,
-        NavigationScreen.Maps,
-        NavigationScreen.Setting
-    )
 
     CheckPermission()
 
     Scaffold(
         topBar = { GpsAlarmActionBar() },
         content = { innerPadding -> InitNavHost(navController, innerPadding) },
-        bottomBar = { InitBottomNavigation(items, navController) }
+        bottomBar = { InitBottomNavigation(navController) }
     )
 }
 
@@ -73,11 +68,14 @@ fun GpsAlarmActionBar() {
 }
 
 @Composable
-private fun InitBottomNavigation(items: List<NavigationScreen>, navController: NavHostController) {
+private fun InitBottomNavigation(navController: NavHostController) {
     BottomNavigation {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
-        items.forEach { screen ->
+        NavigationScreen.values().forEach { screen ->
+            if (screen == NavigationScreen.CreateAlarm || screen == NavigationScreen.AlarmDetail) {
+                return@forEach
+            }
             BottomNavigationItem(
                 icon = { Icon(screen.icon, contentDescription = null) },
                 label = { Text(stringResource(screen.resourceId)) },

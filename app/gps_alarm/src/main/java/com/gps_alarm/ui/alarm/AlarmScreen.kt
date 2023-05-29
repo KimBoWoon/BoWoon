@@ -34,12 +34,12 @@ import util.Log
 
 @Composable
 fun AlarmScreen(onNavigate: NavHostController) {
-    InitLifecycle(onNavigate)
+    SetSideEffect(onNavigate)
     InitAlarmScreen(onNavigate)
 }
 
 @Composable
-fun InitLifecycle(
+fun SetSideEffect(
     onNavigate: NavHostController
 ) {
     val viewModel = hiltViewModel<AlarmVM>()
@@ -67,7 +67,19 @@ fun InitLifecycle(
                                 onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${it.longitude}/${it.latitude}")
                             }
                             is AlarmVM.AlarmSideEffect.AddAlarm -> {
-                                Log.e("AlarmScreen > not support AddAlarm")
+                                viewModel.setDataStore(it.data)
+                            }
+                            is AlarmVM.AlarmSideEffect.GetGeocode -> {
+                                viewModel.geocode.value = it.geocode
+                            }
+                            is AlarmVM.AlarmSideEffect.GetAddress -> {
+                                it.address?.let { address ->
+                                    Log.d(address.toString())
+                                    viewModel.findAddress.value = address
+                                } ?: run {
+                                    Log.d("잘못된 데이터입니다!")
+                                    onNavigate.popBackStack()
+                                }
                             }
                         }
                     }
