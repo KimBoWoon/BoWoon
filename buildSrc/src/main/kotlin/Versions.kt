@@ -16,21 +16,21 @@ object Versions {
     }
 
     object Jetpack {
-        const val core = "1.10.0"
+        const val core = "1.10.1"
         const val appcompat = "1.6.1"
-        const val lifecycle = "2.4.1"
-        const val activity = "1.4.0"
-        const val fragment = "1.4.1"
-        const val navigation = "2.5.0"
+        const val lifecycle = "2.6.1"
+        const val activity = "1.7.2"
+        const val fragment = "1.5.7"
+        const val navigation = "2.5.3"
         const val datastore = "1.0.0"
         const val paging = "3.1.1"
-        const val room = "2.4.3"
-        const val workManager = "2.7.1"
+        const val room = "2.5.0"
+        const val workManager = "2.8.1"
         const val splash = "1.0.0"
     }
 
     object Gradle {
-        const val gradle = "8.0.1"
+        const val gradle = "8.0.2"
         const val plugin = "1.6.0"
     }
 

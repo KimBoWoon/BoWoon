@@ -129,6 +129,7 @@ dependencies {
         Dependencies.Jetpack.core,
         Dependencies.Jetpack.datastore,
         Dependencies.Jetpack.workManager,
+        Dependencies.Jetpack.lifecycle,
 //        Dependencies.Jetpack.splash,
         Dependencies.Google.location,
         Dependencies.Hilt.hiltAndroid,

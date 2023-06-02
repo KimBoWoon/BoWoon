@@ -40,6 +40,9 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-    </application>
 
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="tg8mcy1i69" />
+    </application>
 </manifest>

@@ -234,6 +234,8 @@ fun FoundAddressList(addresses: List<Addresses>?) {
 @Composable
 fun AddressDialog(dismissDialogCallback: () -> Unit) {
     Dialog(onDismissRequest = { dismissDialogCallback.invoke() }) {
+//        val local = "http://172.30.50.8/address.html"
+        val local = "http://192.168.35.56/address.html"
         val viewModel = hiltViewModel<AlarmVM>()
         val executeCallback: (String) -> Unit = {
             viewModel.getGeocode(it)

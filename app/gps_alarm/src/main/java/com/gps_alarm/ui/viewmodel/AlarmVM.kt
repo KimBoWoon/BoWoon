@@ -38,19 +38,7 @@ class AlarmVM @Inject constructor(
     val geocode = MutableStateFlow<Geocode?>(null)
     val chooseAddress = MutableStateFlow<Addresses?>(null)
     val alarmTitle = MutableStateFlow<String>("")
-
     val expandedAddressItem = MutableStateFlow(-1)
-
-    fun onCardArrowClicked(index: Int) {
-        if (expandedAddressItem.value == -1) {
-            expandedAddressItem.value = index
-        } else if (expandedAddressItem.value == index) {
-            expandedAddressItem.value = -1
-        } else if (expandedAddressItem.value > -1) {
-            expandedAddressItem.value = -1
-            expandedAddressItem.value = index
-        }
-    }
 
     override val container: Container<AlarmData, AlarmSideEffect> = container(AlarmData())
 
@@ -234,6 +222,17 @@ class AlarmVM @Inject constructor(
                     postSideEffect(AlarmSideEffect.GetAddress(null))
                 }
             }
+        }
+    }
+
+    fun onCardArrowClicked(index: Int) {
+        if (expandedAddressItem.value == -1) {
+            expandedAddressItem.value = index
+        } else if (expandedAddressItem.value == index) {
+            expandedAddressItem.value = -1
+        } else if (expandedAddressItem.value > -1) {
+            expandedAddressItem.value = -1
+            expandedAddressItem.value = index
         }
     }
 }
