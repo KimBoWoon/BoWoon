@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.gps_alarm.data.Address
 import com.gps_alarm.data.AlarmData
@@ -30,6 +31,7 @@ import com.gps_alarm.ui.NavigationScreen
 import com.gps_alarm.ui.dialog.GpsAlarmDialog
 import com.gps_alarm.ui.util.OnLifecycleEvent
 import com.gps_alarm.ui.viewmodel.AlarmVM
+import kotlinx.coroutines.launch
 import util.Log
 
 @Composable
@@ -47,44 +49,47 @@ fun SetSideEffect(
 
     OnLifecycleEvent { owner, event ->
         when (event) {
-            Lifecycle.Event.ON_START -> { Log.d("ON_START") }
             Lifecycle.Event.ON_CREATE -> {
                 Log.d("ON_CREATE")
-                owner.lifecycleScope.launchWhenCreated {
-                    viewModel.fetchAlarmList()
-                    viewModel.container.sideEffectFlow.collect {
-                        when (it) {
-                            is AlarmVM.AlarmSideEffect.ShowToast -> {
-                                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                            }
-                            is AlarmVM.AlarmSideEffect.SaveListToDataStore -> {
-                                viewModel.saveToDataStore(it.data)
-                            }
-                            is AlarmVM.AlarmSideEffect.ModifyAddress -> {
-                                viewModel.changeData(it.data)
-                            }
-                            is AlarmVM.AlarmSideEffect.GoToDetail -> {
-                                onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${it.longitude}/${it.latitude}")
-                            }
-                            is AlarmVM.AlarmSideEffect.AddAlarm -> {
-                                viewModel.setDataStore(it.data)
-                            }
-                            is AlarmVM.AlarmSideEffect.GetGeocode -> {
-                                viewModel.geocode.value = it.geocode
-                            }
-                            is AlarmVM.AlarmSideEffect.GetAddress -> {
-                                it.address?.let { address ->
-                                    Log.d(address.toString())
-                                    viewModel.findAddress.value = address
-                                } ?: run {
-                                    Log.d("잘못된 데이터입니다!")
-                                    onNavigate.popBackStack()
+                viewModel.fetchAlarmList()
+
+                owner.lifecycleScope.launch {
+                    owner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        viewModel.container.sideEffectFlow.collect {
+                            when (it) {
+                                is AlarmVM.AlarmSideEffect.ShowToast -> {
+                                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                                }
+                                is AlarmVM.AlarmSideEffect.SaveListToDataStore -> {
+                                    viewModel.saveToDataStore(it.data)
+                                }
+                                is AlarmVM.AlarmSideEffect.ModifyAddress -> {
+                                    viewModel.changeData(it.data)
+                                }
+                                is AlarmVM.AlarmSideEffect.GoToDetail -> {
+                                    onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${it.longitude}/${it.latitude}")
+                                }
+                                is AlarmVM.AlarmSideEffect.AddAlarm -> {
+                                    viewModel.setDataStore(it.data)
+                                }
+                                is AlarmVM.AlarmSideEffect.GetGeocode -> {
+                                    viewModel.geocode.value = it.geocode
+                                }
+                                is AlarmVM.AlarmSideEffect.GetAddress -> {
+                                    it.address?.let { address ->
+                                        Log.d(address.toString())
+                                        viewModel.findAddress.value = address
+                                    } ?: run {
+                                        Log.d("잘못된 데이터입니다!")
+                                        onNavigate.popBackStack()
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+            Lifecycle.Event.ON_START -> { Log.d("ON_START") }
             Lifecycle.Event.ON_RESUME -> { Log.d("ON_RESUME") }
             Lifecycle.Event.ON_PAUSE -> { Log.d("ON_PAUSE") }
             Lifecycle.Event.ON_STOP -> { Log.d("ON_STOP") }
@@ -99,7 +104,7 @@ fun InitAlarmScreen(onNavigate: NavHostController) {
     val viewModel = hiltViewModel<AlarmVM>()
     val listState = rememberLazyListState()
     var isRefreshing by remember { mutableStateOf(false) }
-    val alarmData = viewModel.container.stateFlow.collectAsState(AlarmData()).value
+    val alarmData = viewModel.container.stateFlow.collectAsState(AlarmData(alarmList = null, loading = true, error = null)).value
     @OptIn(ExperimentalMaterialApi::class)
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -128,15 +133,18 @@ fun InitAlarmScreen(onNavigate: NavHostController) {
                         modifier = Modifier.align(alignment = Alignment.Center)
                     )
                 }
-                alarmData.alarmList.isEmpty() && alarmData.error == null -> {
+                alarmData.alarmList?.isEmpty() == true && alarmData.error == null -> {
+                    Log.d("alarm list geocode data empty")
                     isRefreshing = false
                     Text(text = "저장된 주소가 없습니다.")
                 }
-                alarmData.alarmList.isNotEmpty() && alarmData.error == null -> {
+                alarmData.alarmList?.isNotEmpty() == true && alarmData.error == null -> {
+                    Log.d("alarm list geocode data success")
                     isRefreshing = false
                     AlarmContent(listState, alarmData.alarmList)
                 }
-                else -> {
+                alarmData.error != null -> {
+                    Log.d("alarm list geocode data error")
                     GpsAlarmDialog(
                         "데이터를 가져오는대 문제가 발생했습니다.\n다시 시도하시겠습니까?",
                         "재시도",
@@ -144,6 +152,9 @@ fun InitAlarmScreen(onNavigate: NavHostController) {
                         "취소",
                         {}
                     )
+                }
+                else -> {
+                    Log.d("alarm list geocode data unknown")
                 }
             }
             PullRefreshIndicator(

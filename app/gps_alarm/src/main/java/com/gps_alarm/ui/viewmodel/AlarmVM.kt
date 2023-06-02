@@ -40,7 +40,7 @@ class AlarmVM @Inject constructor(
     val alarmTitle = MutableStateFlow<String>("")
     val expandedAddressItem = MutableStateFlow(-1)
 
-    override val container: Container<AlarmData, AlarmSideEffect> = container(AlarmData())
+    override val container: Container<AlarmData, AlarmSideEffect> = container(AlarmData(alarmList = null, loading = true, error = null))
 
     sealed class AlarmSideEffect {
         data class ShowToast(val message: String) : AlarmSideEffect()
@@ -54,7 +54,7 @@ class AlarmVM @Inject constructor(
 
     fun fetchAlarmList() {
         intent {
-            reduce { state.copy(alarmList = emptyList(), loading = true) }
+            reduce { state.copy(alarmList = null, loading = true, error = null) }
             dataStoreUseCase.get(LocalDatastore.Keys.alarmList)?.let { alarmList ->
                 reduce {
                     state.copy(
@@ -63,9 +63,12 @@ class AlarmVM @Inject constructor(
                         } else {
                             alarmList.map { it.decode(json) }
                         },
-                        loading = false
+                        loading = false,
+                        error = null
                     )
                 }
+            } ?: run {
+                reduce { state.copy(alarmList = emptyList(), loading = false, error = null) }
             }
         }
     }

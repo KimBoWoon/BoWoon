@@ -78,9 +78,9 @@ fun MapScreen(onNavigate: NavHostController) {
                     state.loading -> {
                         Log.d("addressList Loading...")
                     }
-                    state.alarmList.isEmpty() && state.error == null -> {
+                    state.alarmList?.isEmpty() == true && state.error == null -> {
                     }
-                    state.alarmList.isNotEmpty() && state.error == null -> {
+                    state.alarmList?.isNotEmpty() == true && state.error == null -> {
                         mapView.getMapAsync { naverMap ->
                             state.alarmList.forEach { address ->
                                 addMarker(address).apply {
