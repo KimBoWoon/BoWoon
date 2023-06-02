@@ -11,6 +11,7 @@ plugins {
     id(Dependencies.BuildPlugins.googleService)
     id(Dependencies.BuildPlugins.firebasePerformance)
     kotlin(Dependencies.BuildPlugins.serialization)
+    id(Dependencies.BuildPlugins.firebaseCrashlytics)
 }
 
 android {
@@ -139,6 +140,7 @@ dependencies {
         Dependencies.Firebase.performance,
         Dependencies.Firebase.analytics,
         Dependencies.Firebase.message,
+        Dependencies.Firebase.crashlytics,
         Dependencies.Naver.map,
         Dependencies.Serialization.kotlin,
         Dependencies.Serialization.converter,

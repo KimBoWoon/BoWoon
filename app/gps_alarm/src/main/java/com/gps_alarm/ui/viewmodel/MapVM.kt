@@ -19,7 +19,7 @@ class MapVM @Inject constructor(
     private val dataStoreUseCase: DataStoreUseCase,
     private val json: Json
 ) : ContainerHost<AlarmData, MapVM.MapSideEffect>, BaseVM() {
-    override val container: Container<AlarmData, MapSideEffect> = container(AlarmData())
+    override val container: Container<AlarmData, MapSideEffect> = container(AlarmData(alarmList = null, loading = false, error = null))
 
     sealed class MapSideEffect {
 

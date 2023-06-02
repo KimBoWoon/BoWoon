@@ -11,6 +11,7 @@ object Dependencies {
         const val safeArgs = "androidx.navigation.safeargs.kotlin"
         const val googleService = "com.google.gms.google-services"
         const val firebasePerformance = "com.google.firebase.firebase-perf"
+        const val firebaseCrashlytics = "com.google.firebase.crashlytics"
     }
 
     object Gradle {
@@ -35,6 +36,7 @@ object Dependencies {
         const val performance = "com.google.firebase:firebase-perf-ktx"
         const val analytics = "com.google.firebase:firebase-analytics-ktx"
         const val message = "com.google.firebase:firebase-messaging-ktx"
+        const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
     }
 
     object Jetpack {
