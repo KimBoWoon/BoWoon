@@ -12,11 +12,12 @@ import javax.inject.Inject
 
 private val Context.datastore by preferencesDataStore(name = "gpsAlarm.datastore")
 
-class LocalDatastore @Inject constructor(
+class LocalDataStore @Inject constructor(
     private val context: Context
 ) {
     object Keys {
         val alarmList = stringSetPreferencesKey("ALARM_LIST")
+        val setting = stringPreferencesKey("SETTING")
     }
 
     suspend fun <T> set(key: Preferences.Key<T>, value: T) {

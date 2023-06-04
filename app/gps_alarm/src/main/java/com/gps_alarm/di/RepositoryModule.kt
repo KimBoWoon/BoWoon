@@ -1,6 +1,6 @@
 package com.gps_alarm.di
 
-import com.data.gpsAlarm.local.LocalDatastore
+import com.data.gpsAlarm.local.LocalDataStore
 import com.data.gpsAlarm.repository.DataStoreRepositoryImpl
 import com.data.gpsAlarm.repository.MapsApiRepositoryImpl
 import com.data.gpsAlarm.service.MapsApiService
@@ -21,6 +21,6 @@ object RepositoryModule {
 
     @Provides
     fun provideDatastore(
-        dataStore: LocalDatastore
+        dataStore: LocalDataStore
     ): DataStoreRepository = DataStoreRepositoryImpl(dataStore)
 }

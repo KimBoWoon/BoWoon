@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -171,7 +172,6 @@ fun SaveAddressView(onNavigate: NavHostController) {
                 if (viewModel.chooseAddress.value != null && viewModel.alarmTitle.value.isNotEmpty()) {
                     viewModel.addAlarm(viewModel.alarmTitle.value, viewModel.chooseAddress.value)
                     viewModel.chooseAddress.value = null
-                    onNavigate.navigateUp()
                 } else {
                     Toast.makeText(context, "주소가 제대로 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
                 }
@@ -235,7 +235,9 @@ fun FoundAddressList(addresses: List<Addresses>?) {
 fun AddressDialog(dismissDialogCallback: () -> Unit) {
     Dialog(onDismissRequest = { dismissDialogCallback.invoke() }) {
 //        val local = "http://172.30.50.8/address.html"
-        val local = "http://192.168.35.56/address.html"
+//        val local = "http://10.0.2.2/address.html"
+//        val local = "file:///android_asset/address.html"
+        val local = "http://172.30.51.155/address.html"
         val viewModel = hiltViewModel<AlarmVM>()
         val executeCallback: (String) -> Unit = {
             viewModel.getGeocode(it)

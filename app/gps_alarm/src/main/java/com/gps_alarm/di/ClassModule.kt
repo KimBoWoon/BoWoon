@@ -1,7 +1,7 @@
 package com.gps_alarm.di
 
 import android.content.Context
-import com.data.gpsAlarm.local.LocalDatastore
+import com.data.gpsAlarm.local.LocalDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,5 +14,5 @@ object ClassModule {
     @Provides
     fun provideLocalDataStore(
         @ApplicationContext context: Context
-    ): LocalDatastore = LocalDatastore(context)
+    ): LocalDataStore = LocalDataStore(context)
 }

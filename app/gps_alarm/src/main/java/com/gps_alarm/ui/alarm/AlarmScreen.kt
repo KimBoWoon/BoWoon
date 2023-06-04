@@ -51,7 +51,6 @@ fun SetSideEffect(
         when (event) {
             Lifecycle.Event.ON_CREATE -> {
                 Log.d("ON_CREATE")
-                viewModel.fetchAlarmList()
 
                 owner.lifecycleScope.launch {
                     owner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -71,6 +70,7 @@ fun SetSideEffect(
                                 }
                                 is AlarmVM.AlarmSideEffect.AddAlarm -> {
                                     viewModel.setDataStore(it.data)
+                                    onNavigate.popBackStack()
                                 }
                                 is AlarmVM.AlarmSideEffect.GetGeocode -> {
                                     viewModel.geocode.value = it.geocode
@@ -90,7 +90,11 @@ fun SetSideEffect(
                 }
             }
             Lifecycle.Event.ON_START -> { Log.d("ON_START") }
-            Lifecycle.Event.ON_RESUME -> { Log.d("ON_RESUME") }
+            Lifecycle.Event.ON_RESUME -> {
+                Log.d("ON_RESUME")
+
+                viewModel.fetchAlarmList()
+            }
             Lifecycle.Event.ON_PAUSE -> { Log.d("ON_PAUSE") }
             Lifecycle.Event.ON_STOP -> { Log.d("ON_STOP") }
             Lifecycle.Event.ON_DESTROY -> { Log.d("ON_DESTROY") }
