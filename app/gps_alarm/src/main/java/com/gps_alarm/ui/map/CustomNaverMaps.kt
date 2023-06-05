@@ -22,7 +22,21 @@ class CustomNaverMaps(
     companion object {
         var infoWindow: InfoWindow? = null
     }
+
     private val maps = MapView(context, options)
+    private val followingListener = NaverMap.OnLocationChangeListener { location ->
+        maps.getMapAsync { naverMap ->
+            val coord = LatLng(location)
+            naverMap.locationOverlay.apply {
+                isVisible = true
+                position = coord
+                bearing = location.bearing
+            }
+
+            naverMap.moveCamera(CameraUpdate.scrollTo(coord))
+            naverMap.moveCamera(CameraUpdate.zoomTo(16.0))
+        }
+    }
 
     fun setMapSettings(callback: OnMapReadyCallback): CustomNaverMaps {
         maps.getMapAsync(callback)
@@ -34,22 +48,20 @@ class CustomNaverMaps(
         return this
     }
 
-    fun addLocationChangeListener(isFollowing: Boolean, listener: NaverMap.OnLocationChangeListener? = null): CustomNaverMaps {
+    fun setCameraFollowing(isFollowing: Boolean): CustomNaverMaps {
+        maps.getMapAsync { naverMap ->
+            Log.d("isFollowing > $isFollowing")
+            naverMap.removeOnLocationChangeListener(followingListener)
+            if (isFollowing) {
+                naverMap.addOnLocationChangeListener(followingListener)
+            }
+        }
+        return this
+    }
+
+    fun addLocationChangeListener(listener: NaverMap.OnLocationChangeListener? = null): CustomNaverMaps {
         maps.getMapAsync { naverMap ->
             naverMap.addOnLocationChangeListener { location ->
-                Log.d("isFollowing > $isFollowing")
-                if (isFollowing) {
-                    val coord = LatLng(location)
-                    naverMap.locationOverlay.apply {
-                        isVisible = true
-                        position = coord
-                        bearing = location.bearing
-                    }
-
-                    naverMap.moveCamera(CameraUpdate.scrollTo(coord))
-                    naverMap.moveCamera(CameraUpdate.zoomTo(16.0))
-                }
-
                 listener?.onLocationChange(location)
             }
         }

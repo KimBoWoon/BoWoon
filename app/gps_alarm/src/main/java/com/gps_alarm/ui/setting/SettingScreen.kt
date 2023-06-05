@@ -1,5 +1,6 @@
 package com.gps_alarm.ui.setting
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,13 +8,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.Button
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,45 +29,46 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
-import com.gps_alarm.ui.util.OnLifecycleEvent
 import com.gps_alarm.ui.viewmodel.SettingVM
 import kotlinx.coroutines.launch
 
 @Composable
 fun SettingScreen(onNavigate: NavHostController) {
     SetSettingSideEffect()
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        SetFollowing()
-    }
+    InitSettingScreen()
 }
 
 @Composable
 fun SetSettingSideEffect() {
     val viewModel = hiltViewModel<SettingVM>()
-    OnLifecycleEvent { owner, event ->
-        when (event) {
-            Lifecycle.Event.ON_CREATE -> {
-                owner.lifecycleScope.launch {
-                    owner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        viewModel.container.sideEffectFlow.collect {
-                            when (it) {
-                                is SettingVM.SettingSideEffect.Save -> {
-                                    viewModel.setDataStore(it.setting)
-                                }
-                            }
+    val lifecycle = LocalLifecycleOwner.current
+    val context = LocalContext.current
+
+    LaunchedEffect("SettingSideEffect") {
+        lifecycle.lifecycleScope.launch {
+            lifecycle.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.container.sideEffectFlow.collect {
+                    when (it) {
+                        is SettingVM.SettingSideEffect.Save -> {
+                            viewModel.setDataStore(it.setting)
+                        }
+                        is SettingVM.SettingSideEffect.ShowToast -> {
+                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             }
-            Lifecycle.Event.ON_START -> {}
-            Lifecycle.Event.ON_RESUME -> {}
-            Lifecycle.Event.ON_PAUSE -> {}
-            Lifecycle.Event.ON_STOP -> {}
-            Lifecycle.Event.ON_DESTROY -> {}
-            Lifecycle.Event.ON_ANY -> {}
         }
+    }
+}
+
+@Composable
+fun InitSettingScreen() {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        SetFollowing()
+        SetCircleView()
     }
 }
 
@@ -78,7 +87,8 @@ fun SetFollowing() {
     ) {
         Text(
             modifier = Modifier.wrapContentWidth(),
-            text = "지도에서 카메라 따라가기")
+            text = "지도에서 카메라 따라가기"
+        )
         Switch(
             modifier = Modifier.wrapContentWidth(),
             checked = isFollowingState.value,
@@ -87,6 +97,36 @@ fun SetFollowing() {
                 viewModel.setSetting(SettingVM.Setting.IS_FOLLOW.label, it)
             }
         )
+    }
+}
+
+@Composable
+fun SetCircleView() {
+    val viewModel = hiltViewModel<SettingVM>()
+    var circleSize by remember { mutableStateOf(viewModel.container.stateFlow.value.circleSize.toString()) }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        OutlinedTextField(
+            label = { Text(text = "원 크기 (m)") },
+            value = circleSize,
+            onValueChange = {
+                circleSize = it
+            }
+        )
+        Button(
+            onClick = {
+                viewModel.setSetting(SettingVM.Setting.CIRCLE_SIZE.label, circleSize.toInt())
+            }
+        ) {
+            Text(text = "저장")
+        }
     }
 }
 

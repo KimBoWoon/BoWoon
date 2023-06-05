@@ -38,17 +38,22 @@ class SettingVM @Inject constructor(
 
     sealed class SettingSideEffect {
         data class Save(val setting: String) : SettingSideEffect()
+        data class ShowToast(val message: String) : SettingSideEffect()
     }
 
     enum class Setting(val label: String) {
-        IS_FOLLOW("isFollow")
+        IS_FOLLOW("isFollow"),
+        CIRCLE_SIZE("circleSize")
     }
 
-    fun setSetting(name: String, value: Boolean) {
+    fun setSetting(name: String, value: Any) {
         intent {
             when (name) {
                 Setting.IS_FOLLOW.label -> {
-                    reduce { state.copy(isFollowing = value) }
+                    reduce { state.copy(isFollowing = value as Boolean) }
+                }
+                Setting.CIRCLE_SIZE.label -> {
+                    reduce { state.copy(circleSize = value as Int) }
                 }
             }
             postSideEffect(SettingSideEffect.Save(state.encode(json)))
@@ -56,8 +61,11 @@ class SettingVM @Inject constructor(
     }
 
     fun setDataStore(data: String) {
-        viewModelScope.launch {
-            dataStoreUseCase.set(LocalDataStore.Keys.setting, data)
+        intent {
+            viewModelScope.launch {
+                dataStoreUseCase.set(LocalDataStore.Keys.setting, data)
+            }
+            postSideEffect(SettingSideEffect.ShowToast("데이터 저장 완료"))
         }
     }
 }

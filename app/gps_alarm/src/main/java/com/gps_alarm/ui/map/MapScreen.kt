@@ -11,6 +11,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
+import com.gps_alarm.data.MapData
+import com.gps_alarm.ui.util.OnLifecycleEvent
 import com.gps_alarm.ui.util.addCircleOverlay
 import com.gps_alarm.ui.util.addMarker
 import com.gps_alarm.ui.viewmodel.MapVM
@@ -20,43 +22,29 @@ import util.Log
 @Composable
 fun MapScreen(onNavigate: NavHostController) {
     SetSideMapEffect()
+    InitLifecycle()
+    InitMapScreen()
+}
+
+@Composable
+fun InitLifecycle() {
+    val context = LocalContext.current
     val viewModel = hiltViewModel<MapVM>()
-    val state = viewModel.container.stateFlow.collectAsState().value
 
-    viewModel.getSetting()
-
-    when {
-        state.loading -> {
-            Log.d("addressList Loading...")
-        }
-        state.mapView != null -> {
-            if (!state.alarmList.isNullOrEmpty()) {
-                state.mapView.getMapAsync { naverMap ->
-                    state.alarmList.forEach { address ->
-                        addMarker(address).apply {
-                            map = if (address.isEnable == true) {
-                                naverMap
-                            } else {
-                                null
-                            }
-                        }
-                        addCircleOverlay(address).apply {
-                            map = if (address.isEnable == true) {
-                                naverMap
-                            } else {
-                                null
-                            }
-                        }
-                    }
-                }
+    OnLifecycleEvent { owner, event ->
+        when (event) {
+            Lifecycle.Event.ON_CREATE -> {
+                owner.lifecycle.addObserver(viewModel)
+                viewModel.createMap(context)
             }
-            AndroidView(factory = { state.mapView })
-        }
-        state.error != null -> {
-            Log.printStackTrace(state.error)
-        }
-        else -> {
-            Log.d("MapScreen unknown")
+            Lifecycle.Event.ON_START -> {}
+            Lifecycle.Event.ON_RESUME -> {
+                owner.lifecycle.addObserver(viewModel.customMapView)
+            }
+            Lifecycle.Event.ON_PAUSE -> {}
+            Lifecycle.Event.ON_STOP -> {}
+            Lifecycle.Event.ON_DESTROY -> {}
+            Lifecycle.Event.ON_ANY -> {}
         }
     }
 }
@@ -70,12 +58,37 @@ fun SetSideMapEffect() {
     LaunchedEffect("key") {
         lifecycle.lifecycleScope.launch {
             viewModel.container.sideEffectFlow.flowWithLifecycle(lifecycle.lifecycle, Lifecycle.State.CREATED).collect {
-                when (it) {
-                    is MapVM.MapSideEffect.GetSetting -> {
-                        viewModel.getIsFollowing(context)
+
+            }
+        }
+    }
+}
+
+@Composable
+fun InitMapScreen() {
+    val viewModel = hiltViewModel<MapVM>()
+    val state = viewModel.container.stateFlow.collectAsState(MapData(null, null, null, true, null)).value
+
+    when {
+        state.loading -> {
+            Log.d("addressList Loading...")
+        }
+        state.mapView != null -> {
+            if (!state.alarmList.isNullOrEmpty()) {
+                state.mapView.getMapAsync { naverMap ->
+                    state.alarmList.filter { it.isEnable == true }.forEach { address ->
+                        addMarker(address).apply {map = naverMap }
+                        addCircleOverlay(address, state.settingInfo?.circleSize?.toDouble() ?: 0.0).apply { map = naverMap }
                     }
                 }
             }
+            AndroidView(factory = { state.mapView })
+        }
+        state.error != null -> {
+            Log.printStackTrace(state.error)
+        }
+        else -> {
+            Log.d("MapScreen unknown > $state")
         }
     }
 }

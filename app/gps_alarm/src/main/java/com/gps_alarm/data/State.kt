@@ -12,11 +12,13 @@ data class AlarmData(
 data class MapData(
     val mapView: MapView? = null,
     val alarmList: List<Address>? = null,
+    val settingInfo: SettingInfo? = null,
     val loading: Boolean = false,
     val error: Throwable? = null
 )
 
 @Serializable
 data class SettingInfo(
-    val isFollowing: Boolean = false
+    val isFollowing: Boolean = false,
+    val circleSize: Int = 0
 )

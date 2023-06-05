@@ -84,10 +84,10 @@ fun addMarker(address: Address): Marker = Marker().apply {
     }
 }
 
-fun addCircleOverlay(address: Address): CircleOverlay = CircleOverlay().apply {
+fun addCircleOverlay(address: Address, circleSize: Double): CircleOverlay = CircleOverlay().apply {
     if (address.isEnable == true && address.latitude != null && address.longitude != null) {
         center = LatLng(address.latitude, address.longitude)
-        radius = 100.0
+        radius = circleSize
         color = circleOverlay.toArgb()
     }
 }

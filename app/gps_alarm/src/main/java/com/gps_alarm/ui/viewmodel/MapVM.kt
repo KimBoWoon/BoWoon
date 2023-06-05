@@ -16,18 +16,14 @@ import com.naver.maps.map.MapView
 import com.naver.maps.map.overlay.InfoWindow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import util.Log
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,59 +32,32 @@ class MapVM @Inject constructor(
     private val json: Json
 ) : ContainerHost<MapData, MapVM.MapSideEffect>, BaseVM() {
     override val container: Container<MapData, MapSideEffect> = container(MapData())
+    lateinit var customMapView: CustomNaverMaps
 
     sealed class MapSideEffect {
-        object GetSetting : MapSideEffect()
     }
 
-    fun getIsFollowing(context: Context) {
+    fun createMap(context: Context) {
         intent {
-            callbackFlow {
-                runCatching {
-                    Pair<List<Address>, Boolean>(
-                        dataStoreUseCase.get(LocalDataStore.Keys.alarmList)?.map { it.decode(json) } ?: emptyList(),
-                        dataStoreUseCase.get(LocalDataStore.Keys.setting)?.decode<SettingInfo>(json)?.isFollowing ?: false
+            viewModelScope.launch(Dispatchers.Main) {
+                reduce { state.copy(mapView = null, alarmList = null, loading = true, error = null) }
+                val alarmList = withContext(Dispatchers.IO) { dataStoreUseCase.get(LocalDataStore.Keys.alarmList)?.map { it.decode<Address>(json) } ?: emptyList() }
+                val settingInfo = withContext(Dispatchers.IO) { dataStoreUseCase.get(LocalDataStore.Keys.setting)?.decode<SettingInfo>(json) ?: SettingInfo() }
+                reduce {
+                    state.copy(
+                        mapView = createMapView(context, settingInfo.isFollowing),
+                        alarmList = alarmList,
+                        settingInfo = settingInfo,
+                        loading = false,
+                        error = null
                     )
-                }.onSuccess {
-                    trySend(it)
-                }.onFailure { e ->
-                    trySend(Pair(emptyList(), false))
-                    close(e)
-                }
-
-                awaitClose {
-                    Log.d("getIsFollowing > close")
-                    close()
-                }
-            }.catch {e ->
-                Log.printStackTrace(e)
-                viewModelScope.launch(Dispatchers.Main) {
-                    reduce {
-                        state.copy(
-                            mapView = createMapView(context, false),
-                            alarmList = emptyList(),
-                            loading = false,
-                            error = e
-                        )
-                    }
-                }
-            }.collect { (alarmList, isFollowing) ->
-                viewModelScope.launch(Dispatchers.Main) {
-                    reduce {
-                        state.copy(
-                            mapView = createMapView(context, isFollowing),
-                            alarmList = alarmList,
-                            loading = false,
-                            error = null
-                        )
-                    }
                 }
             }
         }
     }
 
-    private fun createMapView(context: Context, isFollowing: Boolean): MapView =
-        CustomNaverMaps(
+    private fun createMapView(context: Context, isFollowing: Boolean): MapView {
+        customMapView = CustomNaverMaps(
             context,
             null
         ).setMapSettings {
@@ -107,12 +76,8 @@ class MapVM @Inject constructor(
                     return infoWindow.marker?.tag as? CharSequence ?: ""
                 }
             }
-        ).addLocationChangeListener(isFollowing)
-            .create()
+        ).setCameraFollowing(isFollowing)
 
-    fun getSetting() {
-        intent {
-            postSideEffect(MapSideEffect.GetSetting)
-        }
+        return customMapView.create()
     }
 }

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +38,7 @@ import util.Log
 @Composable
 fun AlarmScreen(onNavigate: NavHostController) {
     SetSideEffect(onNavigate)
+    InitLifecycle()
     InitAlarmScreen(onNavigate)
 }
 
@@ -46,49 +48,55 @@ fun SetSideEffect(
 ) {
     val viewModel = hiltViewModel<AlarmVM>()
     val context = LocalContext.current
+    val lifecycle = LocalLifecycleOwner.current
 
-    OnLifecycleEvent { owner, event ->
-        when (event) {
-            Lifecycle.Event.ON_CREATE -> {
-                Log.d("ON_CREATE")
-
-                owner.lifecycleScope.launch {
-                    owner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        viewModel.container.sideEffectFlow.collect {
-                            when (it) {
-                                is AlarmVM.AlarmSideEffect.ShowToast -> {
-                                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                                }
-                                is AlarmVM.AlarmSideEffect.SaveListToDataStore -> {
-                                    viewModel.saveToDataStore(it.data)
-                                }
-                                is AlarmVM.AlarmSideEffect.ModifyAddress -> {
-                                    viewModel.changeData(it.data)
-                                }
-                                is AlarmVM.AlarmSideEffect.GoToDetail -> {
-                                    onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${it.longitude}/${it.latitude}")
-                                }
-                                is AlarmVM.AlarmSideEffect.AddAlarm -> {
-                                    viewModel.setDataStore(it.data)
-                                    onNavigate.popBackStack()
-                                }
-                                is AlarmVM.AlarmSideEffect.GetGeocode -> {
-                                    viewModel.geocode.value = it.geocode
-                                }
-                                is AlarmVM.AlarmSideEffect.GetAddress -> {
-                                    it.address?.let { address ->
-                                        Log.d(address.toString())
-                                        viewModel.findAddress.value = address
-                                    } ?: run {
-                                        Log.d("잘못된 데이터입니다!")
-                                        onNavigate.popBackStack()
-                                    }
-                                }
+    LaunchedEffect("alarmSideEffectSetting") {
+        lifecycle.lifecycleScope.launch {
+            lifecycle.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.container.sideEffectFlow.collect {
+                    when (it) {
+                        is AlarmVM.AlarmSideEffect.ShowToast -> {
+                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is AlarmVM.AlarmSideEffect.SaveListToDataStore -> {
+                            viewModel.saveToDataStore(it.data)
+                        }
+                        is AlarmVM.AlarmSideEffect.ModifyAddress -> {
+                            viewModel.changeData(it.data)
+                        }
+                        is AlarmVM.AlarmSideEffect.GoToDetail -> {
+                            onNavigate.navigate("${NavigationScreen.AlarmDetail.route}/${it.longitude}/${it.latitude}")
+                        }
+                        is AlarmVM.AlarmSideEffect.AddAlarm -> {
+                            viewModel.setDataStore(it.data)
+                            onNavigate.popBackStack()
+                        }
+                        is AlarmVM.AlarmSideEffect.GetGeocode -> {
+                            viewModel.geocode.value = it.geocode
+                        }
+                        is AlarmVM.AlarmSideEffect.GetAddress -> {
+                            it.address?.let { address ->
+                                Log.d(address.toString())
+                                viewModel.findAddress.value = address
+                            } ?: run {
+                                Log.d("잘못된 데이터입니다!")
+                                onNavigate.popBackStack()
                             }
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun InitLifecycle() {
+    val viewModel = hiltViewModel<AlarmVM>()
+
+    OnLifecycleEvent { owner, event ->
+        when (event) {
+            Lifecycle.Event.ON_CREATE -> { Log.d("ON_CREATE") }
             Lifecycle.Event.ON_START -> { Log.d("ON_START") }
             Lifecycle.Event.ON_RESUME -> {
                 Log.d("ON_RESUME")
