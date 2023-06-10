@@ -6,16 +6,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.bowoon.android.gps_alarm.R
 import com.gps_alarm.ui.activities.GpsAlarmActivity
 
-@Composable
-fun SendNotification(notificationId: Int?) {
-    val context = LocalContext.current
+fun SendNotification(context: Context, notificationId: Int?) {
     val CHANNEL_ID = context.getString(R.string.notification_channel_id)
     val message = "목적지를 확인하세요."
 

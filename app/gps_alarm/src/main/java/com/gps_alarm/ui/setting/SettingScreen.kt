@@ -94,7 +94,7 @@ fun SetFollowing() {
             checked = isFollowingState.value,
             onCheckedChange = {
                 isFollowingState.value = it
-                viewModel.setSetting(SettingVM.Setting.IS_FOLLOW.label, it)
+                viewModel.setSetting(SettingVM.Setting.IS_FOLLOW, it)
             }
         )
     }
@@ -114,7 +114,8 @@ fun SetCircleView() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         OutlinedTextField(
-            label = { Text(text = "원 크기 (m)") },
+            modifier = Modifier.align(alignment = Alignment.CenterVertically),
+            label = { Text(text = "접근 범위 (m)") },
             value = circleSize,
             onValueChange = {
                 circleSize = it
@@ -122,7 +123,7 @@ fun SetCircleView() {
         )
         Button(
             onClick = {
-                viewModel.setSetting(SettingVM.Setting.CIRCLE_SIZE.label, circleSize.toInt())
+                viewModel.setSetting(SettingVM.Setting.CIRCLE_SIZE, circleSize.toInt())
             }
         ) {
             Text(text = "저장")

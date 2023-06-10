@@ -70,18 +70,17 @@ object Log {
         if (showLog) tr?.printStackTrace()
     }
 
-    private fun tag(): String? {
-        Thread.currentThread().stackTrace[4]?.apply {
-            val className = className.substring(className.lastIndexOf(".") + 1)
-            val linkString = "(${fileName}:${lineNumber})"
-            val pathString = "BoWoon# $className.${methodName}"
-            return pathString + linkString
-//            return if (pathString.length + linkString.length > 80) {
-//                pathString.substring(0, 80 - linkString.length) + "..." + linkString
-//            } else {
-//                pathString + linkString
-//            }
+    private fun tag(): String =
+        Thread.currentThread().stackTrace.let { trace ->
+            var index = 4
+
+            while (index < trace.size && trace[index].fileName.isNullOrEmpty()) {
+                index++
+            }
+
+            return when {
+                trace.size > index -> "(${trace[index].fileName}:${trace[index].lineNumber})"
+                else -> "LinkNotFound"
+            }
         }
-        return null
-    }
 }

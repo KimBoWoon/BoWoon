@@ -41,18 +41,18 @@ class SettingVM @Inject constructor(
         data class ShowToast(val message: String) : SettingSideEffect()
     }
 
-    enum class Setting(val label: String) {
-        IS_FOLLOW("isFollow"),
-        CIRCLE_SIZE("circleSize")
+    enum class Setting {
+        IS_FOLLOW,
+        CIRCLE_SIZE
     }
 
-    fun setSetting(name: String, value: Any) {
+    fun setSetting(name: Setting, value: Any) {
         intent {
             when (name) {
-                Setting.IS_FOLLOW.label -> {
+                Setting.IS_FOLLOW -> {
                     reduce { state.copy(isFollowing = value as Boolean) }
                 }
-                Setting.CIRCLE_SIZE.label -> {
+                Setting.CIRCLE_SIZE -> {
                     reduce { state.copy(circleSize = value as Int) }
                 }
             }

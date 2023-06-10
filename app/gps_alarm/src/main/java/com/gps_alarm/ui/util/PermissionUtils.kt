@@ -19,9 +19,11 @@ import util.Log
 @Composable
 fun CheckPermission() {
     val permissionList = arrayOf(
-        Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.POST_NOTIFICATIONS
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.POST_NOTIFICATIONS,
+//        Manifest.permission.FOREGROUND_SERVICE,
+//        Manifest.permission.ACCESS_BACKGROUND_LOCATION
     )
     val context = LocalContext.current
     val showDialogList = mutableListOf<String>()
@@ -40,11 +42,13 @@ fun CheckPermission() {
     when {
         showDialogList.size > 0 -> {
             //Some permissions are denied and can be asked again.
-            AskForPermissions(permissionList)
+//            AskForPermissions(permissionList)
+            GoToAppSetting()
         }
         permissionDenied > 0 -> {
             //Show alert dialog
-            GoToAppSetting()
+//            GoToAppSetting()
+            AskForPermissions(permissionList)
         }
         else -> {
             //All permissions granted. Do your stuff 🤞
