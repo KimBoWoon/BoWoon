@@ -12,13 +12,20 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -37,16 +44,35 @@ import com.gps_alarm.ui.util.alarmDeepLink
 import com.gps_alarm.ui.util.alarmDetailArgument
 import com.gps_alarm.ui.util.dpToSp
 import com.gps_alarm.ui.viewmodel.GpsAlarmVM
+import kotlinx.coroutines.launch
 
 @Composable
 fun GpsMainCompose() {
     val navController = rememberNavController()
+    val viewModel = hiltViewModel<GpsAlarmVM>()
+    val lifecycle = LocalLifecycleOwner.current
+    val checkPermissionFlag = remember { mutableStateOf(false) }
 
-    CheckPermission()
+    LaunchedEffect("key") {
+        lifecycle.lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.container.sideEffectFlow.collect {
+                    when (it) {
+                        GpsAlarmVM.GpsAlarmSideEffect.CheckPermission -> checkPermissionFlag.value = true
+                    }
+                }
+            }
+        }
+    }
+
+    if (checkPermissionFlag.value) {
+//        checkPermissionFlag.value = false
+        CheckPermission()
+    }
 
     Scaffold(
         topBar = { GpsAlarmActionBar() },
-        content = { innerPadding -> InitNavHost(navController, innerPadding) },
+        content = { innerPadding ->InitNavHost(navController, innerPadding) },
         bottomBar = { InitBottomNavigation(navController) }
     )
 }

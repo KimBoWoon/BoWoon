@@ -237,7 +237,7 @@ fun AddressDialog(dismissDialogCallback: () -> Unit) {
 //        val local = "http://172.30.50.8/address.html"
 //        val local = "http://10.0.2.2/address.html"
 //        val local = "file:///android_asset/address.html"
-        val local = "http://172.30.50.183/address.html"
+        val local = "http://172.30.51.17/address.html"
         val viewModel = hiltViewModel<AlarmVM>()
         val executeCallback: (String) -> Unit = {
             viewModel.getGeocode(it)

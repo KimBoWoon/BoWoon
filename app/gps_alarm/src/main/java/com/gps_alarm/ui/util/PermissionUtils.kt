@@ -5,11 +5,12 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,21 +19,41 @@ import util.Log
 
 @Composable
 fun CheckPermission() {
-    val permissionList = arrayOf(
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.POST_NOTIFICATIONS,
-//        Manifest.permission.FOREGROUND_SERVICE,
-//        Manifest.permission.ACCESS_BACKGROUND_LOCATION
-    )
+    val permissionList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.POST_NOTIFICATIONS,
+            Manifest.permission.FOREGROUND_SERVICE,
+//            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        )
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.FOREGROUND_SERVICE,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        )
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.FOREGROUND_SERVICE,
+        )
+    } else {
+        arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+        )
+    }
     val context = LocalContext.current
     val showDialogList = mutableListOf<String>()
     var permissionDenied = 0
 
-    permissionList.forEach {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, it)) {
-            showDialogList.add(it)
-        } else if (ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_DENIED) {
+    permissionList.forEach { permission ->
+        if (ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, permission)) {
+            showDialogList.add(permission)
+        } else if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED) {
             permissionDenied++
         }
     }
@@ -40,50 +61,23 @@ fun CheckPermission() {
     Log.i("permission denied > ${permissionDenied}, show dialog > ${showDialogList.size}")
 
     when {
-        showDialogList.size > 0 -> {
-            //Some permissions are denied and can be asked again.
-//            AskForPermissions(permissionList)
-            GoToAppSetting()
-        }
-        permissionDenied > 0 -> {
-            //Show alert dialog
-//            GoToAppSetting()
-            AskForPermissions(permissionList)
-        }
-        else -> {
-            //All permissions granted. Do your stuff 🤞
-            Log.d("all permission granted")
-        }
+        permissionDenied > 0 -> AskForPermissions(permissionList)
+        showDialogList.size > 0 -> GoToAppSetting()
+        else -> Log.d("all permission granted")
     }
 }
 
 @Composable
-private fun AskForPermissions(permissionsList: Array<String>) {
+private fun AskForPermissions(permissionList: Array<String>) {
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { permissions ->
-            permissions.keys.forEach {
-                if (permissions[it] == true) {
-                    Log.d("permission granted")
-                } else if (permissions[it] == false) {
-                    Log.d("permission denied")
-                } else {
-                    Log.d("permission null")
-                }
+            permissions.entries.forEach {
+                Log.d("permission status > ${it.key}, ${it.value}")
             }
         }
     )
-    val newPermissionStr = mutableListOf<String>()
-    permissionsList.forEach {
-        newPermissionStr.add(it)
-    }
-    if (newPermissionStr.isNotEmpty()) {
-        SideEffect { launcher.launch(newPermissionStr.toTypedArray()) }
-    } else {
-        /* User has pressed 'Deny & Don't ask again' so we have to show the enable permissions dialog
-        which will lead them to app details page to enable permissions from there. */
-        GoToAppSetting()
-    }
+    LaunchedEffect("key") { launcher.launch(permissionList) }
 }
 
 @Composable
