@@ -7,15 +7,8 @@ import com.gps_alarm.ui.util.createNotificationChannel
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class GpsAlarmApplication : Application()/*, Configuration.Provider*/ {
+class GpsAlarmApplication : Application() {
     private val applicationLifecycle = CustomApplicationLifecycle()
-//    @Inject
-//    lateinit var workerFactory: HiltWorkerFactory
-//
-//    override fun getWorkManagerConfiguration() =
-//        Configuration.Builder()
-//            .setWorkerFactory(workerFactory)
-//            .build()
 
     override fun onCreate() {
         super.onCreate()
