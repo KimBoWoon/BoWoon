@@ -1,15 +1,14 @@
 package com.gps_alarm.ui.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.viewModelScope
 import com.data.gpsAlarm.local.LocalDataStore
 import com.domain.gpsAlarm.usecase.DataStoreUseCase
 import com.gps_alarm.base.BaseVM
 import com.gps_alarm.data.Address
-import com.gps_alarm.data.AlarmData
+import com.gps_alarm.data.SettingInfo
+import com.gps_alarm.data.StartServiceData
 import com.gps_alarm.ui.util.decode
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.serialization.json.Json
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -23,9 +22,9 @@ import javax.inject.Inject
 class GpsAlarmVM @Inject constructor(
     private val json: Json,
     private val dataStoreUseCase: DataStoreUseCase
-) : BaseVM(), ContainerHost<AlarmData, GpsAlarmVM.GpsAlarmSideEffect> {
+) : BaseVM(), ContainerHost<StartServiceData, GpsAlarmVM.GpsAlarmSideEffect> {
     var appBarTitle = mutableStateOf("GPS 알람")
-    override val container: Container<AlarmData, GpsAlarmSideEffect> = container(AlarmData())
+    override val container: Container<StartServiceData, GpsAlarmSideEffect> = container(StartServiceData())
 
     sealed class GpsAlarmSideEffect {
         object CheckPermission : GpsAlarmSideEffect()
@@ -46,12 +45,8 @@ class GpsAlarmVM @Inject constructor(
         intent {
             reduce { state.copy(alarmList = null, loading = true, error = null) }
             val addressList = dataStoreUseCase.get(LocalDataStore.Keys.alarmList)?.map { it.decode<Address>(json) } ?: emptyList()
-            reduce { state.copy(alarmList = addressList, loading = false, error = null) }
+            val setting = dataStoreUseCase.get(LocalDataStore.Keys.setting)?.decode(json) ?: SettingInfo()
+            reduce { state.copy(alarmList = addressList, settingInfo = setting, loading = false, error = null) }
         }
     }
-
-//    suspend fun getAddressList(): Array<Address> =
-//        viewModelScope.async {
-//            dataStoreUseCase.get(LocalDataStore.Keys.alarmList)?.map { it.decode<Address>(json) }?.toTypedArray()
-//        }.await() ?: emptyArray()
 }

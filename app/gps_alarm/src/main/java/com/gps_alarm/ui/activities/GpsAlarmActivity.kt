@@ -47,7 +47,8 @@ class GpsAlarmActivity : BaseActivity() {
                     if (ActivityCompat.checkSelfPermission(this@GpsAlarmActivity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         Intent(this@GpsAlarmActivity, GpsAlarmService::class.java).apply {
                             action = "StartService"
-                            putExtra("addressList", it.alarmList?.toTypedArray())
+                            putExtra(GpsAlarmService.ADDRESS_LIST, it.alarmList?.toTypedArray())
+                            putExtra(GpsAlarmService.SETTING_INFO, it.settingInfo)
                         }.run {
                             when {
                                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> this@GpsAlarmActivity.startForegroundService(this)

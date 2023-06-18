@@ -40,8 +40,10 @@ fun AlarmDetailCompose(address: Address?) {
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
+            Text(text = "알람 내용 : ${it.name}")
             Text(text = "지번 주소\n${it.jibunAddress.orEmpty()}")
             Text(text = "도로명 주소\n${it.roadAddress.orEmpty()}")
+            Text(text = "알림 설정 > ${if (it.isEnable == true) "켜짐" else "꺼짐"}")
             FixedMarkerMap(it)
         }
     }
