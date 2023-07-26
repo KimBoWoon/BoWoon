@@ -5,10 +5,10 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.domain.rssReader.dto.ChampionInfo
-import com.lol.R
+import com.bowoon.lol.R
+import com.bowoon.lol.databinding.FragmentChampionDetailBinding
+import com.domain.lol.dto.ChampionInfo
 import com.lol.base.BaseFragment
-import com.lol.databinding.FragmentChampionDetailBinding
 import com.lol.ui.adapter.LolAdapter
 import com.lol.ui.dialog.ChampionInfoBottomDialog
 import com.lol.ui.fragments.vm.ChampionDetailVM

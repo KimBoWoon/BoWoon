@@ -3,10 +3,10 @@ package com.lol.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bowoon.lol.R
+import com.bowoon.lol.databinding.VhChampionSkinBinding
+import com.bowoon.lol.databinding.VhEmptyBinding
 import com.domain.lol.dto.Skin
-import com.lol.R
-import com.lol.databinding.VhChampionSkinBinding
-import com.lol.databinding.VhEmptyBinding
 import com.lol.ui.vh.ChampionSkinVH
 import com.lol.ui.vh.EmptyVH
 import util.Log

@@ -6,9 +6,9 @@ import android.widget.AdapterView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.lol.R
+import com.bowoon.lol.R
+import com.bowoon.lol.databinding.FragmentSettingBinding
 import com.lol.base.BaseFragment
-import com.lol.databinding.FragmentSettingBinding
 import com.lol.ui.activities.vm.MainVM
 import com.lol.ui.adapter.VersionAdapter
 import com.lol.ui.dialog.LolDialog

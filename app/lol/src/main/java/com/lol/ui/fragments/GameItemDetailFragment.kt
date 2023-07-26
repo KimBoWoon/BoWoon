@@ -5,10 +5,10 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.bowoon.lol.R
+import com.bowoon.lol.databinding.FragmentGameItemDetailBinding
 import com.domain.lol.dto.GameItemInfo
-import com.lol.R
 import com.lol.base.BaseFragment
-import com.lol.databinding.FragmentGameItemDetailBinding
 import com.lol.ui.activities.vm.MainVM
 import com.lol.ui.adapter.RelatedItemAdapter
 import com.lol.ui.fragments.vm.GameItemDetailVM

@@ -7,7 +7,7 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.bowoon.android.gps_alarm.R
+import com.bowoon.gpsAlarm.R
 
 enum class NavigationScreen(
     val route: String,

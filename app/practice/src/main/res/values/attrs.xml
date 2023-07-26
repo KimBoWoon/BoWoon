@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+        <attr name="border_overlay" format="boolean" />
+        <attr name="circle_background_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="RoundedImageView">
+        <attr name="radius" format="dimension" />
+        <attr name="top_left" format="dimension" />
+        <attr name="top_right" format="dimension" />
+        <attr name="bottom_left" format="dimension" />
+        <attr name="bottom_right" format="dimension" />
+    </declare-styleable>
+</resources>

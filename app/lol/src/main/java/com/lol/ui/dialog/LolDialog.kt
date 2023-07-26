@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.lol.R
+import com.bowoon.lol.R
+import com.bowoon.lol.databinding.DialogConfirmDismissBinding
 import com.lol.base.BaseDialog
-import com.lol.databinding.DialogConfirmDismissBinding
 import com.lol.ui.dialog.vm.LolDialogVM
 import kotlinx.coroutines.launch
 

@@ -10,9 +10,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.domain.rssReader.dto.ChampionInfo
+import com.bowoon.lol.R
+import com.domain.lol.dto.ChampionInfo
 import com.domain.lol.dto.GameItemInfo
-import com.lol.R
 import util.Log
 
 abstract class BaseFragment<V : ViewDataBinding>(

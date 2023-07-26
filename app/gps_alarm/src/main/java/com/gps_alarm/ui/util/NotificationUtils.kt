@@ -8,7 +8,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.bowoon.android.gps_alarm.R
+import com.bowoon.gpsAlarm.R
 import com.gps_alarm.ui.activities.GpsAlarmActivity
 
 fun SendNotification(context: Context, notificationId: Int?) {

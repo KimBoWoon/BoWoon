@@ -6,12 +6,10 @@ import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.os.Build
 import android.provider.Settings
-import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
+import com.bowoon.lol.R
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.HiltAndroidApp
 import util.Log
-import javax.inject.Inject
 
 @HiltAndroidApp
 class LolApplication : Application()/*, Configuration.Provider*/ {

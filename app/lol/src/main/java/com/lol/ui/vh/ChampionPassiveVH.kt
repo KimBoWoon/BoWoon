@@ -1,8 +1,8 @@
 package com.lol.ui.vh
 
+import com.bowoon.lol.databinding.VhChampionPassiveBinding
 import com.domain.lol.dto.Passive
 import com.lol.base.BaseVH
-import com.lol.databinding.VhChampionPassiveBinding
 import util.Log
 
 class ChampionPassiveVH(

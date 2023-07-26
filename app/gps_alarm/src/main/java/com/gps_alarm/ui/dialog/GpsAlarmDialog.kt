@@ -25,7 +25,7 @@ fun GpsAlarmDialog(
     if (showDialog) {
         Dialog(
             onDismissRequest = { showDialog = true },
-            properties = DialogProperties(false, false)
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         ) {
             Surface(
                 modifier = Modifier

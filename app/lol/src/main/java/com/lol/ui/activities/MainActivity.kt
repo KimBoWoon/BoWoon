@@ -1,16 +1,14 @@
 package com.lol.ui.activities
 
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import com.lol.R
+import com.bowoon.lol.R
+import com.bowoon.lol.databinding.ActivityMainBinding
 import com.lol.base.BaseActivity
-import com.lol.databinding.ActivityMainBinding
 import com.lol.ui.activities.vm.MainVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

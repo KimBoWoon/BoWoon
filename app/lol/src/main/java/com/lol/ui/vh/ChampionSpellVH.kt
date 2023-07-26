@@ -1,8 +1,8 @@
 package com.lol.ui.vh
 
+import com.bowoon.lol.databinding.VhChampionSpellBinding
 import com.domain.lol.dto.Spell
 import com.lol.base.BaseVH
-import com.lol.databinding.VhChampionSpellBinding
 import util.Log
 
 class ChampionSpellVH(

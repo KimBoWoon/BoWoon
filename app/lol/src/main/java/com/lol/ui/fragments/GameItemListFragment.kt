@@ -6,10 +6,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.bowoon.lol.R
+import com.bowoon.lol.databinding.FragmentGameItemBinding
 import com.google.android.material.chip.Chip
-import com.lol.R
 import com.lol.base.BaseFragment
-import com.lol.databinding.FragmentGameItemBinding
 import com.lol.ui.activities.vm.MainVM
 import com.lol.ui.adapter.LolAdapter
 import com.lol.ui.fragments.vm.GameItemVM

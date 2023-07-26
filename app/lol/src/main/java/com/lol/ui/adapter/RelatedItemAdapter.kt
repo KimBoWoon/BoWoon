@@ -3,8 +3,8 @@ package com.lol.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bowoon.lol.databinding.VhRelatedItemBinding
 import com.domain.lol.dto.GameItemInfo
-import com.lol.databinding.VhRelatedItemBinding
 import com.lol.ui.vh.RelatedItemVH
 
 class RelatedItemAdapter(

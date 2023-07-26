@@ -2,7 +2,7 @@ package com.lol.ui.fragments.vm
 
 import androidx.lifecycle.viewModelScope
 import com.domain.lol.dto.ChampionDetailRoot
-import com.domain.gpsAlarm.usecase.DataDragonApiUseCase
+import com.domain.lol.usecase.DataDragonApiUseCase
 import com.lol.base.BaseVM
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

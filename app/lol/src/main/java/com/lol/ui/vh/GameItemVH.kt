@@ -1,10 +1,10 @@
 package com.lol.ui.vh
 
 import androidx.databinding.ViewDataBinding
+import com.bowoon.lol.databinding.VhGameItemBinding
 import com.domain.lol.dto.GameItemInfo
 import com.lol.base.BaseFragment
 import com.lol.base.BaseVH
-import com.lol.databinding.VhGameItemBinding
 import util.Log
 
 class GameItemVH(

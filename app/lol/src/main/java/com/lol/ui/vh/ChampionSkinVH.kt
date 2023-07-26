@@ -1,8 +1,8 @@
 package com.lol.ui.vh
 
+import com.bowoon.lol.databinding.VhChampionSkinBinding
 import com.domain.lol.dto.Skin
 import com.lol.base.BaseVH
-import com.lol.databinding.VhChampionSkinBinding
 import util.Log
 
 class ChampionSkinVH(

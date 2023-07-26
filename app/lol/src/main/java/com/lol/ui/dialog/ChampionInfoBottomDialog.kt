@@ -4,11 +4,11 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import com.bowoon.lol.R
+import com.bowoon.lol.databinding.BottomChampionInfoBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.lol.R
 import com.lol.base.BaseBottomSheetDialog
-import com.lol.databinding.BottomChampionInfoBinding
 import com.lol.ui.dialog.vm.ChampionInfoBottomDialogVM
 import util.ContextUtils.getScreenHeight
 

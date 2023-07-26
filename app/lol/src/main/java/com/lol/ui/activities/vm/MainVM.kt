@@ -1,10 +1,11 @@
 package com.lol.ui.activities.vm
 
 import androidx.lifecycle.viewModelScope
-import com.data.gpsAlarm.local.LocalDataStore
-import com.domain.rssReader.dto.ChampionRoot
+import com.data.lol.local.LocalDatastore
+import com.domain.lol.dto.ChampionRoot
 import com.domain.lol.dto.GameItemRoot
-import com.domain.gpsAlarm.usecase.DataDragonApiUseCase
+import com.domain.lol.usecase.DataDragonApiUseCase
+import com.domain.lol.usecase.DataStoreUseCase
 import com.lol.base.BaseVM
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,10 +28,10 @@ class MainVM @Inject constructor(
             runCatching {
                 dataDragonApiUseCase.getVersion()
             }.onSuccess { versionList ->
-                lolVersion.value = dataStoreUseCase.get(LocalDataStore.Keys.LOL_VERSION)?.let {
+                lolVersion.value = dataStoreUseCase.get(LocalDatastore.Keys.LOL_VERSION)?.let {
                     DataStatus.Success(it)
                 } ?: run {
-                    dataStoreUseCase.set(LocalDataStore.Keys.LOL_VERSION, versionList.firstOrNull() ?: "UNKNOWN VERSION")
+                    dataStoreUseCase.set(LocalDatastore.Keys.LOL_VERSION, versionList.firstOrNull() ?: "UNKNOWN VERSION")
                     DataStatus.Success(versionList.firstOrNull())
                 }
                 lolVersionList.value = DataStatus.Success(versionList)
@@ -66,7 +67,7 @@ class MainVM @Inject constructor(
 
     fun changeVersion() {
         viewModelScope.launch {
-            val version = dataStoreUseCase.get(LocalDataStore.Keys.LOL_VERSION)
+            val version = dataStoreUseCase.get(LocalDatastore.Keys.LOL_VERSION)
             if ((lolVersion.value as? DataStatus.Success<String?>)?.data != version) {
                 lolVersion.value = DataStatus.Success(version)
             }

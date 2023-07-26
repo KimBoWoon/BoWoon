@@ -1,0 +1,30 @@
+package com.bowoon.convention
+
+import com.android.build.api.dsl.CommonExtension
+import org.gradle.api.JavaVersion
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+fun Project.configureKotlinAndroid(
+    commonExtensions: CommonExtension<*, *, *, *>
+) {
+    commonExtensions.apply {
+        compileSdk = Config.ApplicationSetting.compileSdk
+
+        defaultConfig {
+            minSdk = Config.ApplicationSetting.minSdk
+        }
+
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
+        }
+
+        tasks.withType<KotlinCompile>().configureEach {
+            kotlinOptions {
+                jvmTarget = JavaVersion.VERSION_17.toString()
+            }
+        }
+    }
+}

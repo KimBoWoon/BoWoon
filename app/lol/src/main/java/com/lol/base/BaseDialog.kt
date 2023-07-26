@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
-import com.lol.R
+import com.bowoon.lol.R
 import util.ScreenUtils.dp
 
 open class BaseDialog<V : ViewDataBinding>(

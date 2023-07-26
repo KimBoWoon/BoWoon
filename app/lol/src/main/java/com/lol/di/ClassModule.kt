@@ -1,7 +1,7 @@
 package com.lol.di
 
 import android.content.Context
-import com.data.gpsAlarm.local.LocalDataStore
+import com.data.lol.local.LocalDatastore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,5 +14,5 @@ object ClassModule {
     @Provides
     fun provideLocalDataStore(
         @ApplicationContext context: Context
-    ): LocalDataStore = LocalDataStore(context)
+    ): LocalDatastore = LocalDatastore(context)
 }

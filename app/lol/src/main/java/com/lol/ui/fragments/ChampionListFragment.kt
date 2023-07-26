@@ -9,9 +9,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.lol.R
+import com.bowoon.lol.R
+import com.bowoon.lol.databinding.FragmentChampionListBinding
 import com.lol.base.BaseFragment
-import com.lol.databinding.FragmentChampionListBinding
 import com.lol.ui.activities.MainActivity
 import com.lol.ui.activities.vm.MainVM
 import com.lol.ui.adapter.LolAdapter
