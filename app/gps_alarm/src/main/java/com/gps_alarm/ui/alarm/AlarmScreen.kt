@@ -37,13 +37,13 @@ import util.Log
 
 @Composable
 fun AlarmScreen(onNavigate: NavHostController) {
-    SetSideEffect(onNavigate)
-    InitLifecycle()
+    AlarmSideEffect(onNavigate)
+    AlarmLifecycle()
     InitAlarmScreen(onNavigate)
 }
 
 @Composable
-fun SetSideEffect(
+fun AlarmSideEffect(
     onNavigate: NavHostController
 ) {
     val viewModel = hiltViewModel<AlarmVM>()
@@ -91,7 +91,7 @@ fun SetSideEffect(
 }
 
 @Composable
-fun InitLifecycle() {
+fun AlarmLifecycle() {
     val viewModel = hiltViewModel<AlarmVM>()
 
     OnLifecycleEvent { owner, event ->

@@ -24,7 +24,6 @@ dependencies {
         libs.hilt.android,
         libs.coroutine.core,
         libs.glide.glide,
-        project(":domain")
     ).forEach {
         implementation(it)
     }

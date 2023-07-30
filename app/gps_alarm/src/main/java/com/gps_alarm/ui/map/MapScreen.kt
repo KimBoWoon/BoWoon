@@ -21,13 +21,13 @@ import util.Log
 
 @Composable
 fun MapScreen(onNavigate: NavHostController) {
-    SetSideMapEffect()
-    InitLifecycle()
+    MapSideEffect()
+    MapLifecycle()
     InitMapScreen()
 }
 
 @Composable
-fun InitLifecycle() {
+fun MapLifecycle() {
     val context = LocalContext.current
     val viewModel = hiltViewModel<MapVM>()
 
@@ -50,7 +50,7 @@ fun InitLifecycle() {
 }
 
 @Composable
-fun SetSideMapEffect() {
+fun MapSideEffect() {
     val viewModel = hiltViewModel<MapVM>()
     val lifecycle = LocalLifecycleOwner.current
     val context = LocalContext.current

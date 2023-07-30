@@ -19,6 +19,7 @@ dependencies {
         libs.jetpack.core,
         libs.jetpack.datastore,
         libs.jetpack.lifecycle,
+//        libs.jetpack.startup,
 //        libs.jetpack.splash,
         libs.google.location,
         libs.hilt.android,
@@ -36,8 +37,6 @@ dependencies {
         libs.orbit.compose,
         platform(libs.compose.bom),
         platform(libs.firebase.bom),
-        project(":data"),
-        project(":domain")
     ).forEach {
         implementation(it)
     }

@@ -14,8 +14,6 @@ dependencies {
         libs.google.material,
         libs.constraint.layout,
         libs.hilt.android,
-        project(":data"),
-        project(":domain")
     ).forEach {
         implementation(it)
     }

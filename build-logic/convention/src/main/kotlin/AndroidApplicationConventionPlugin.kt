@@ -45,55 +45,43 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                             defaultConfig.versionName = versionName
                             defaultConfig.versionCode = versionCode
                             testInstrumentationRunner = Config.ApplicationSetting.testInstrumentationRunner
-                            SimpleDateFormat(Config.ApplicationSetting.dateFormat, Locale.getDefault()).run {
-                                setProperty("archivesBaseName", "${appName}-v${versionName}-${format(System.currentTimeMillis())}")
-                            }
-                            signingConfigs {
-                                create(Config.Sign.Release.name) {
-                                    storeFile = file(getProp(Config.Sign.Release.storeFile))
-                                    storePassword = getProp(Config.Sign.Release.storePassword)
-                                    keyAlias = getProp(Config.Sign.Release.keyAlias)
-                                    keyPassword = getProp(Config.Sign.Release.keyPassword)
-                                }
-                                getByName(Config.Sign.Debug.name) {
-                                    storeFile = file(getProp(Config.Sign.Debug.storeFile))
-                                    storePassword = getProp(Config.Sign.Debug.storePassword)
-                                    keyAlias = getProp(Config.Sign.Debug.keyAlias)
-                                    keyPassword = getProp(Config.Sign.Debug.keyPassword)
-                                }
-                            }
-                            buildTypes {
-                                release {
-                                    isMinifyEnabled = true
-                                    isShrinkResources = true
-                                    isDebuggable = false
-                                    proguardFiles(
-                                        getDefaultProguardFile(Config.ApplicationSetting.defaultProguardFile),
-                                        Config.ApplicationSetting.proguardFile
-                                    )
-                                    signingConfig = signingConfigs.getByName(Config.Sign.Release.name)
-                                }
-                                debug {
-                                    isMinifyEnabled = false
-//                                    applicationIdSuffix = ".dev"
-                                }
-                            }
-                            flavorDimensions.addAll(listOf(Config.Dimensions.mode))
-                            productFlavors {
-                                create(Config.Flavors.gpsAlarm) {
-                                    dimension = Config.Dimensions.mode
-                                }
-                                create(Config.Flavors.lol) {
-                                    dimension = Config.Dimensions.mode
-                                }
-                                create(Config.Flavors.practice) {
-                                    dimension = Config.Dimensions.mode
-                                }
-                                create(Config.Flavors.rssReader) {
-                                    dimension = Config.Dimensions.mode
-                                }
-                            }
                         }
+
+                        SimpleDateFormat(Config.ApplicationSetting.dateFormat, Locale.getDefault()).run {
+                            setProperty("archivesBaseName", "${appName}-v${versionName}-${format(System.currentTimeMillis())}")
+                        }
+                    }
+                }
+
+                signingConfigs {
+                    create(Config.Sign.Release.name) {
+                        storeFile = file(getProp(Config.Sign.Release.storeFile))
+                        storePassword = getProp(Config.Sign.Release.storePassword)
+                        keyAlias = getProp(Config.Sign.Release.keyAlias)
+                        keyPassword = getProp(Config.Sign.Release.keyPassword)
+                    }
+                    getByName(Config.Sign.Debug.name) {
+                        storeFile = file(getProp(Config.Sign.Debug.storeFile))
+                        storePassword = getProp(Config.Sign.Debug.storePassword)
+                        keyAlias = getProp(Config.Sign.Debug.keyAlias)
+                        keyPassword = getProp(Config.Sign.Debug.keyPassword)
+                    }
+                }
+
+                buildTypes {
+                    release {
+                        isMinifyEnabled = true
+                        isShrinkResources = true
+                        isDebuggable = false
+                        proguardFiles(
+                            getDefaultProguardFile(Config.ApplicationSetting.defaultProguardFile),
+                            Config.ApplicationSetting.proguardFile
+                        )
+                        signingConfig = signingConfigs.getByName(Config.Sign.Release.name)
+                    }
+                    debug {
+                        isMinifyEnabled = false
+                        applicationIdSuffix = ".dev"
                     }
                 }
 
@@ -103,10 +91,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     dataBinding = true
                 }
             }
-
-//            extensions.configure<ApplicationAndroidComponentsExtension> {
-//                configurePrintApksTask(this)
-//            }
 
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
             dependencies {

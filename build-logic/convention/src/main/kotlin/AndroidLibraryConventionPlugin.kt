@@ -19,9 +19,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
             }
-//            extensions.configure<LibraryAndroidComponentsExtension> {
-//                configurePrintApksTask(this)
-//            }
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
             configurations.configureEach {
                 resolutionStrategy {

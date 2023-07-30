@@ -11,8 +11,6 @@ dependencies {
         libs.constraint.layout,
         libs.hilt.android,
         libs.hilt.navigation,
-        project(":data"),
-        project(":domain")
     ).forEach {
         implementation(it)
     }

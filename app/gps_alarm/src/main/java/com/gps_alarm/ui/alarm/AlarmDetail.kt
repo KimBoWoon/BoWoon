@@ -19,7 +19,7 @@ fun AlarmDetailScreen(
     longitude: String,
     latitude: String
 ) {
-    SetSideEffect(onNavigate)
+    AlarmSideEffect(onNavigate)
     val viewModel = hiltViewModel<AlarmVM>()
     val address = viewModel.findAddress.collectAsState()
 

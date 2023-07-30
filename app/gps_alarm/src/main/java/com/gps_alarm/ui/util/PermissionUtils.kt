@@ -19,51 +19,63 @@ import util.Log
 
 @Composable
 fun CheckPermission() {
-    val permissionList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        arrayOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.POST_NOTIFICATIONS,
-            Manifest.permission.FOREGROUND_SERVICE,
+    val permissionList = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.POST_NOTIFICATIONS,
+                Manifest.permission.FOREGROUND_SERVICE,
 //            Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        )
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        arrayOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.FOREGROUND_SERVICE,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        )
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        arrayOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.FOREGROUND_SERVICE,
-        )
-    } else {
-        arrayOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-        )
+            )
+        }
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.FOREGROUND_SERVICE,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            )
+        }
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> {
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.FOREGROUND_SERVICE,
+            )
+        }
+        else -> {
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            )
+        }
     }
+
     val context = LocalContext.current
     val showDialogList = mutableListOf<String>()
     var permissionDenied = 0
 
     permissionList.forEach { permission ->
-        if (ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, permission)) {
-            showDialogList.add(permission)
-        } else if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED) {
+        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED) {
             permissionDenied++
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, permission)) {
+                showDialogList.add(permission)
+            }
         }
     }
 
     Log.i("permission denied > ${permissionDenied}, show dialog > ${showDialogList.size}")
 
     when {
-        permissionDenied > 0 -> AskForPermissions(permissionList)
-        showDialogList.size > 0 -> GoToAppSetting()
-        else -> Log.d("all permission granted")
+        permissionDenied == 0 -> Log.d("all permission granted")
+        permissionDenied > 0 -> {
+            when {
+                showDialogList.isEmpty() -> AskForPermissions(permissionList)
+                else -> GoToAppSetting()
+            }
+        }
     }
 }
 
@@ -77,7 +89,7 @@ private fun AskForPermissions(permissionList: Array<String>) {
             }
         }
     )
-    LaunchedEffect("key") { launcher.launch(permissionList) }
+    LaunchedEffect("permissionCheck") { launcher.launch(permissionList) }
 }
 
 @Composable

@@ -25,8 +25,6 @@ dependencies {
         libs.firebase.analytics,
         libs.firebase.message,
         platform(libs.firebase.bom),
-        project(":data"),
-        project(":domain")
     ).forEach {
         implementation(it)
     }

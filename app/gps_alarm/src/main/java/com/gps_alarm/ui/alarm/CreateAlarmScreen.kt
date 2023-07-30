@@ -22,7 +22,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -59,7 +58,7 @@ import util.Log
 
 @Composable
 fun CreateAlarmScreen(onNavigate: NavHostController) {
-    SetSideEffect(onNavigate)
+    AlarmSideEffect(onNavigate)
     InitCreateAlarmScreen(onNavigate)
 }
 

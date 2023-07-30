@@ -34,12 +34,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SettingScreen(onNavigate: NavHostController) {
-    SetSettingSideEffect()
+    SettingSideEffect()
     InitSettingScreen()
 }
 
 @Composable
-fun SetSettingSideEffect() {
+fun SettingSideEffect() {
     val viewModel = hiltViewModel<SettingVM>()
     val lifecycle = LocalLifecycleOwner.current
     val context = LocalContext.current

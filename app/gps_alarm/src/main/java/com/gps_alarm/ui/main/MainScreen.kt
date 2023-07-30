@@ -49,11 +49,23 @@ import kotlinx.coroutines.launch
 @Composable
 fun GpsMainCompose() {
     val navController = rememberNavController()
+
+    MainSideEffect()
+
+    Scaffold(
+        topBar = { GpsAlarmActionBar() },
+        content = { innerPadding ->InitNavHost(navController, innerPadding) },
+        bottomBar = { InitBottomNavigation(navController) }
+    )
+}
+
+@Composable
+fun MainSideEffect() {
+    val checkPermissionFlag = remember { mutableStateOf(false) }
     val viewModel = hiltViewModel<GpsAlarmVM>()
     val lifecycle = LocalLifecycleOwner.current
-    val checkPermissionFlag = remember { mutableStateOf(false) }
 
-    LaunchedEffect("key") {
+    LaunchedEffect("MainSideEffect") {
         lifecycle.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.container.sideEffectFlow.collect {
@@ -66,15 +78,8 @@ fun GpsMainCompose() {
     }
 
     if (checkPermissionFlag.value) {
-//        checkPermissionFlag.value = false
         CheckPermission()
     }
-
-    Scaffold(
-        topBar = { GpsAlarmActionBar() },
-        content = { innerPadding ->InitNavHost(navController, innerPadding) },
-        bottomBar = { InitBottomNavigation(navController) }
-    )
 }
 
 @Composable
