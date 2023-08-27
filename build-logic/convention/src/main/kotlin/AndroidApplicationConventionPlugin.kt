@@ -51,6 +51,22 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                             setProperty("archivesBaseName", "${appName}-v${versionName}-${format(System.currentTimeMillis())}")
                         }
                     }
+
+                    flavorDimensions.addAll(listOf(Config.Dimensions.mode))
+                    productFlavors {
+                        create(Config.Flavors.gpsAlarm) {
+                            dimension = Config.Dimensions.mode
+                        }
+                        create(Config.Flavors.lol) {
+                            dimension = Config.Dimensions.mode
+                        }
+                        create(Config.Flavors.practice) {
+                            dimension = Config.Dimensions.mode
+                        }
+                        create(Config.Flavors.rssReader) {
+                            dimension = Config.Dimensions.mode
+                        }
+                    }
                 }
 
                 signingConfigs {
@@ -81,7 +97,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     }
                     debug {
                         isMinifyEnabled = false
-                        applicationIdSuffix = ".dev"
+//                        applicationIdSuffix = ".dev"
                     }
                 }
 

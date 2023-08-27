@@ -10,12 +10,14 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,13 +39,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.domain.gpsAlarm.dto.Addresses
 import com.gps_alarm.data.GpsAlarmConstant.EXPAND_ANIMATION_DURATION
@@ -54,6 +60,7 @@ import com.gps_alarm.data.GpsAlarmConstant.FIND_ADDRESS_SYSTEM_ERROR
 import com.gps_alarm.ui.util.FixedMarkerMap
 import com.gps_alarm.ui.viewmodel.AlarmVM
 import com.gps_alarm.ui.webview.ShowWebView
+import kotlinx.coroutines.launch
 import util.Log
 
 @Composable
@@ -102,6 +109,7 @@ fun FindAddressView() {
             alarmTitle = it
         }
     )
+    WeekRow()
     Button(
         modifier = Modifier
             .fillMaxWidth()
@@ -148,6 +156,47 @@ fun FindAddressView() {
 
     if (showDialog) {
         AddressDialog(dismissDialogCallback = { showDialog = false })
+    }
+}
+
+@Composable
+fun WeekRow() {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        val weekString = listOf("일", "월", "화", "수", "목", "금", "토")
+        val viewModel: AlarmVM = hiltViewModel()
+
+        repeat(7) {
+            var enabled by remember { mutableStateOf(false) }
+
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .weight(1f)
+                    .background(
+                        if (enabled) {
+                            Color.Green
+                        } else {
+                            Color.Transparent
+                        }
+                    )
+                    .clickable {
+                        if (viewModel.week.contains(weekString[it])) {
+                            viewModel.week.remove(weekString[it])
+                            enabled = false
+                        } else {
+                            viewModel.week.add(weekString[it])
+                            enabled = true
+                        }
+                    },
+                text = weekString[it],
+                color = if (weekString[it] == "일") Color.Red else if (weekString[it] == "토") Color.Blue else Color.Unspecified,
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp
+            )
+        }
     }
 }
 
@@ -211,8 +260,10 @@ fun FoundAddressList(addresses: List<Addresses>?) {
                     address = address,
                     onAddressClick = {
                         viewModel.onCardArrowClicked(index)
-                        lifecycle.lifecycleScope.launchWhenStarted {
-                            listState.scrollToItem(index)
+                        lifecycle.lifecycleScope.launch {
+                            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                                listState.scrollToItem(index)
+                            }
                         }
                     },
                     expanded = expandedCardIds == index
@@ -233,10 +284,7 @@ fun FoundAddressList(addresses: List<Addresses>?) {
 @Composable
 fun AddressDialog(dismissDialogCallback: () -> Unit) {
     Dialog(onDismissRequest = { dismissDialogCallback.invoke() }) {
-//        val local = "http://172.30.50.8/address.html"
-//        val local = "http://10.0.2.2/address.html"
-//        val local = "file:///android_asset/address.html"
-        val local = "http://172.30.51.17/address.html"
+        val local = "http://172.30.50.183/address.html"
         val viewModel = hiltViewModel<AlarmVM>()
         val executeCallback: (String) -> Unit = {
             viewModel.getGeocode(it)

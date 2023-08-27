@@ -1,6 +1,5 @@
 package com.gps_alarm.ui.util
 
-import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -18,19 +17,17 @@ import com.naver.maps.map.NaverMapOptions
 import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
-import com.naver.maps.map.util.FusedLocationSource
 
 @Composable
 fun FixedMarkerMap(address: Addresses?) {
     address?.let {
-        FixedMarkerMap(address = dataMapper("", it))
+        FixedMarkerMap(address = dataMapper("", emptyList(), it))
     }
 }
 
 @Composable
 fun FixedMarkerMap(address: Address?) {
     val context = LocalContext.current
-    val fusedLocationSource = FusedLocationSource(context as Activity, 1000)
     val mapView = CustomNaverMaps(
         context,
         NaverMapOptions().apply {

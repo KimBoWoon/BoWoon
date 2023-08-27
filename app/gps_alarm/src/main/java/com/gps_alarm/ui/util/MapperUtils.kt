@@ -12,14 +12,18 @@ inline fun <reified T> String.decode(json: Json): T =
 inline fun <reified T> T.encode(json: Json): String =
     json.encodeToString(this)
 
-fun dataMapper(alarmTitle: String, addresses: Addresses): Address =
-    Address(
-        alarmTitle,
-        false,
-        addresses.distance,
-        addresses.englishAddress,
-        addresses.jibunAddress,
-        addresses.roadAddress,
-        addresses.longitude,
-        addresses.latitude
-    )
+fun dataMapper(
+    alarmTitle: String,
+    weekList: List<String>,
+    addresses: Addresses
+): Address = Address(
+    alarmTitle,
+    isEnable = false,
+    addresses.distance,
+    addresses.englishAddress,
+    addresses.jibunAddress,
+    addresses.roadAddress,
+    addresses.longitude,
+    addresses.latitude,
+    weekList = weekList.toMutableList()
+)

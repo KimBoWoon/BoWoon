@@ -33,83 +33,75 @@ class AndroidDomainConventionPlugin : Plugin<Project> {
                             this@configure.namespace = Config.Library.Domain.namespace
                             defaultConfig.targetSdk = targetSdkVersion
                             buildTypes {
-                                release {
-                                    isMinifyEnabled = true
-                                    isShrinkResources = true
-                                    proguardFiles(
-                                        getDefaultProguardFile(Config.ApplicationSetting.defaultProguardFile),
-                                        Config.ApplicationSetting.proguardFile
-                                    )
-                                }
                                 debug {
                                     isMinifyEnabled = false
                                 }
                             }
                         }
                     }
+
+                    flavorDimensions.addAll(listOf(Config.Dimensions.mode))
+                    productFlavors {
+                        create(Config.Flavors.gpsAlarm) {
+                            dimension = Config.Dimensions.mode
+
+                            buildConfigField("String", "NAVER_MAPS_CLIENT_KEY", getProp("naver_maps_client_key"))
+                            buildConfigField("String", "NAVER_MAPS_CLIENT_SECRET_KEY", getProp("naver_maps_client_secret_key"))
+                        }
+                        create(Config.Flavors.lol) {
+                            dimension = Config.Dimensions.mode
+
+                            buildConfigField("String", "riotApiKey", getProp("riot_api_key"))
+                        }
+                        create(Config.Flavors.practice) {
+                            dimension = Config.Dimensions.mode
+                        }
+                        create(Config.Flavors.rssReader) {
+                            dimension = Config.Dimensions.mode
+                        }
+                    }
+
+                    sourceSets {
+                        getByName(Config.SourceSet.main) {
+                            getByName(Config.Flavors.gpsAlarm) {
+                                manifest.srcFile("src/gpsAlarm/AndroidManifest.xml")
+                                java.setSrcDirs(listOf("src/base/java", "src/gpsAlarm/java"))
+                            }
+                            getByName(Config.Flavors.lol) {
+                                manifest.srcFile("src/lol/AndroidManifest.xml")
+                                java.setSrcDirs(listOf("src/base/java", "src/lol/java"))
+                            }
+                            getByName(Config.Flavors.practice) {
+                                manifest.srcFile("src/practice/AndroidManifest.xml")
+                                java.setSrcDirs(listOf("src/base/java", "src/practice/java"))
+                            }
+                            getByName(Config.Flavors.rssReader) {
+                                manifest.srcFile("src/rssReader/AndroidManifest.xml")
+                                java.setSrcDirs(listOf("src/base/java", "src/rssReader/java"))
+                            }
+                        }
+                        getByName(Config.SourceSet.debug) {
+                            getByName(Config.Flavors.gpsAlarm) {
+                                manifest.srcFile("src/gpsAlarm/AndroidManifest.xml")
+                                java.setSrcDirs(listOf("src/base/java", "src/gpsAlarm/java"))
+                            }
+                            getByName(Config.Flavors.lol) {
+                                manifest.srcFile("src/lol/AndroidManifest.xml")
+                                java.setSrcDirs(listOf("src/base/java", "src/lol/java"))
+                            }
+                            getByName(Config.Flavors.practice) {
+                                manifest.srcFile("src/practice/AndroidManifest.xml")
+                                java.setSrcDirs(listOf("src/base/java", "src/practice/java"))
+                            }
+                            getByName(Config.Flavors.rssReader) {
+                                manifest.srcFile("src/rssReader/AndroidManifest.xml")
+                                java.setSrcDirs(listOf("src/base/java", "src/rssReader/java"))
+                            }
+                        }
+                    }
                 }
 
                 configureKotlinAndroid(this)
-
-                flavorDimensions.addAll(listOf(Config.Dimensions.mode))
-                productFlavors {
-                    create(Config.Flavors.gpsAlarm) {
-                        dimension = Config.Dimensions.mode
-
-                        buildConfigField("String", "NAVER_MAPS_CLIENT_KEY", getProp("naver_maps_client_key"))
-                        buildConfigField("String", "NAVER_MAPS_CLIENT_SECRET_KEY", getProp("naver_maps_client_secret_key"))
-                    }
-                    create(Config.Flavors.lol) {
-                        dimension = Config.Dimensions.mode
-
-                        buildConfigField("String", "riotApiKey", getProp("riot_api_key"))
-                    }
-                    create(Config.Flavors.practice) {
-                        dimension = Config.Dimensions.mode
-                    }
-                    create(Config.Flavors.rssReader) {
-                        dimension = Config.Dimensions.mode
-                    }
-                }
-
-                sourceSets {
-                    getByName(Config.SourceSet.main) {
-                        getByName(Config.Flavors.gpsAlarm) {
-                            manifest.srcFile("src/gpsAlarm/AndroidManifest.xml")
-                            java.setSrcDirs(listOf("src/base/java", "src/gpsAlarm/java"))
-                        }
-                        getByName(Config.Flavors.lol) {
-                            manifest.srcFile("src/lol/AndroidManifest.xml")
-                            java.setSrcDirs(listOf("src/base/java", "src/lol/java"))
-                        }
-                        getByName(Config.Flavors.practice) {
-                            manifest.srcFile("src/practice/AndroidManifest.xml")
-                            java.setSrcDirs(listOf("src/base/java", "src/practice/java"))
-                        }
-                        getByName(Config.Flavors.rssReader) {
-                            manifest.srcFile("src/rssReader/AndroidManifest.xml")
-                            java.setSrcDirs(listOf("src/base/java", "src/rssReader/java"))
-                        }
-                    }
-                    getByName(Config.SourceSet.debug) {
-                        getByName(Config.Flavors.gpsAlarm) {
-                            manifest.srcFile("src/gpsAlarm/AndroidManifest.xml")
-                            java.setSrcDirs(listOf("src/base/java", "src/gpsAlarm/java"))
-                        }
-                        getByName(Config.Flavors.lol) {
-                            manifest.srcFile("src/lol/AndroidManifest.xml")
-                            java.setSrcDirs(listOf("src/base/java", "src/lol/java"))
-                        }
-                        getByName(Config.Flavors.practice) {
-                            manifest.srcFile("src/practice/AndroidManifest.xml")
-                            java.setSrcDirs(listOf("src/base/java", "src/practice/java"))
-                        }
-                        getByName(Config.Flavors.rssReader) {
-                            manifest.srcFile("src/rssReader/AndroidManifest.xml")
-                            java.setSrcDirs(listOf("src/base/java", "src/rssReader/java"))
-                        }
-                    }
-                }
             }
 
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")

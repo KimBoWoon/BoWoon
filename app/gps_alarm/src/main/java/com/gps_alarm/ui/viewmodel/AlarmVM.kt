@@ -39,6 +39,7 @@ class AlarmVM @Inject constructor(
     val chooseAddress = MutableStateFlow<Addresses?>(null)
     val alarmTitle = MutableStateFlow<String>("")
     val expandedAddressItem = MutableStateFlow(-1)
+    val week = mutableSetOf<String>()
 
     override val container: Container<AlarmData, AlarmSideEffect> = container(AlarmData(alarmList = null, loading = true, error = null))
 
@@ -51,6 +52,23 @@ class AlarmVM @Inject constructor(
         data class GetGeocode(val geocode: Geocode) : AlarmSideEffect()
         data class GetAddress(val address: Address?) : AlarmSideEffect()
     }
+
+//    init {
+//        if (BuildConfig.DEBUG) {
+//            addAlarm(
+//                "스타벅스 석촌호수점",
+//                Addresses(
+//                    null,
+//                    0.0,
+//                    null,
+//                    "서울 송파구 송파동 7-4",
+//                    "서울 송파구 석촌호수로 262",
+//                    127.10533937925041,
+//                    37.50952059479555
+//                )
+//            )
+//        }
+//    }
 
     fun fetchAlarmList() {
         intent {
@@ -108,7 +126,7 @@ class AlarmVM @Inject constructor(
     fun addAlarm(title: String, addresses: Addresses?) {
         intent {
             addresses?.let {
-                val address = dataMapper(title, addresses)
+                val address = dataMapper(title, week.toList(), addresses)
                 postSideEffect(AlarmSideEffect.AddAlarm(address))
             } ?: run {
                 postSideEffect(AlarmSideEffect.ShowToast("데이터를 확인해주세요!"))
@@ -158,7 +176,7 @@ class AlarmVM @Inject constructor(
                 }?.let {
                     mutableSetOf<String>().apply {
                         val decodeString = it.decode<com.data.gpsAlarm.dto.Addresses>(json)
-                        val data = dataMapper(alarmTitle.value, decodeString.mapper()).encode(json)
+                        val data = dataMapper(alarmTitle.value, address.weekList, decodeString.mapper()).encode(json)
                         addAll(addressesSet)
                         add(data)
                         dataStoreUseCase.set(LocalDataStore.Keys.alarmList, this)
