@@ -7,7 +7,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
-import com.rss_reader.databinding.ActivityArticleDetailBinding
+import com.bowoon.rss_reader.databinding.ActivityArticleDetailBinding
 import util.Log
 
 class RssWebViewClient(

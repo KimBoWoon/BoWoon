@@ -1,8 +1,8 @@
 package com.practice.ui.vh
 
+import com.bowoon.practice.databinding.ViewholderWishPokemonBinding
 import com.domain.practice.dto.Pokemon
 import com.practice.base.BaseVH
-import com.practice.databinding.ViewholderWishPokemonBinding
 import com.practice.ui.fragments.WishPokemonListFragment
 import util.Log
 

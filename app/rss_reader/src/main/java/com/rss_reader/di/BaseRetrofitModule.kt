@@ -1,15 +1,15 @@
 package com.rss_reader.di
 
 import com.data.BuildConfig
-import com.gps_alarm.service.AppInterceptor
+import com.rss_reader.network.AppInterceptor
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
+import com.rss_reader.network.NetworkLogInterceptor
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -21,7 +21,7 @@ object BaseRetrofitModule {
         interceptor: HttpLoggingInterceptor
     ): OkHttpClient = OkHttpClient().newBuilder().apply {
         addNetworkInterceptor(interceptor)
-        addInterceptor(com.gps_alarm.service.AppInterceptor())
+        addInterceptor(AppInterceptor())
         if (BuildConfig.DEBUG) {
             addInterceptor(OkHttpProfilerInterceptor())
             addInterceptor(NetworkLogInterceptor())
@@ -29,16 +29,14 @@ object BaseRetrofitModule {
     }.build()
 
     @Provides
-    fun provideKotlinSerialization(): Json = Json {
-        ignoreUnknownKeys = true
-        prettyPrint = true
-    }
-
-    @Provides
-    fun provideJsonMediaType(): MediaType = "application/json".toMediaType()
-
-    @Provides
     fun provideInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
+
+    @Provides
+    fun provideTikXmlFactory(tikXml: TikXml): TikXmlConverterFactory =
+        TikXmlConverterFactory.create(tikXml)
+
+    @Provides
+    fun provideTikXml(): TikXml = TikXml.Builder().exceptionOnUnreadXml(false).build()
 }

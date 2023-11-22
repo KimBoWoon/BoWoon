@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.practice.R
+import com.bowoon.practice.R
+import com.bowoon.practice.databinding.DialogConfirmDismissBinding
 import com.practice.base.BaseDialog
-import com.practice.databinding.DialogConfirmDismissBinding
 import com.practice.ui.dialog.vm.PokemonDialogVM
 import kotlinx.coroutines.launch
 

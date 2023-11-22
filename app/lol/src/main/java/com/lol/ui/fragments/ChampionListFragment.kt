@@ -48,9 +48,9 @@ class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(
 
     override fun initBinding() {
         binding.apply {
-            (requireActivity() as? MainActivity)?.apply {
-                setSupportActionBar(binding.toolbar)
-            }
+//            (requireActivity() as? MainActivity)?.apply {
+//                setSupportActionBar(binding.toolbar)
+//            }
             rvLolChampionList.apply {
                 if (layoutManager == null) {
                     layoutManager = GridLayoutManager(requireContext(), 3).apply {

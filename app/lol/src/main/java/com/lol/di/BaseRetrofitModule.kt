@@ -1,7 +1,8 @@
 package com.lol.di
 
 import com.data.BuildConfig
-import com.gps_alarm.service.AppInterceptor
+import com.lol.network.AppInterceptor
+import com.lol.network.NetworkLogInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +20,7 @@ object BaseRetrofitModule {
         interceptor: okhttp3.logging.HttpLoggingInterceptor
     ): OkHttpClient = OkHttpClient().newBuilder().apply {
         addNetworkInterceptor(interceptor)
-        addInterceptor(com.gps_alarm.service.AppInterceptor())
+        addInterceptor(AppInterceptor())
         if (BuildConfig.DEBUG) {
             addInterceptor(com.localebro.okhttpprofiler.OkHttpProfilerInterceptor())
             addInterceptor(NetworkLogInterceptor())
@@ -27,8 +28,7 @@ object BaseRetrofitModule {
     }.build()
 
     @Provides
-    fun provideKotlinSerialization(): kotlinx.serialization.json.Json =
-        kotlinx.serialization.json.Json {
+    fun provideKotlinSerialization(): Json = Json {
             ignoreUnknownKeys = true
             prettyPrint = true
         }

@@ -5,9 +5,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.practice.R
+import com.bowoon.practice.R
+import com.bowoon.practice.databinding.FragmentSettingBinding
 import com.practice.base.BaseFragment
-import com.practice.databinding.FragmentSettingBinding
 import com.practice.ui.dialog.PokemonDialog
 import com.practice.ui.fragments.vm.SettingVM
 import dagger.hilt.android.AndroidEntryPoint

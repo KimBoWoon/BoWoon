@@ -26,6 +26,6 @@ object DataDragonApiRetrofitModule {
         .build()
         .create(DataDragonApiService::class.java)
 
-//    @Provides
-//    fun provideDataDragonApiBaseUrl(): String = "https://ddragon.leagueoflegends.com/"
+    @Provides
+    fun provideDataDragonApiBaseUrl(): String = "https://ddragon.leagueoflegends.com/"
 }

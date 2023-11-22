@@ -1,4 +1,4 @@
-package com.rss_reader.di
+package com.rss_reader.network
 
 import okhttp3.Interceptor
 import okhttp3.Request

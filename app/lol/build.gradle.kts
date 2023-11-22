@@ -29,6 +29,8 @@ dependencies {
         libs.okhttp.okhttp,
         libs.okhttp.logging,
         libs.okhttp.profiler,
+        libs.serialization.kotlin,
+        libs.serialization.converter,
         platform(libs.firebase.bom),
     ).forEach {
         implementation(it)

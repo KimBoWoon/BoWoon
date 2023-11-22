@@ -16,6 +16,14 @@ dependencies {
         libs.okhttp.okhttp,
         libs.okhttp.logging,
         libs.okhttp.profiler,
+        libs.tikxml.annotation,
+        libs.tikxml.retrofitConverter,
+        libs.tikxml.core,
+        libs.serialization.kotlin,
+        libs.serialization.converter,
+        libs.firebase.performance,
+        libs.firebase.analytics,
+        platform(libs.firebase.bom)
     ).forEach {
         implementation(it)
     }

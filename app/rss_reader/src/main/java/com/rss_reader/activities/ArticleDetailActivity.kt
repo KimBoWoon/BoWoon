@@ -2,9 +2,9 @@ package com.rss_reader.activities
 
 import android.os.Bundle
 import android.webkit.WebSettings
-import com.rss_reader.R
+import com.bowoon.rss_reader.R
+import com.bowoon.rss_reader.databinding.ActivityArticleDetailBinding
 import com.rss_reader.base.BaseActivity
-import com.rss_reader.databinding.ActivityArticleDetailBinding
 import com.rss_reader.setting.RssWebChromeClient
 import com.rss_reader.setting.RssWebViewClient
 import dagger.hilt.android.AndroidEntryPoint

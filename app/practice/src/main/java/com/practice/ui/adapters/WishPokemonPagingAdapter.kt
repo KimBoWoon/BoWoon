@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import com.bowoon.practice.R
+import com.bowoon.practice.databinding.ViewholderWishPokemonBinding
 import com.domain.practice.dto.Pokemon
-import com.practice.R
-import com.practice.databinding.ViewholderWishPokemonBinding
 import com.practice.ui.fragments.WishPokemonListFragment
 import com.practice.ui.vh.WishPokemonVH
 

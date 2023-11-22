@@ -2,10 +2,9 @@ package com.practice.ui.vh
 
 import androidx.core.view.isVisible
 import androidx.paging.LoadState
+import com.bowoon.practice.databinding.ViewholderLoadBinding
 import com.practice.base.BaseVH
-import com.practice.databinding.ViewholderLoadBinding
 import util.Log
-import util.ViewAdapter.onDebounceClickListener
 
 class LoadStateVH(
     override val binding: ViewholderLoadBinding,

@@ -2,7 +2,7 @@ package com.bowoon.convention
 
 object Config {
     object ApplicationSetting {
-        const val compileSdk = 33
+        const val compileSdk = 34
         const val minSdk = 23
         const val testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         const val defaultProguardFile = "proguard-android-optimize.txt"

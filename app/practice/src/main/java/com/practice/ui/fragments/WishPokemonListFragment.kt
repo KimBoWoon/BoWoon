@@ -10,10 +10,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bowoon.practice.R
+import com.bowoon.practice.databinding.FragmentWishPokemonBinding
 import com.domain.practice.dto.Pokemon
-import com.practice.R
 import com.practice.base.BaseFragment
-import com.practice.databinding.FragmentWishPokemonBinding
 import com.practice.ui.activities.vm.MainVM
 import com.practice.ui.adapters.PokemonLoadPagingAdapter
 import com.practice.ui.adapters.WishPokemonPagingAdapter

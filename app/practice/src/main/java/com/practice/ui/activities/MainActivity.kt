@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import com.practice.R
+import com.bowoon.practice.R
+import com.bowoon.practice.databinding.ActivityMainBinding
 import com.practice.base.BaseActivity
-import com.practice.databinding.ActivityMainBinding
 import com.practice.ui.activities.vm.MainVM
 import dagger.hilt.android.AndroidEntryPoint
 

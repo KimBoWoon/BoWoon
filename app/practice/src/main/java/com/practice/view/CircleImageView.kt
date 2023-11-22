@@ -24,7 +24,7 @@ import android.view.ViewOutlineProvider
 import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import com.practice.R
+import com.bowoon.practice.R
 import kotlin.math.min
 import kotlin.math.pow
 

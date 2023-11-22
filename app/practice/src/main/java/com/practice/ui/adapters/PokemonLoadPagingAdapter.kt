@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
-import com.practice.databinding.ViewholderLoadBinding
+import com.bowoon.practice.databinding.ViewholderLoadBinding
 import com.practice.ui.vh.LoadStateVH
 
 class PokemonLoadPagingAdapter(

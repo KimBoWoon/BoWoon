@@ -1,8 +1,9 @@
 package com.practice.di
 
 import com.data.BuildConfig
-import com.gps_alarm.service.AppInterceptor
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
+import com.practice.network.AppInterceptor
+import com.practice.network.NetworkLogInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +22,7 @@ object BaseRetrofitModule {
         interceptor: HttpLoggingInterceptor
     ): OkHttpClient = OkHttpClient().newBuilder().apply {
         addNetworkInterceptor(interceptor)
-        addInterceptor(com.gps_alarm.service.AppInterceptor())
+        addInterceptor(AppInterceptor())
         if (BuildConfig.DEBUG) {
             addInterceptor(OkHttpProfilerInterceptor())
             addInterceptor(NetworkLogInterceptor())

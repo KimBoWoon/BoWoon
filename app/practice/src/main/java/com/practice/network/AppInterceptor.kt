@@ -1,4 +1,4 @@
-package com.data.rssReader.service
+package com.practice.network
 
 import okhttp3.Interceptor
 import okhttp3.Response

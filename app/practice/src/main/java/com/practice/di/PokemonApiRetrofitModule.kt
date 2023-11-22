@@ -27,6 +27,6 @@ object PokemonApiRetrofitModule {
         .build()
         .create(PokemonApiService::class.java)
 
-//    @Provides
-//    fun providePokemonApiBaseUrl(): String = "https://pokeapi.co/api/v2/"
+    @Provides
+    fun providePokemonApiBaseUrl(): String = "https://pokeapi.co/api/v2/"
 }

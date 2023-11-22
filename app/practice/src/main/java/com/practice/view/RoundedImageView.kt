@@ -7,7 +7,7 @@ import android.graphics.Path
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.widget.ImageView
-import com.practice.R
+import com.bowoon.practice.R
 
 @SuppressLint("AppCompatCustomView")
 class RoundedImageView @JvmOverloads constructor(
@@ -101,8 +101,8 @@ class RoundedImageView @JvmOverloads constructor(
         path.addRoundRect(roundRect, radii, Path.Direction.CW)
     }
 
-    override fun draw(canvas: Canvas?) {
-        canvas?.clipPath(path)
+    override fun draw(canvas: Canvas) {
+        canvas.clipPath(path)
         super.draw(canvas)
     }
 }

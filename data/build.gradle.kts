@@ -13,12 +13,12 @@ dependencies {
         libs.google.material,
         libs.serialization.kotlin,
         libs.serialization.converter,
-        libs.tikxml.annotation,
-        libs.tikxml.retrofitConverter,
-        libs.tikxml.core,
         libs.hilt.android,
         libs.coroutine.core,
         libs.glide.glide,
+        libs.tikxml.annotation,
+        libs.tikxml.retrofitConverter,
+        libs.tikxml.core
     ).forEach {
         implementation(it)
     }

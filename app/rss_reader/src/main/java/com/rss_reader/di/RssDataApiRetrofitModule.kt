@@ -24,6 +24,6 @@ object RssDataApiRetrofitModule {
         .build()
         .create(RssDataService::class.java)
 
-//    @Provides
-//    fun provideBaseUrl(): String = "https://www.google.com"
+    @Provides
+    fun provideBaseUrl(): String = "https://www.google.com"
 }

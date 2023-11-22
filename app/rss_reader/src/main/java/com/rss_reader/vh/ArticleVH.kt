@@ -3,8 +3,8 @@ package com.rss_reader.vh
 import android.content.Intent
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.recyclerview.widget.RecyclerView
+import com.bowoon.rss_reader.databinding.VhRssBinding
 import com.rss_reader.activities.ArticleDetailActivity
-import com.rss_reader.databinding.VhRssBinding
 import com.rss_reader.dto.Article
 import util.ScreenUtils.dp
 

@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bowoon.practice.R
+import com.bowoon.practice.databinding.ViewholderPokemonBinding
 import com.domain.practice.dto.Pokemon
-import com.practice.R
-import com.practice.databinding.ViewholderPokemonBinding
 import com.practice.ui.fragments.PokemonListFragment
 import com.practice.ui.vh.PokemonVH
 

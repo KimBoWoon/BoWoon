@@ -1,7 +1,7 @@
 package com.rss_reader.vh
 
 import androidx.recyclerview.widget.RecyclerView
-import com.rss_reader.databinding.VhFeedHeaderBinding
+import com.bowoon.rss_reader.databinding.VhFeedHeaderBinding
 import com.rss_reader.dto.Article
 
 class FeedHeaderVH(

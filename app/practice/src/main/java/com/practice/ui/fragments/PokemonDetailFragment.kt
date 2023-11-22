@@ -6,10 +6,10 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bowoon.practice.R
+import com.bowoon.practice.databinding.FragmentPokemonDetailBinding
 import com.domain.practice.dto.Pokemon
-import com.practice.R
 import com.practice.base.BaseFragment
-import com.practice.databinding.FragmentPokemonDetailBinding
 import com.practice.ui.fragments.vm.PokemonDetailVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

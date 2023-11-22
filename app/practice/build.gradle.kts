@@ -19,6 +19,8 @@ dependencies {
         libs.okhttp.okhttp,
         libs.okhttp.logging,
         libs.okhttp.profiler,
+        libs.serialization.kotlin,
+        libs.serialization.converter
     ).forEach {
         implementation(it)
     }

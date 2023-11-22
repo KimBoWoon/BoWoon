@@ -1,4 +1,4 @@
-package com.data.lol.service
+package com.lol.network
 
 import okhttp3.Interceptor
 import okhttp3.Response

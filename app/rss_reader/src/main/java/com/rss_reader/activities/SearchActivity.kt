@@ -6,12 +6,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.rss_reader.R
+import com.bowoon.rss_reader.R
+import com.bowoon.rss_reader.databinding.ActivitySearchBinding
 import com.rss_reader.activities.vm.SearchVM
 import com.rss_reader.adapter.ArticleAdapter
 import com.rss_reader.adapter.StickyDecoration
 import com.rss_reader.base.BaseActivity
-import com.rss_reader.databinding.ActivitySearchBinding
 import com.rss_reader.producer.ArticleProducer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers

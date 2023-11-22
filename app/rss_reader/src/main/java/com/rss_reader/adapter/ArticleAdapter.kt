@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.rss_reader.R
-import com.rss_reader.databinding.VhFeedHeaderBinding
-import com.rss_reader.databinding.VhRssBinding
+import com.bowoon.rss_reader.R
+import com.bowoon.rss_reader.databinding.VhFeedHeaderBinding
+import com.bowoon.rss_reader.databinding.VhRssBinding
 import com.rss_reader.dto.Article
 import com.rss_reader.vh.ArticleVH
 import com.rss_reader.vh.FeedHeaderVH

@@ -1,4 +1,4 @@
-package com.lol.di
+package com.practice.network
 
 import okhttp3.Interceptor
 import okhttp3.Request
