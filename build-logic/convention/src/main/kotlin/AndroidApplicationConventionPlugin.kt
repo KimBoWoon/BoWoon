@@ -52,21 +52,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                         }
                     }
 
-                    flavorDimensions.addAll(listOf(Config.Dimensions.mode))
-                    productFlavors {
-                        create(Config.Flavors.gpsAlarm) {
-                            dimension = Config.Dimensions.mode
-                        }
-                        create(Config.Flavors.lol) {
-                            dimension = Config.Dimensions.mode
-                        }
-                        create(Config.Flavors.practice) {
-                            dimension = Config.Dimensions.mode
-                        }
-                        create(Config.Flavors.rssReader) {
-                            dimension = Config.Dimensions.mode
-                        }
-                    }
+                    buildConfigField("String", "NAVER_MAPS_CLIENT_KEY", getProp("naver_maps_client_key"))
+                    buildConfigField("String", "NAVER_MAPS_CLIENT_SECRET_KEY", getProp("naver_maps_client_secret_key"))
+                    buildConfigField("String", "riotApiKey", getProp("riot_api_key"))
                 }
 
                 signingConfigs {

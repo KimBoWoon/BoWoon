@@ -14,6 +14,11 @@ dependencies {
         libs.google.material,
         libs.constraint.layout,
         libs.hilt.android,
+        libs.retrofit2,
+        libs.okhttp.bom,
+        libs.okhttp.okhttp,
+        libs.okhttp.logging,
+        libs.okhttp.profiler,
     ).forEach {
         implementation(it)
     }

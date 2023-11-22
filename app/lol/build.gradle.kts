@@ -24,6 +24,11 @@ dependencies {
         libs.firebase.performance,
         libs.firebase.analytics,
         libs.firebase.message,
+        libs.retrofit2,
+        libs.okhttp.bom,
+        libs.okhttp.okhttp,
+        libs.okhttp.logging,
+        libs.okhttp.profiler,
         platform(libs.firebase.bom),
     ).forEach {
         implementation(it)

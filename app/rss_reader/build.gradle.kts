@@ -11,6 +11,11 @@ dependencies {
         libs.constraint.layout,
         libs.hilt.android,
         libs.hilt.navigation,
+        libs.retrofit2,
+        libs.okhttp.bom,
+        libs.okhttp.okhttp,
+        libs.okhttp.logging,
+        libs.okhttp.profiler,
     ).forEach {
         implementation(it)
     }

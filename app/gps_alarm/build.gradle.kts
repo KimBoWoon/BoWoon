@@ -35,6 +35,11 @@ dependencies {
         libs.orbit.core,
         libs.orbit.viewModel,
         libs.orbit.compose,
+        libs.retrofit2,
+        libs.okhttp.bom,
+        libs.okhttp.okhttp,
+        libs.okhttp.logging,
+        libs.okhttp.profiler,
         platform(libs.compose.bom),
         platform(libs.firebase.bom),
     ).forEach {
