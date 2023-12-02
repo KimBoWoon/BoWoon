@@ -4,7 +4,7 @@ import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import com.bowoon.practice.databinding.ViewholderLoadBinding
 import com.practice.base.BaseVH
-import util.Log
+import com.data.util.Log
 
 class LoadStateVH(
     override val binding: ViewholderLoadBinding,

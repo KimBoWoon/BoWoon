@@ -13,8 +13,8 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.lol.ui.dialog.LolDialog
-import util.ContextUtils.showToast
-import util.Log
+import com.data.util.ContextUtils.showToast
+import com.data.util.Log
 
 abstract class BaseActivity<V : ViewDataBinding>(
     @LayoutRes val layoutId: Int

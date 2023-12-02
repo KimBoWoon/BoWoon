@@ -23,7 +23,7 @@ import com.lol.ui.vh.ChampionSpellVH
 import com.lol.ui.vh.ChampionVH
 import com.lol.ui.vh.EmptyVH
 import com.lol.ui.vh.GameItemVH
-import util.Log
+import com.data.util.Log
 
 class LolAdapter(
     private val items: List<Any?>? = null,

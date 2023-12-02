@@ -4,9 +4,9 @@ android-gradle = "8.1.4"
 android-plugin = "1.6.0"
 google-material = "1.10.0"
 google-location = "21.0.1"
-firebase-google-service = "4.3.15"
+firebase-google-service = "4.4.0"
 firebase-gradle = "3.4.3"
-firebase-crashlytics-plugin = "2.9.6"
+firebase-crashlytics-plugin = "2.9.9"
 firebase-performance-plugin = "1.4.2"
 firebase-bom = "32.6.0"
 jetpack-core = "1.12.0"
@@ -18,11 +18,12 @@ jetpack-navigation = "2.7.5"
 jetpack-navigation-safeArgs = "2.7.5"
 jetpack-datastore = "1.0.0"
 jetpack-paging = "3.2.1"
-jetpack-room = "2.6.0"
-jetpack-work-manager = "2.8.1"
+jetpack-room = "2.6.1"
+jetpack-work-manager = "2.9.0"
 jetpack-splash = "1.0.1"
 jetpack-startup = "1.1.1"
 constraint-layout = "2.1.4"
+swiperefresh-layout = "1.1.0"
 retrofit2 = "2.9.0"
 okhttp-okHttp = "4.10.0"
 okhttp-profiler = "1.0.8"
@@ -89,6 +90,7 @@ jetpack-room-paging = { module = "androidx.room:room-paging", version.ref = "jet
 jetpack-splash = { module = "androidx.core:core-splashscreen", version.ref = "jetpack-splash" }
 jetpack-startup = { module = "androidx.startup:startup-runtime", version.ref = "jetpack-startup" }
 constraint-layout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraint-layout" }
+swiperefresh-layout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefresh-layout" }
 retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit2" }
 okhttp-bom = { module = "com.squareup.okhttp3:okhttp-bom", version.ref = "okhttp-okHttp" }
 okhttp-okhttp = { module = "com.squareup.okhttp3:okhttp" }

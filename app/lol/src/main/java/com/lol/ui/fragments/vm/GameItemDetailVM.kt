@@ -6,7 +6,7 @@ import com.lol.base.BaseVM
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import util.DataStatus
+import com.data.util.DataStatus
 import javax.inject.Inject
 
 @HiltViewModel

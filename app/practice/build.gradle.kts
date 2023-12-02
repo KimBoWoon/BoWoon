@@ -20,7 +20,10 @@ dependencies {
         libs.okhttp.logging,
         libs.okhttp.profiler,
         libs.serialization.kotlin,
-        libs.serialization.converter
+        libs.serialization.converter,
+        libs.firebase.performance,
+        libs.firebase.analytics,
+        platform(libs.firebase.bom)
     ).forEach {
         implementation(it)
     }

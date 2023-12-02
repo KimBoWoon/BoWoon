@@ -2,7 +2,7 @@ package com.lol.ui.vh
 
 import com.bowoon.lol.databinding.VhEmptyBinding
 import com.lol.base.BaseVH
-import util.Log
+import com.data.util.Log
 
 class EmptyVH(
     override val binding: VhEmptyBinding

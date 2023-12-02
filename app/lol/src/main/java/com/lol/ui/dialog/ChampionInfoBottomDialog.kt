@@ -10,7 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.lol.base.BaseBottomSheetDialog
 import com.lol.ui.dialog.vm.ChampionInfoBottomDialogVM
-import util.ContextUtils.getScreenHeight
+import com.data.util.ContextUtils.getScreenHeight
 
 class ChampionInfoBottomDialog(
     private val content: String

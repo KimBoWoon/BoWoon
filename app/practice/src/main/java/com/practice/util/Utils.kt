@@ -3,7 +3,7 @@ package com.practice.util
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import util.ScreenUtils.dp
+import com.data.util.ScreenUtils.dp
 
 class PokemonDecorator : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {

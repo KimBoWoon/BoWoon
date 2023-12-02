@@ -9,7 +9,7 @@ import android.provider.Settings
 import com.bowoon.lol.R
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.HiltAndroidApp
-import util.Log
+import com.data.util.Log
 
 @HiltAndroidApp
 class LolApplication : Application()/*, Configuration.Provider*/ {

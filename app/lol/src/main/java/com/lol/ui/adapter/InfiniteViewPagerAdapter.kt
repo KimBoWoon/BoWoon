@@ -9,7 +9,7 @@ import com.bowoon.lol.databinding.VhEmptyBinding
 import com.domain.lol.dto.Skin
 import com.lol.ui.vh.ChampionSkinVH
 import com.lol.ui.vh.EmptyVH
-import util.Log
+import com.data.util.Log
 
 class InfiniteViewPagerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val NONE = -1

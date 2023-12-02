@@ -1,4 +1,4 @@
-package util
+package com.data.util
 
 import android.content.Context
 import android.content.res.Resources
@@ -10,7 +10,6 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat.getSystemService
 import com.google.android.material.snackbar.Snackbar
 import kotlin.math.roundToInt
 

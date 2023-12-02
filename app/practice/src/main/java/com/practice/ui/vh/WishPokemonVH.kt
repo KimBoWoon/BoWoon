@@ -4,7 +4,7 @@ import com.bowoon.practice.databinding.ViewholderWishPokemonBinding
 import com.domain.practice.dto.Pokemon
 import com.practice.base.BaseVH
 import com.practice.ui.fragments.WishPokemonListFragment
-import util.Log
+import com.data.util.Log
 
 class WishPokemonVH(
     override val binding: ViewholderWishPokemonBinding,

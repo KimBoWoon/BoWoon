@@ -1,4 +1,4 @@
-package util
+package com.data.util
 
 sealed class DataStatus<out R> {
     object Loading : DataStatus<Nothing>()

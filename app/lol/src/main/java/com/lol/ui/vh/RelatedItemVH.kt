@@ -3,7 +3,7 @@ package com.lol.ui.vh
 import com.bowoon.lol.databinding.VhRelatedItemBinding
 import com.domain.lol.dto.GameItemInfo
 import com.lol.base.BaseVH
-import util.Log
+import com.data.util.Log
 
 class RelatedItemVH(
     override val binding: VhRelatedItemBinding

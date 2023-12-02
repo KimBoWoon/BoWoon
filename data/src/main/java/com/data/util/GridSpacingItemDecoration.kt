@@ -1,4 +1,4 @@
-package util
+package com.data.util
 
 import android.graphics.Rect
 import android.view.View

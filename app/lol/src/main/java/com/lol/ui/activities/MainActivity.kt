@@ -12,9 +12,9 @@ import com.lol.base.BaseActivity
 import com.lol.ui.activities.vm.MainVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import util.ContextUtils.showToast
-import util.DataStatus
-import util.Log
+import com.data.util.ContextUtils.showToast
+import com.data.util.DataStatus
+import com.data.util.Log
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(

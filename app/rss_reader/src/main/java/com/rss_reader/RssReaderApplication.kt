@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.data.util.Log
 import dagger.hilt.android.HiltAndroidApp
-import util.Log
 
 @HiltAndroidApp
 class RssReaderApplication : Application() {

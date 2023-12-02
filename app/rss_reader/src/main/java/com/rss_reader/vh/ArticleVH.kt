@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bowoon.rss_reader.databinding.VhRssBinding
 import com.rss_reader.activities.ArticleDetailActivity
 import com.rss_reader.dto.Article
-import util.ScreenUtils.dp
+import com.data.util.ScreenUtils.dp
 
 class ArticleVH(
     private val binding: VhRssBinding

@@ -13,7 +13,7 @@ import com.practice.base.BaseFragment
 import com.practice.ui.fragments.vm.PokemonDetailVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import util.ContextUtils.showToast
+import com.data.util.ContextUtils.showToast
 import kotlin.random.Random
 
 @AndroidEntryPoint

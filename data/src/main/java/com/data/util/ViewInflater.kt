@@ -1,4 +1,4 @@
-package util
+package com.data.util
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

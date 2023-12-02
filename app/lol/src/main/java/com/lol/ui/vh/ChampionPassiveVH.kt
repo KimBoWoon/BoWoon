@@ -3,7 +3,7 @@ package com.lol.ui.vh
 import com.bowoon.lol.databinding.VhChampionPassiveBinding
 import com.domain.lol.dto.Passive
 import com.lol.base.BaseVH
-import util.Log
+import com.data.util.Log
 
 class ChampionPassiveVH(
     override val binding: VhChampionPassiveBinding

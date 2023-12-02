@@ -14,8 +14,8 @@ import com.lol.ui.adapter.RelatedItemAdapter
 import com.lol.ui.fragments.vm.GameItemDetailVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import util.DataStatus
-import util.Log
+import com.data.util.DataStatus
+import com.data.util.Log
 
 @AndroidEntryPoint
 class GameItemDetailFragment : BaseFragment<FragmentGameItemDetailBinding>(

@@ -5,7 +5,7 @@ import com.bowoon.lol.databinding.VhChampionBinding
 import com.domain.lol.dto.ChampionInfo
 import com.lol.base.BaseFragment
 import com.lol.base.BaseVH
-import util.Log
+import com.data.util.Log
 
 class ChampionVH(
     override val binding: VhChampionBinding,

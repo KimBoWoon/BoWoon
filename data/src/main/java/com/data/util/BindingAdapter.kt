@@ -1,4 +1,4 @@
-package util
+package com.data.util
 
 import android.os.SystemClock
 import android.text.Html
@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
-import util.ViewAdapter.DebounceClickValues.MIN_CLICK_INTERVAL
+import com.data.util.ViewAdapter.DebounceClickValues.MIN_CLICK_INTERVAL
 
 object ViewAdapter {
     @JvmStatic

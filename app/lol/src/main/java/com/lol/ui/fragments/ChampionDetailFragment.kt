@@ -15,9 +15,9 @@ import com.lol.ui.fragments.vm.ChampionDetailVM
 import com.lol.util.ViewPagerUtils.infiniteViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import util.DataStatus
-import util.Log
-import util.ifNotNull
+import com.data.util.DataStatus
+import com.data.util.Log
+import com.data.util.ifNotNull
 
 @AndroidEntryPoint
 class ChampionDetailFragment : BaseFragment<FragmentChampionDetailBinding>(

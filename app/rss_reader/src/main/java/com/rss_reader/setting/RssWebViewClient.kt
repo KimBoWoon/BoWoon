@@ -8,7 +8,7 @@ import android.webkit.WebViewClient
 import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import com.bowoon.rss_reader.databinding.ActivityArticleDetailBinding
-import util.Log
+import com.data.util.Log
 
 class RssWebViewClient(
     private val binding: ViewDataBinding? = null

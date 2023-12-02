@@ -3,7 +3,7 @@ package com.lol.ui.vh
 import com.bowoon.lol.databinding.VhChampionSpellBinding
 import com.domain.lol.dto.Spell
 import com.lol.base.BaseVH
-import util.Log
+import com.data.util.Log
 
 class ChampionSpellVH(
     override val binding: VhChampionSpellBinding

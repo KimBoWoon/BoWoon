@@ -3,7 +3,7 @@ package com.lol.ui.vh
 import com.bowoon.lol.databinding.VhChampionSkinBinding
 import com.domain.lol.dto.Skin
 import com.lol.base.BaseVH
-import util.Log
+import com.data.util.Log
 
 class ChampionSkinVH(
     override val binding: VhChampionSkinBinding

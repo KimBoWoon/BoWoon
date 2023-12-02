@@ -15,9 +15,9 @@ import com.lol.ui.dialog.LolDialog
 import com.lol.ui.fragments.vm.SettingVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import util.DataStatus
-import util.Log
-import util.ViewAdapter.onDebounceClickListener
+import com.data.util.DataStatus
+import com.data.util.Log
+import com.data.util.ViewAdapter.onDebounceClickListener
 
 @AndroidEntryPoint
 class SettingFragment : BaseFragment<FragmentSettingBinding>(

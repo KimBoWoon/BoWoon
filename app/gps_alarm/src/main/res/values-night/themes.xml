@@ -12,8 +12,12 @@
         <!-- Status bar color. -->
 <!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
         <!-- Customize your theme here. -->
+        <item name="android:textViewStyle">@style/GpsAlarmTextView</item>
     </style>
 
+    <style name="GpsAlarmTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/white</item>
+    </style>
 <!--    <style name="Theme.GpsAlarm.Splash" parent="Theme.SplashScreen">-->
 <!--        <item name="windowSplashScreenBackground">@color/white</item>-->
 <!--        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>-->

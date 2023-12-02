@@ -12,14 +12,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bowoon.lol.R
 import com.bowoon.lol.databinding.FragmentChampionListBinding
 import com.lol.base.BaseFragment
-import com.lol.ui.activities.MainActivity
 import com.lol.ui.activities.vm.MainVM
 import com.lol.ui.adapter.LolAdapter
 import com.lol.ui.fragments.vm.ChampionListVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import util.DataStatus
-import util.Log
+import com.data.util.DataStatus
+import com.data.util.Log
 
 @AndroidEntryPoint
 class ChampionListFragment : BaseFragment<FragmentChampionListBinding>(

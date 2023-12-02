@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.bowoon.lol.R
 import com.domain.lol.dto.ChampionInfo
 import com.domain.lol.dto.GameItemInfo
-import util.Log
+import com.data.util.Log
 
 abstract class BaseFragment<V : ViewDataBinding>(
     @LayoutRes private val layoutId: Int

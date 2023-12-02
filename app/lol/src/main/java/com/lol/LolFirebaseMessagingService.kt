@@ -17,7 +17,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.lol.ui.activities.MainActivity
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import util.Log
+import com.data.util.Log
 
 
 class LolFirebaseMessagingService : FirebaseMessagingService() {

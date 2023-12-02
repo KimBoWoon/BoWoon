@@ -1,4 +1,4 @@
-package util
+package com.data.util
 
 import android.util.Log
 import com.data.BuildConfig

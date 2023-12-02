@@ -8,6 +8,11 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.bowoon.rss_reader.R
 import com.bowoon.rss_reader.databinding.ActivitySearchBinding
+import com.data.util.DataStatus
+import com.data.util.Log
+import com.data.util.StickyHeaderItemDecoration
+import com.data.util.ViewAdapter.onDebounceClickListener
+import com.data.util.ViewUtils.hideSoftKeyboard
 import com.rss_reader.activities.vm.SearchVM
 import com.rss_reader.adapter.ArticleAdapter
 import com.rss_reader.adapter.StickyDecoration
@@ -16,11 +21,6 @@ import com.rss_reader.producer.ArticleProducer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import util.DataStatus
-import util.Log
-import util.StickyHeaderItemDecoration
-import util.ViewAdapter.onDebounceClickListener
-import util.ViewUtils.hideSoftKeyboard
 
 @AndroidEntryPoint
 class SearchActivity : BaseActivity<ActivitySearchBinding>(R.layout.activity_search) {

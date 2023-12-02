@@ -2,7 +2,7 @@ package com.rss_reader.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import util.StickyHeaderItemDecoration
+import com.data.util.StickyHeaderItemDecoration
 
 class StickyDecoration(
     private val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>? = null

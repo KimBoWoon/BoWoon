@@ -1,4 +1,4 @@
-package util
+package com.data.util
 
 import android.view.MotionEvent
 import androidx.core.view.get

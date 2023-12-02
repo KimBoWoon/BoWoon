@@ -8,6 +8,11 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.bowoon.rss_reader.R
 import com.bowoon.rss_reader.databinding.ActivityMainBinding
+import com.data.util.DataStatus
+import com.data.util.LoadMore
+import com.data.util.RecyclerViewScrollEventListener
+import com.data.util.StickyHeaderItemDecoration
+import com.data.util.ViewAdapter.onDebounceClickListener
 import com.rss_reader.activities.vm.MainVM
 import com.rss_reader.adapter.ArticleAdapter
 import com.rss_reader.adapter.StickyDecoration
@@ -17,11 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import util.DataStatus
-import util.LoadMore
-import util.RecyclerViewScrollEventListener
-import util.StickyHeaderItemDecoration
-import util.ViewAdapter.onDebounceClickListener
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {

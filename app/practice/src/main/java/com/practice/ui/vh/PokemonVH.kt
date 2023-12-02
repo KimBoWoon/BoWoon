@@ -4,7 +4,7 @@ import com.bowoon.practice.databinding.ViewholderPokemonBinding
 import com.domain.practice.dto.Pokemon
 import com.practice.base.BaseVH
 import com.practice.ui.fragments.PokemonListFragment
-import util.Log
+import com.data.util.Log
 
 class PokemonVH(
     override val binding: ViewholderPokemonBinding,

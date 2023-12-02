@@ -14,7 +14,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
 import com.bowoon.lol.R
-import util.ScreenUtils.dp
+import com.data.util.ScreenUtils.dp
 
 open class BaseDialog<V : ViewDataBinding>(
     @LayoutRes
