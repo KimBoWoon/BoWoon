@@ -43,6 +43,10 @@
                 android:value="" />
         </activity>
 
+        <activity
+            android:name="com.bowoon.gps_alarm.webview.AddressWebViewActivity"
+            android:exported="false" />
+
         <service
             android:name="com.bowoon.gps_alarm.service.GpsAlarmService"
             android:exported="false"

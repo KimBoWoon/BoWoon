@@ -5,29 +5,39 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
+import com.bowoon.gpsAlarm.R
 import com.bowoon.gpsAlarm.databinding.AlarmFragmentBinding
+import com.bowoon.gps_alarm.base.BaseFragment
+import com.bowoon.gps_alarm.data.Address
+import com.bowoon.gps_alarm.ui.util.setFadeAnimation
 import com.bowoon.gps_alarm.ui.viewmodel.AlarmVM
+import com.data.util.DataStatus
 import com.data.util.Log
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AlarmFragment : Fragment() {
+class AlarmFragment : BaseFragment() {
     companion object {
         private const val TAG = "#AlarmFragment"
     }
+
     private lateinit var binding: AlarmFragmentBinding
     private val viewModel by viewModels<AlarmVM>()
-    private val alarmAdapter = AlarmAdapter()
+    private val alarmAdapter by lazy { AlarmAdapter(handler) }
+    private val handler by lazy { ClickHandler() }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = AlarmFragmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -38,6 +48,7 @@ class AlarmFragment : Fragment() {
 
         binding.apply {
             lifecycleOwner = this@AlarmFragment
+            handler = this@AlarmFragment.handler
         }
 
         initBinding()
@@ -49,7 +60,7 @@ class AlarmFragment : Fragment() {
         viewModel.fetchAlarmList()
     }
 
-    private fun initBinding() {
+    override fun initBinding() {
         binding.apply {
             srlAlarmFragmentRoot.setOnRefreshListener {
                 srlAlarmFragmentRoot.isRefreshing = true
@@ -61,38 +72,46 @@ class AlarmFragment : Fragment() {
         }
     }
 
-    private fun initFlow() {
+    override fun initFlow() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.container.stateFlow.collectLatest {
-                    when {
-                        it.loading -> {
-                            Log.d(TAG, "alarm list geocode data loading...")
+                viewModel.alarmList.collectLatest {
+                    when (it) {
+                        is DataStatus.Loading -> {
                             binding.pbLoading.isVisible = true
-                            binding.srlAlarmFragmentRoot.isRefreshing = true
                         }
-                        it.alarmList?.isEmpty() == true && it.error == null -> {
-                            Log.d(TAG, "alarm list geocode data empty")
+                        is DataStatus.Success -> {
                             binding.pbLoading.isVisible = false
                             binding.srlAlarmFragmentRoot.isRefreshing = false
+                            alarmAdapter.submitList(it.data)
                         }
-                        it.alarmList?.isNotEmpty() == true && it.error == null -> {
-                            Log.d(TAG, "alarm list geocode data success > ${it.alarmList}")
+                        is DataStatus.Failure -> {
                             binding.pbLoading.isVisible = false
                             binding.srlAlarmFragmentRoot.isRefreshing = false
-                            alarmAdapter.submitList(it.alarmList)
-                        }
-                        it.error != null -> {
-                            Log.d(TAG, "alarm list geocode data error")
-                            binding.pbLoading.isVisible = false
-                            binding.srlAlarmFragmentRoot.isRefreshing = false
-                        }
-                        else -> {
-                            Log.d(TAG, "alarm list geocode data unknown")
-                            binding.pbLoading.isVisible = false
-                            binding.srlAlarmFragmentRoot.isRefreshing = false
+                            Log.printStackTrace(it.throwable)
                         }
                     }
+                }
+            }
+        }
+    }
+
+    inner class ClickHandler {
+        fun createAlarm() {
+            findNavController().navigate(
+                R.id.createAlarmFragment,
+                null,
+                NavOptions.Builder()
+                    .setFadeAnimation()
+                    .build()
+            )
+        }
+
+        fun removeAlarm(address: Address?) {
+            address?.let {
+                lifecycleScope.launch {
+                    viewModel.removeAlarm(it.longitude, it.latitude)
+                    viewModel.fetchAlarmList()
                 }
             }
         }

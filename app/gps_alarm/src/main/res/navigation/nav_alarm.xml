@@ -10,4 +10,10 @@
         android:name="com.bowoon.gps_alarm.ui.alarm.AlarmFragment"
         android:label="AlarmFragment"
         tools:layout="@layout/alarm_fragment" />
+
+    <fragment
+        android:id="@+id/createAlarmFragment"
+        android:name="com.bowoon.gps_alarm.ui.alarm.CreateAlarmFragment"
+        android:label="CreateAlarmFragment"
+        tools:layout="@layout/create_alarm_fragment" />
 </navigation>

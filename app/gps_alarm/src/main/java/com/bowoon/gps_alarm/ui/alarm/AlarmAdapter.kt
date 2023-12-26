@@ -8,16 +8,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bowoon.gpsAlarm.databinding.VhAlarmBinding
 import com.bowoon.gps_alarm.data.Address
 
-class AlarmAdapter : ListAdapter<Address, AlarmVH>(diff) {
+class AlarmAdapter(
+    private val handler: AlarmFragment.ClickHandler
+) : ListAdapter<Address, AlarmVH>(diff) {
     companion object {
         private val diff = object : DiffUtil.ItemCallback<Address>() {
             override fun areItemsTheSame(oldItem: Address, newItem: Address): Boolean = oldItem == newItem
-            override fun areContentsTheSame(oldItem: Address, newItem: Address): Boolean = oldItem.name == newItem.name && oldItem.roadAddress == newItem.roadAddress
+            override fun areContentsTheSame(oldItem: Address, newItem: Address): Boolean = oldItem.longitude == newItem.longitude && oldItem.latitude == newItem.latitude
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlarmVH =
-        AlarmVH(VhAlarmBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        AlarmVH(VhAlarmBinding.inflate(LayoutInflater.from(parent.context), parent, false), handler)
 
     override fun onBindViewHolder(holder: AlarmVH, position: Int) {
         currentList[position]?.let {
@@ -27,13 +29,21 @@ class AlarmAdapter : ListAdapter<Address, AlarmVH>(diff) {
 }
 
 class AlarmVH(
-    private val binding: VhAlarmBinding
+    private val binding: VhAlarmBinding,
+    private val handler: AlarmFragment.ClickHandler
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(address: Address?) {
         address?.let {
             binding.apply {
                 item = it
+                vh = this@AlarmVH
             }
+        }
+    }
+
+    fun removeAlarm(address: Address?) {
+        address?.let {
+            handler.removeAlarm(it)
         }
     }
 }

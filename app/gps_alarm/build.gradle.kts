@@ -20,12 +20,9 @@ dependencies {
         libs.firebase.analytics,
         libs.firebase.message,
         libs.firebase.crashlytics,
-        libs.naver0map,
+        libs.naver.map,
         libs.serialization.kotlin,
         libs.serialization.converter,
-        libs.orbit.core,
-        libs.orbit.viewModel,
-        libs.orbit.compose,
         libs.retrofit2,
         libs.okhttp.bom,
         libs.okhttp.okhttp,
@@ -45,15 +42,14 @@ dependencies {
     }
 
     arrayOf(
-        libs.test.junit,
-        libs.orbit.test
+        libs.test.junit
     ).forEach {
         testImplementation(it)
     }
 
     arrayOf(
         libs.test.junit.ext,
-        libs.test.espresso,
+        libs.test.espresso
     ).forEach {
         androidTestImplementation(it)
     }

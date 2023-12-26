@@ -12,17 +12,17 @@ import android.os.Looper
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.bowoon.gpsAlarm.R
+import com.bowoon.gps_alarm.data.Address
+import com.bowoon.gps_alarm.data.SettingInfo
+import com.bowoon.gps_alarm.ui.util.SendNotification
+import com.bowoon.gps_alarm.ui.util.getSafetyParcelable
+import com.bowoon.gps_alarm.ui.util.getSafetyParcelableArrayExtra
+import com.data.util.Log
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.bowoon.gps_alarm.data.Address
-import com.bowoon.gps_alarm.data.SettingInfo
-import com.bowoon.gps_alarm.ui.util.SendNotification
-import com.bowoon.gps_alarm.ui.util.parcelable
-import com.bowoon.gps_alarm.ui.util.parcelableArray
 import dagger.hilt.android.AndroidEntryPoint
-import com.data.util.Log
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -97,8 +97,8 @@ class GpsAlarmService @Inject constructor() : Service() {
         intent?.let {
             it.action?.let { action ->
                 if (action == "StartService") {
-                    addressList = intent.extras?.parcelableArray(ADDRESS_LIST)
-                    settingInfo = intent.extras?.parcelable(SETTING_INFO)
+                    addressList = intent.extras?.getSafetyParcelableArrayExtra(ADDRESS_LIST)
+                    settingInfo = intent.extras?.getSafetyParcelable(SETTING_INFO)
                     startService()
                 } else {
                     removeLocationCallback()

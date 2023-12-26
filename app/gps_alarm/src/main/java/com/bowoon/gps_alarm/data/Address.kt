@@ -20,10 +20,5 @@ data class Address(
     val longitude: Double? = null,
     @SerialName("y")
     val latitude: Double? = null,
-    val weekList: MutableList<String> = mutableListOf()
-) : Parcelable {
-    fun changeWeekList(weekList: List<String>) {
-        this.weekList.clear()
-        this.weekList.addAll(weekList)
-    }
-}
+    val weekList: List<String>? = null
+) : Parcelable

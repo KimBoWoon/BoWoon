@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.8.20"
+kotlin = "1.9.0"
 android-gradle = "8.1.4"
 android-plugin = "1.6.0"
 google-material = "1.10.0"
@@ -8,7 +8,7 @@ firebase-google-service = "4.4.0"
 firebase-gradle = "3.4.3"
 firebase-crashlytics-plugin = "2.9.9"
 firebase-performance-plugin = "1.4.2"
-firebase-bom = "32.6.0"
+firebase-bom = "32.7.0"
 jetpack-core = "1.12.0"
 jetpack-appcompat = "1.6.1"
 jetpack-lifecycle = "2.6.2"
@@ -132,7 +132,7 @@ orbit-test = { module = "org.orbit-mvi:orbit-test", version.ref = "orbit" }
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist-webview" }
 accompanist-pullToRefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanist-pullToRefresh" }
 coroutine-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutine-core" }
-naver0map = { module = "com.naver.maps:map-sdk", version.ref = "naver-map" }
+naver-map = { module = "com.naver.maps:map-sdk", version.ref = "naver-map" }
 threetenabp-core = { module = "com.jakewharton.threetenabp:threetenabp", version.ref = "threetenabp-core" }
 tikxml-annotation = { module = "com.tickaroo.tikxml:annotation", version.ref = "tikxml-core" }
 tikxml-retrofitConverter = { module = "com.tickaroo.tikxml:retrofit-converter", version.ref = "tikxml-core" }

@@ -6,21 +6,49 @@
     <data>
 
         <variable
+            name="vh"
+            type="com.bowoon.gps_alarm.ui.alarm.AlarmVH" />
+
+        <variable
             name="item"
             type="com.bowoon.gps_alarm.data.Address" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/border_radius_10"
+        android:padding="10dp">
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_alarm_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{item.name}"
-            android:textSize="30dp"
+            android:textSize="18dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Hello, World!" />
+            tools:text="Title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_alarm_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{item.roadAddress}"
+            android:textSize="18dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_alarm_title"
+            tools:text="Address" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/b_remove_alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="제거"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_alarm_address"
+            app:onDebounceClickListener="@{() -> vh.removeAlarm(item)}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

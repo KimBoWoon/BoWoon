@@ -14,7 +14,7 @@ inline fun <reified T> T.encode(json: Json): String =
 
 fun dataMapper(
     alarmTitle: String,
-    weekList: List<String>,
+    weekList: List<String>?,
     addresses: Addresses
 ): Address = Address(
     alarmTitle,
@@ -25,5 +25,5 @@ fun dataMapper(
     addresses.roadAddress,
     addresses.longitude,
     addresses.latitude,
-    weekList = weekList.toMutableList()
+    weekList = weekList ?: emptyList()
 )
