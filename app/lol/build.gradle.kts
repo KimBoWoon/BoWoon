@@ -20,17 +20,14 @@ dependencies {
         libs.hilt.android,
         libs.hilt.navigation,
         libs.hilt.work.manager,
-        libs.glide.glide,
+        libs.glide,
         libs.firebase.performance,
         libs.firebase.analytics,
         libs.firebase.message,
         libs.retrofit2,
-        libs.okhttp.bom,
-        libs.okhttp.okhttp,
-        libs.okhttp.logging,
-        libs.okhttp.profiler,
-        libs.serialization.kotlin,
-        libs.serialization.converter,
+        project(":core:dataManager"),
+        project(":core:commonUtils"),
+        project(":core:network"),
         platform(libs.firebase.bom),
     ).forEach {
         implementation(it)
@@ -39,7 +36,7 @@ dependencies {
     arrayOf(
         libs.hilt.android.compiler,
         libs.hilt.compiler,
-        libs.glide.glideCompiler
+        libs.glide.compiler
     ).forEach {
         kapt(it)
     }

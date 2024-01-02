@@ -7,15 +7,15 @@
 
         <variable
             name="champion"
-            type="com.domain.lol.dto.ChampionDetail" />
+            type="com.bowoon.lol.data.ChampionDetail" />
 
         <variable
             name="vm"
-            type="com.lol.ui.fragments.vm.ChampionDetailVM" />
+            type="com.bowoon.lol.ui.fragments.vm.ChampionDetailVM" />
 
         <variable
             name="clickHandler"
-            type="com.lol.ui.fragments.ChampionDetailFragment.ClickHandler" />
+            type="com.bowoon.lol.ui.fragments.ChampionDetailFragment.ClickHandler" />
     </data>
 
     <ScrollView
@@ -95,7 +95,7 @@
                     android:layout_height="wrap_content"
                     android:text="챔피언 사용 팁"
                     android:visibility="gone"
-                    app:onDebounceClickListener="@{() -> clickHandler.showChampionInfoDialog(champion.allytipsString)}" />
+                    app:onDebounceClickListener="@{() -> clickHandler.showChampionInfoDialog(champion.allytips.toString())}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/b_champion_enemytip"
@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:text="챔피언 적대 팁"
                     android:visibility="gone"
-                    app:onDebounceClickListener="@{() -> clickHandler.showChampionInfoDialog(champion.enemytipsString)}" />
+                    app:onDebounceClickListener="@{() -> clickHandler.showChampionInfoDialog(champion.enemytips.toString())}" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatTextView

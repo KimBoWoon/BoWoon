@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.lol.ui.dialog.vm.LolDialogVM" />
+            type="com.bowoon.lol.ui.dialog.vm.LolDialogVM" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

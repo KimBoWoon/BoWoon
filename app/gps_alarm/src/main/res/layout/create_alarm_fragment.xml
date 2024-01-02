@@ -13,34 +13,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_alarm_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/b_search_address"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/b_search_address"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="주소 검색"
-            app:layout_constraintBottom_toTopOf="@id/b_save_address"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_alarm_title"
             app:onDebounceClickListener="@{() -> handler.openAddressWebView()}" />
+
+        <!--        <androidx.appcompat.widget.AppCompatTextView-->
+        <!--            android:id="@+id/tv_result_address"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:textSize="40dp"-->
+        <!--            app:layout_constraintBottom_toTopOf="@id/map_view"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/b_search_address" />-->
+
+        <com.naver.maps.map.MapView
+            android:id="@+id/map_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/b_save_address"
+            app:layout_constraintTop_toBottomOf="@id/b_search_address" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/b_save_address"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="주소 저장"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/b_search_address"
             app:onDebounceClickListener="@{() -> handler.saveAddress()}" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_result_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="40dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

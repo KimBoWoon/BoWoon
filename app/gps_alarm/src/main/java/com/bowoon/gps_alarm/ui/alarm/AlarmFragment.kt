@@ -11,14 +11,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.bowoon.commonutils.Log
 import com.bowoon.gpsAlarm.R
 import com.bowoon.gpsAlarm.databinding.AlarmFragmentBinding
 import com.bowoon.gps_alarm.base.BaseFragment
 import com.bowoon.gps_alarm.data.Address
 import com.bowoon.gps_alarm.ui.util.setFadeAnimation
 import com.bowoon.gps_alarm.ui.viewmodel.AlarmVM
-import com.data.util.DataStatus
-import com.data.util.Log
+import com.bowoon.commonutils.DataStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -109,10 +109,8 @@ class AlarmFragment : BaseFragment() {
 
         fun removeAlarm(address: Address?) {
             address?.let {
-                lifecycleScope.launch {
-                    viewModel.removeAlarm(it.longitude, it.latitude)
-                    viewModel.fetchAlarmList()
-                }
+                viewModel.removeAlarm(it)
+                viewModel.fetchAlarmList()
             }
         }
     }

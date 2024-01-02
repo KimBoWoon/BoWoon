@@ -7,7 +7,7 @@
 
         <variable
             name="skin"
-            type="com.domain.lol.dto.Skin" />
+            type="com.bowoon.lol.data.Skin" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

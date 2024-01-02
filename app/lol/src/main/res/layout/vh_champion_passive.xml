@@ -7,7 +7,7 @@
 
         <variable
             name="passive"
-            type="com.domain.lol.dto.Passive" />
+            type="com.bowoon.lol.data.Passive" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

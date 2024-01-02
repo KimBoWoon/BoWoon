@@ -10,10 +10,10 @@ fun Project.configureKotlinAndroid(
     commonExtensions: CommonExtension<*, *, *, *, *>
 ) {
     commonExtensions.apply {
-        compileSdk = Config.ApplicationSetting.compileSdk
+        compileSdk = Config.ApplicationSetting.COMPILE_SDK_VERSION
 
         defaultConfig {
-            minSdk = Config.ApplicationSetting.minSdk
+            minSdk = Config.ApplicationSetting.MIN_SDK_VERSION
         }
 
         compileOptions {

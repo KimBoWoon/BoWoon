@@ -7,11 +7,11 @@
 
         <variable
             name="vh"
-            type="com.practice.ui.vh.PokemonVH" />
+            type="com.bowoon.practice.ui.vh.PokemonVH" />
 
         <variable
             name="dto"
-            type="com.domain.practice.dto.Pokemon" />
+            type="com.bowoon.practice.data.Pokemon" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:loadImage="@{dto.imageUrl}"
             tools:background="@tools:sample/avatars" />
 
         <TextView

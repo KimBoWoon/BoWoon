@@ -40,14 +40,6 @@ gradlePlugin {
             id = "bowoon.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
-        register("androidData") {
-            id = "bowoon.data"
-            implementationClass = "AndroidDataConventionPlugin"
-        }
-        register("androidDomain") {
-            id = "bowoon.domain"
-            implementationClass = "AndroidDomainConventionPlugin"
-        }
         register("androidHilt") {
             id = "bowoon.hilt"
             implementationClass = "AndroidHiltConventionPlugin"

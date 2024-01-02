@@ -2,7 +2,7 @@ package com.bowoon.gps_alarm.ui.util
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.data.util.Log
+import com.bowoon.commonutils.Log
 
 class CustomApplicationLifecycle : DefaultLifecycleObserver {
     override fun onCreate(owner: LifecycleOwner) {

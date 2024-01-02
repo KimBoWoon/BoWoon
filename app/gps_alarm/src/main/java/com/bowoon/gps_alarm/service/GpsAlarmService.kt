@@ -15,9 +15,9 @@ import com.bowoon.gpsAlarm.R
 import com.bowoon.gps_alarm.data.Address
 import com.bowoon.gps_alarm.data.SettingInfo
 import com.bowoon.gps_alarm.ui.util.SendNotification
-import com.bowoon.gps_alarm.ui.util.getSafetyParcelable
-import com.bowoon.gps_alarm.ui.util.getSafetyParcelableArrayExtra
-import com.data.util.Log
+import com.bowoon.commonutils.Log
+import com.bowoon.commonutils.getSafetyParcelable
+import com.bowoon.commonutils.getSafetyParcelableArrayExtra
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult

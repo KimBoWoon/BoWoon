@@ -1,12 +1,12 @@
 import com.android.build.gradle.LibraryExtension
+import com.bowoon.convention.Config
 import com.bowoon.convention.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.getByType
-import org.gradle.kotlin.dsl.kotlin
+import java.io.File
+import java.io.FileInputStream
+import java.util.Properties
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -15,22 +15,49 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
                 apply("org.jetbrains.kotlin.kapt")
+                apply("org.jetbrains.kotlin.plugin.parcelize")
+                apply("org.jetbrains.kotlin.plugin.serialization")
             }
             extensions.configure<LibraryExtension> {
-                configureKotlinAndroid(this)
-            }
-            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-            configurations.configureEach {
-                resolutionStrategy {
-                    force(libs.findLibrary("test-junit").get())
-                    // Temporary workaround for https://issuetracker.google.com/174733673
-                    force("org.objenesis:objenesis:2.6")
+                defaultConfig {
+                    compileSdk = Config.Library.MIN_SDK_VERSION
+                    minSdk = Config.Library.COMPILE_SDK_VERSION
+                    buildTypes {
+                        release {
+                            isMinifyEnabled = true
+                            isJniDebuggable = false
+                        }
+                        debug {
+                            isMinifyEnabled = false
+                        }
+                    }
+
+                    buildConfigField("String", "NAVER_MAPS_CLIENT_KEY", getProp("naver_maps_client_key"))
+                    buildConfigField("String", "NAVER_MAPS_CLIENT_SECRET_KEY", getProp("naver_maps_client_secret_key"))
+                    buildConfigField("String", "riotApiKey", getProp("riot_api_key"))
+
+//                    when (appName) {
+//                        Config.Application.GpsAlarm.appName -> {
+//                        }
+//                        Config.Application.Lol.appName -> {
+//                        }
+//                    }
                 }
-            }
-            dependencies {
-                add("androidTestImplementation", kotlin("test"))
-                add("testImplementation", kotlin("test"))
+
+                configureKotlinAndroid(this)
             }
         }
     }
+
+    lateinit var prop: Properties
+    private fun getProp(propertyKey: String): String =
+        runCatching {
+            if (!this::prop.isInitialized) {
+                prop = Properties().apply {
+                    load(FileInputStream(File("./sign", "local.properties")))
+                }
+            }
+
+            prop.getProperty(propertyKey)
+        }.getOrDefault("\"key not found\"")
 }

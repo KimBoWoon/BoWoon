@@ -5,22 +5,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bowoon.commonutils.ContextUtils.showToast
+import com.bowoon.commonutils.Log
+import com.bowoon.commonutils.getSafetyParcelableExtra
 import com.bowoon.gpsAlarm.databinding.CreateAlarmFragmentBinding
 import com.bowoon.gps_alarm.base.BaseFragment
-import com.bowoon.gps_alarm.ui.util.getSafetyParcelableExtra
+import com.bowoon.gps_alarm.data.Geocode
 import com.bowoon.gps_alarm.ui.viewmodel.AlarmVM
 import com.bowoon.gps_alarm.webview.AddressWebViewActivity
-import com.data.util.Log
-import com.domain.gpsAlarm.dto.Geocode
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.LocationTrackingMode
+import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CreateAlarmFragment : BaseFragment() {
     companion object {
         private const val TAG = "#CreateAlarmFragment"
+
+        const val RESULT_ADDRESS = "ADDRESS"
+        const val ADDRESS_DATA_RESULT_CODE = 1000
     }
 
     private lateinit var binding: CreateAlarmFragmentBinding
@@ -28,8 +38,27 @@ class CreateAlarmFragment : BaseFragment() {
     private val handler by lazy { ClickHandler() }
     private var geocode: Geocode? = null
     private val activityResultCallback = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == 1000) {
-            geocode = result?.data?.getSafetyParcelableExtra<Geocode>("address")
+        if (result.resultCode == ADDRESS_DATA_RESULT_CODE) {
+            geocode = result?.data?.getSafetyParcelableExtra<Geocode>(RESULT_ADDRESS)
+            binding.mapView.isVisible = true
+            binding.mapView.getMapAsync { naverMap ->
+                LatLng(geocode?.addresses?.firstOrNull()?.latitude ?: 0.0, geocode?.addresses?.firstOrNull()?.longitude ?: 0.0).also {
+                    naverMap.moveCamera(CameraUpdate.scrollTo(it))
+                    Marker().apply {
+                        position = it
+                        map = naverMap
+                    }
+                }
+                naverMap.minZoom = 16.0
+                naverMap.maxZoom = 16.0
+                naverMap.locationTrackingMode = LocationTrackingMode.None
+                naverMap.isIndoorEnabled = true
+                naverMap.uiSettings.apply {
+                    isZoomControlEnabled = false
+                    isLocationButtonEnabled = false
+                    isScrollGesturesEnabled = false
+                }
+            }
         }
     }
 
@@ -71,8 +100,12 @@ class CreateAlarmFragment : BaseFragment() {
 
         fun saveAddress() {
             Log.d(TAG, geocode.toString())
-            viewModel.addAlarm("CreateAlarm", geocode?.addresses?.firstOrNull())
-            findNavController().popBackStack()
+            if (binding.etAlarmTitle.text.toString().trim().isEmpty()) {
+                requireContext().showToast("알림 제목을 입력해주세요.", Toast.LENGTH_SHORT)
+            } else {
+                viewModel.addAlarm(binding.etAlarmTitle.text.toString(), geocode?.addresses?.firstOrNull())
+                findNavController().popBackStack()
+            }
         }
     }
 }

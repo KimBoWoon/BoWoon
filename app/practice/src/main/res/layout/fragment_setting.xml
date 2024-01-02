@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.practice.ui.fragments.vm.SettingVM" />
+            type="com.bowoon.practice.ui.fragments.vm.SettingVM" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

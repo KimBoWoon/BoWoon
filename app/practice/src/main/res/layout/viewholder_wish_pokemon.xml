@@ -7,11 +7,11 @@
 
         <variable
             name="vh"
-            type="com.practice.ui.vh.WishPokemonVH" />
+            type="com.bowoon.practice.ui.vh.WishPokemonVH" />
 
         <variable
             name="dto"
-            type="com.domain.practice.dto.Pokemon" />
+            type="com.bowoon.practice.data.Pokemon" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

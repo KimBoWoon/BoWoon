@@ -12,17 +12,15 @@ dependencies {
         libs.hilt.android,
         libs.hilt.navigation,
         libs.retrofit2,
-        libs.okhttp.bom,
-        libs.okhttp.okhttp,
-        libs.okhttp.logging,
-        libs.okhttp.profiler,
         libs.tikxml.annotation,
-        libs.tikxml.retrofitConverter,
-        libs.tikxml.core,
-        libs.serialization.kotlin,
-        libs.serialization.converter,
+        libs.jsoup,
         libs.firebase.performance,
         libs.firebase.analytics,
+        project(":core:dataManager"),
+        project(":core:commonUtils"),
+        project(":core:network"),
+        project(":core:ui"),
+        project(":core:imageLoader"),
         platform(libs.firebase.bom)
     ).forEach {
         implementation(it)
@@ -30,7 +28,8 @@ dependencies {
 
     arrayOf(
         libs.hilt.android.compiler,
-        libs.hilt.compiler
+        libs.hilt.compiler,
+        libs.tikxml.processor
     ).forEach {
         kapt(it)
     }

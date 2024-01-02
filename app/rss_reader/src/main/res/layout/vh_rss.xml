@@ -7,11 +7,11 @@
 
         <variable
             name="rss"
-            type="com.rss_reader.dto.Article" />
+            type="com.bowoon.rss_reader.data.Article" />
 
         <variable
             name="vh"
-            type="com.rss_reader.vh.ArticleVH" />
+            type="com.bowoon.rss_reader.vh.ArticleVH" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

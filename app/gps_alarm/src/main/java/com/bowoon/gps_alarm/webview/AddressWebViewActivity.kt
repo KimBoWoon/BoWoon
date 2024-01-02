@@ -6,15 +6,16 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import com.bowoon.commonutils.Log
 import com.bowoon.gpsAlarm.R
 import com.bowoon.gpsAlarm.databinding.AddressWebViewActivityBinding
+import com.bowoon.gps_alarm.ui.alarm.CreateAlarmFragment
 import com.bowoon.gps_alarm.ui.viewmodel.AlarmVM
 import com.bowoon.gps_alarm.webview.javascript.GpsAlarmInterface
 import com.bowoon.gps_alarm.webview.javascript.GpsAlarmInterfaceImpl
 import com.bowoon.gps_alarm.webview.settings.WebViewChromeClient
 import com.bowoon.gps_alarm.webview.settings.WebViewClient
-import com.data.util.DataStatus
-import com.data.util.Log
+import com.bowoon.commonutils.DataStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -60,7 +61,7 @@ class AddressWebViewActivity : AppCompatActivity() {
 
             addJavascriptInterface(GpsAlarmInterfaceImpl(executeCallback), GpsAlarmInterface.INTERFACE_NAME)
 
-            loadUrl("http:///172.30.50.178/address.html")
+            loadUrl("http:///172.30.50.183/address.html")
         }
 
         initFlow()
@@ -75,9 +76,9 @@ class AddressWebViewActivity : AppCompatActivity() {
                     }
                     is DataStatus.Success -> {
                         setResult(
-                            1000,
+                            CreateAlarmFragment.ADDRESS_DATA_RESULT_CODE,
                             intent.apply {
-                                putExtra("address", it.data)
+                                putExtra(CreateAlarmFragment.RESULT_ADDRESS, it.data)
                             }
                         )
                         finish()

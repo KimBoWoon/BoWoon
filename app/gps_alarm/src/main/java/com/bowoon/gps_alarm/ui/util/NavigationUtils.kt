@@ -4,10 +4,10 @@ import androidx.navigation.NavOptions
 import com.bowoon.gpsAlarm.R
 
 fun NavOptions.Builder.setFadeAnimation(): NavOptions.Builder {
-    setEnterAnim(R.anim.fade_in)
-        .setExitAnim(R.anim.fade_out)
-        .setPopEnterAnim(R.anim.fade_in)
-        .setPopExitAnim(R.anim.fade_out)
+    setEnterAnim(com.bowoon.ui.R.anim.fade_in)
+        .setExitAnim(com.bowoon.ui.R.anim.fade_out)
+        .setPopEnterAnim(com.bowoon.ui.R.anim.fade_in)
+        .setPopExitAnim(com.bowoon.ui.R.anim.fade_out)
 
     return this
 }

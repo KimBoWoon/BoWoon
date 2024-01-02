@@ -6,7 +6,7 @@
 
         <variable
             name="vh"
-            type="com.practice.ui.vh.LoadStateVH" />
+            type="com.bowoon.practice.ui.vh.LoadStateVH" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

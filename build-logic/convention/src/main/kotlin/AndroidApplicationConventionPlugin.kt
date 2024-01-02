@@ -45,30 +45,82 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                             defaultConfig.versionName = versionName
                             defaultConfig.versionCode = versionCode
                             testInstrumentationRunner = Config.ApplicationSetting.testInstrumentationRunner
+
+                            signingConfigs {
+                                when (appName) {
+                                    Config.Application.GpsAlarm.appName -> {
+                                        create(Config.Application.GpsAlarm.Sign.Release.name) {
+                                            storeFile = file(getProp(Config.Application.GpsAlarm.Sign.Release.storeFile))
+                                            storePassword = getProp(Config.Application.GpsAlarm.Sign.Release.storePassword)
+                                            keyAlias = getProp(Config.Application.GpsAlarm.Sign.Release.keyAlias)
+                                            keyPassword = getProp(Config.Application.GpsAlarm.Sign.Release.keyPassword)
+                                        }
+                                        getByName(Config.Application.GpsAlarm.Sign.Debug.name) {
+                                            storeFile = file(getProp(Config.Application.GpsAlarm.Sign.Debug.storeFile))
+                                            storePassword = getProp(Config.Application.GpsAlarm.Sign.Debug.storePassword)
+                                            keyAlias = getProp(Config.Application.GpsAlarm.Sign.Debug.keyAlias)
+                                            keyPassword = getProp(Config.Application.GpsAlarm.Sign.Debug.keyPassword)
+                                        }
+                                    }
+                                    Config.Application.Lol.appName -> {
+                                        create(Config.Application.Lol.Sign.Release.name) {
+                                            storeFile = file(getProp(Config.Application.Lol.Sign.Release.storeFile))
+                                            storePassword = getProp(Config.Application.Lol.Sign.Release.storePassword)
+                                            keyAlias = getProp(Config.Application.Lol.Sign.Release.keyAlias)
+                                            keyPassword = getProp(Config.Application.Lol.Sign.Release.keyPassword)
+                                        }
+                                        getByName(Config.Application.Lol.Sign.Debug.name) {
+                                            storeFile = file(getProp(Config.Application.Lol.Sign.Debug.storeFile))
+                                            storePassword = getProp(Config.Application.Lol.Sign.Debug.storePassword)
+                                            keyAlias = getProp(Config.Application.Lol.Sign.Debug.keyAlias)
+                                            keyPassword = getProp(Config.Application.Lol.Sign.Debug.keyPassword)
+                                        }
+                                    }
+                                    Config.Application.Practice.appName -> {
+                                        create(Config.Application.Practice.Sign.Release.name) {
+                                            storeFile = file(getProp(Config.Application.Practice.Sign.Release.storeFile))
+                                            storePassword = getProp(Config.Application.Practice.Sign.Release.storePassword)
+                                            keyAlias = getProp(Config.Application.Practice.Sign.Release.keyAlias)
+                                            keyPassword = getProp(Config.Application.Practice.Sign.Release.keyPassword)
+                                        }
+                                        getByName(Config.Application.Practice.Sign.Debug.name) {
+                                            storeFile = file(getProp(Config.Application.Practice.Sign.Debug.storeFile))
+                                            storePassword = getProp(Config.Application.Practice.Sign.Debug.storePassword)
+                                            keyAlias = getProp(Config.Application.Practice.Sign.Debug.keyAlias)
+                                            keyPassword = getProp(Config.Application.Practice.Sign.Debug.keyPassword)
+                                        }
+                                    }
+                                    Config.Application.RssReader.appName -> {
+                                        create(Config.Application.RssReader.Sign.Release.name) {
+                                            storeFile = file(getProp(Config.Application.RssReader.Sign.Release.storeFile))
+                                            storePassword = getProp(Config.Application.RssReader.Sign.Release.storePassword)
+                                            keyAlias = getProp(Config.Application.RssReader.Sign.Release.keyAlias)
+                                            keyPassword = getProp(Config.Application.RssReader.Sign.Release.keyPassword)
+                                        }
+                                        getByName(Config.Application.RssReader.Sign.Debug.name) {
+                                            storeFile = file(getProp(Config.Application.RssReader.Sign.Debug.storeFile))
+                                            storePassword = getProp(Config.Application.RssReader.Sign.Debug.storePassword)
+                                            keyAlias = getProp(Config.Application.RssReader.Sign.Debug.keyAlias)
+                                            keyPassword = getProp(Config.Application.RssReader.Sign.Debug.keyPassword)
+                                        }
+                                    }
+                                }
+                            }
                         }
 
                         SimpleDateFormat(Config.ApplicationSetting.dateFormat, Locale.getDefault()).run {
                             setProperty("archivesBaseName", "${appName}-v${versionName}-${format(System.currentTimeMillis())}")
                         }
-                    }
 
-                    buildConfigField("String", "NAVER_MAPS_CLIENT_KEY", getProp("naver_maps_client_key"))
-                    buildConfigField("String", "NAVER_MAPS_CLIENT_SECRET_KEY", getProp("naver_maps_client_secret_key"))
-                    buildConfigField("String", "riotApiKey", getProp("riot_api_key"))
-                }
-
-                signingConfigs {
-                    create(Config.Sign.Release.name) {
-                        storeFile = file(getProp(Config.Sign.Release.storeFile))
-                        storePassword = getProp(Config.Sign.Release.storePassword)
-                        keyAlias = getProp(Config.Sign.Release.keyAlias)
-                        keyPassword = getProp(Config.Sign.Release.keyPassword)
-                    }
-                    getByName(Config.Sign.Debug.name) {
-                        storeFile = file(getProp(Config.Sign.Debug.storeFile))
-                        storePassword = getProp(Config.Sign.Debug.storePassword)
-                        keyAlias = getProp(Config.Sign.Debug.keyAlias)
-                        keyPassword = getProp(Config.Sign.Debug.keyPassword)
+                        when (appName) {
+                            Config.Application.GpsAlarm.appName -> {
+                                buildConfigField("String", "NAVER_MAPS_CLIENT_KEY", getProp("naver_maps_client_key"))
+                                buildConfigField("String", "NAVER_MAPS_CLIENT_SECRET_KEY", getProp("naver_maps_client_secret_key"))
+                            }
+                            Config.Application.Lol.appName -> {
+                                buildConfigField("String", "riotApiKey", getProp("riot_api_key"))
+                            }
+                        }
                     }
                 }
 
@@ -81,11 +133,38 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                             getDefaultProguardFile(Config.ApplicationSetting.defaultProguardFile),
                             Config.ApplicationSetting.proguardFile
                         )
-                        signingConfig = signingConfigs.getByName(Config.Sign.Release.name)
+                        when (namespace) {
+                            Config.Application.GpsAlarm.applicationId -> {
+                                signingConfigs.getByName(Config.Application.GpsAlarm.Sign.Release.name)
+                            }
+                            Config.Application.Lol.applicationId -> {
+                                signingConfigs.getByName(Config.Application.Lol.Sign.Release.name)
+                            }
+                            Config.Application.Practice.applicationId -> {
+                                signingConfigs.getByName(Config.Application.Practice.Sign.Release.name)
+                            }
+                            Config.Application.RssReader.applicationId -> {
+                                signingConfigs.getByName(Config.Application.RssReader.Sign.Release.name)
+                            }
+                        }
                     }
                     debug {
                         isMinifyEnabled = false
 //                        applicationIdSuffix = ".dev"
+                        when (namespace) {
+                            Config.Application.GpsAlarm.applicationId -> {
+                                signingConfigs.getByName(Config.Application.GpsAlarm.Sign.Debug.name)
+                            }
+                            Config.Application.Lol.applicationId -> {
+                                signingConfigs.getByName(Config.Application.Lol.Sign.Debug.name)
+                            }
+                            Config.Application.Practice.applicationId -> {
+                                signingConfigs.getByName(Config.Application.Practice.Sign.Debug.name)
+                            }
+                            Config.Application.RssReader.applicationId -> {
+                                signingConfigs.getByName(Config.Application.RssReader.Sign.Debug.name)
+                            }
+                        }
                     }
                 }
 
@@ -98,8 +177,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
             dependencies {
-                add("implementation", project(":domain"))
-                add("implementation", project(":data"))
             }
         }
     }

@@ -1,6 +1,8 @@
 package com.bowoon.gps_alarm.data
 
 object GpsAlarmConstant {
+    const val geocodeUrl = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
+
     const val EXPAND_ANIMATION_DURATION = 450
     const val EXPANSION_TRANSITION_DURATION = 450
 

@@ -12,10 +12,11 @@ dependencies {
         libs.jetpack.core,
         libs.jetpack.datastore,
         libs.jetpack.lifecycle,
+        libs.jetpack.startup,
         libs.google.location,
         libs.hilt.android,
         libs.hilt.navigation,
-        libs.glide.glide,
+        libs.glide,
         libs.firebase.performance,
         libs.firebase.analytics,
         libs.firebase.message,
@@ -24,11 +25,11 @@ dependencies {
         libs.serialization.kotlin,
         libs.serialization.converter,
         libs.retrofit2,
-        libs.okhttp.bom,
-        libs.okhttp.okhttp,
-        libs.okhttp.logging,
-        libs.okhttp.profiler,
-        platform(libs.firebase.bom),
+        project(":core:dataManager"),
+        project(":core:commonUtils"),
+        project(":core:network"),
+        project(":core:ui"),
+        platform(libs.firebase.bom)
     ).forEach {
         implementation(it)
     }
@@ -36,7 +37,7 @@ dependencies {
     arrayOf(
         libs.hilt.android.compiler,
         libs.hilt.compiler,
-        libs.glide.glideCompiler
+        libs.glide.compiler
     ).forEach {
         kapt(it)
     }

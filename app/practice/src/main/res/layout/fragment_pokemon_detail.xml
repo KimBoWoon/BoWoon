@@ -9,11 +9,11 @@
 
         <variable
             name="vm"
-            type="com.practice.ui.fragments.vm.PokemonDetailVM" />
+            type="com.bowoon.practice.ui.fragments.vm.PokemonDetailVM" />
 
         <variable
             name="dto"
-            type="com.domain.practice.dto.Pokemon" />
+            type="com.bowoon.practice.data.Pokemon" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

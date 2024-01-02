@@ -7,11 +7,4 @@
     <include app:graph="@navigation/nav_alarm" />
     <include app:graph="@navigation/nav_maps" />
     <include app:graph="@navigation/nav_setting" />
-
-    <action
-        android:id="@+id/fade_animation"
-        app:enterAnim="@anim/fade_in"
-        app:exitAnim="@anim/fade_out"
-        app:popEnterAnim="@anim/fade_in"
-        app:popExitAnim="@anim/fade_out" />
 </navigation>

@@ -7,11 +7,11 @@
 
         <variable
             name="vh"
-            type="com.lol.ui.vh.GameItemVH" />
+            type="com.bowoon.lol.ui.vh.GameItemVH" />
 
         <variable
             name="gameItem"
-            type="com.domain.lol.dto.GameItemInfo" />
+            type="com.bowoon.lol.data.GameItemInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

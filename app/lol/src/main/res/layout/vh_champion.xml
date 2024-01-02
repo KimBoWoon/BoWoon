@@ -7,11 +7,11 @@
 
         <variable
             name="vh"
-            type="com.lol.ui.vh.ChampionVH" />
+            type="com.bowoon.lol.ui.vh.ChampionVH" />
 
         <variable
             name="champion"
-            type="com.domain.lol.dto.ChampionInfo" />
+            type="com.bowoon.lol.data.Champion" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

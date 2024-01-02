@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.bowoon.rss_reader.data.Item" />
+
+        <variable
+            name="vh"
+            type="com.bowoon.rss_reader.adapter.ArticleAdapter2.ArticleVH" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="?attr/selectableItemBackground"
+        app:onDebounceClickListener="@{() -> vh.onClick(item)}">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_article_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            tools:background="@tools:sample/avatars" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#33FFFFFF" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_article_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{item.title}"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_article_description"
+            app:layout_constraintTop_toTopOf="@id/iv_article_image"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="article" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_article_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="10dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="@{item.description}"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_article_image"
+            app:layout_constraintTop_toBottomOf="@id/tv_article_title"
+            tools:text="description\nasdfasdf\nasdfsadffasdvcwe" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

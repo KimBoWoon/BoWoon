@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.practice.ui.dialog.vm.PokemonDialogVM" />
+            type="com.bowoon.practice.ui.dialog.vm.PokemonDialogVM" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

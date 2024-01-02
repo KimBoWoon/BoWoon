@@ -15,14 +15,15 @@ dependencies {
         libs.constraint.layout,
         libs.hilt.android,
         libs.retrofit2,
-        libs.okhttp.bom,
-        libs.okhttp.okhttp,
-        libs.okhttp.logging,
-        libs.okhttp.profiler,
         libs.serialization.kotlin,
         libs.serialization.converter,
         libs.firebase.performance,
         libs.firebase.analytics,
+        libs.glide,
+        project(":core:dataManager"),
+        project(":core:commonUtils"),
+        project(":core:network"),
+        project(":core:imageLoader"),
         platform(libs.firebase.bom)
     ).forEach {
         implementation(it)

@@ -34,27 +34,4 @@ class GpsAlarmActivity : BaseActivity() {
         val navController = navHostFragment.navController
         NavigationUI.setupWithNavController(binding.bnvGpsAlarmNavigation, navController)
     }
-
-//    private fun startService() {
-//        lifecycleScope.launch {
-//            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.container.stateFlow.collect {
-//                    if (ActivityCompat.checkSelfPermission(this@GpsAlarmActivity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//                        Intent(this@GpsAlarmActivity, GpsAlarmService::class.java).apply {
-//                            action = "StartService"
-//                            putExtra(GpsAlarmService.ADDRESS_LIST, it.alarmList?.toTypedArray())
-//                            putExtra(GpsAlarmService.SETTING_INFO, it.settingInfo)
-//                        }.run {
-//                            when {
-//                                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> this@GpsAlarmActivity.startForegroundService(this)
-//                                else -> this@GpsAlarmActivity.startService(this)
-//                            }
-//                        }
-//                    } else {
-//                        Log.e("ACCESS_BACKGROUND_LOCATION DENIED")
-//                    }
-//                }
-//            }
-//        }
-//    }
 }

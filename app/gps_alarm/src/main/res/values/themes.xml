@@ -13,12 +13,13 @@
 <!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
         <!-- Customize your theme here. -->
         <item name="android:textViewStyle">@style/GpsAlarmTextView</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowAnimationStyle">@style/SlideAnimation</item>
     </style>
 
     <style name="GpsAlarmTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/black</item>
     </style>
-
 <!--    <style name="Theme.GpsAlarm.Splash" parent="Theme.SplashScreen">-->
 <!--        <item name="windowSplashScreenBackground">@color/white</item>-->
 <!--        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>-->

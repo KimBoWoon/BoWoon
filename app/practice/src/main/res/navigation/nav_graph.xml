@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/home"
-        android:name="com.practice.ui.fragments.PokemonListFragment"
+        android:name="com.bowoon.practice.ui.fragments.PokemonListFragment"
         tools:layout="@layout/fragment_pokemon_list">
         <action
             android:id="@+id/action_home_to_detail"
@@ -16,7 +16,7 @@
 
     <fragment
         android:id="@+id/detail"
-        android:name="com.practice.ui.fragments.PokemonDetailFragment"
+        android:name="com.bowoon.practice.ui.fragments.PokemonDetailFragment"
         tools:layout="@layout/fragment_pokemon_detail">
 <!--        <argument-->
 <!--            android:name="pokemon"-->
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/wish"
-        android:name="com.practice.ui.fragments.WishPokemonListFragment"
+        android:name="com.bowoon.practice.ui.fragments.WishPokemonListFragment"
         tools:layout="@layout/fragment_wish_pokemon">
         <action
             android:id="@+id/action_wish_to_detail"
@@ -41,6 +41,6 @@
 
     <fragment
         android:id="@+id/my"
-        android:name="com.practice.ui.fragments.SettingFragment"
+        android:name="com.bowoon.practice.ui.fragments.SettingFragment"
         tools:layout="@layout/fragment_setting" />
 </navigation>

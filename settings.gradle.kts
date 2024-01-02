@@ -19,9 +19,13 @@ dependencyResolutionManagement {
 rootProject.name = "BoWoon"
 
 include(":app")
-include(":data")
-include(":domain")
 include(":app:lol")
 include(":app:practice")
 include(":app:gps_alarm")
 include(":app:rss_reader")
+include(":core")
+include(":core:dataManager")
+include(":core:network")
+include(":core:commonUtils")
+include(":core:imageLoader")
+include(":core:ui")

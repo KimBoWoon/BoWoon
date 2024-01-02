@@ -1,7 +1,7 @@
 package com.bowoon.gps_alarm.webview.javascript
 
 import android.webkit.JavascriptInterface
-import com.data.util.Log
+import com.bowoon.commonutils.Log
 
 class GpsAlarmInterfaceImpl(
     private val callback: ((String) -> Unit)? = null
