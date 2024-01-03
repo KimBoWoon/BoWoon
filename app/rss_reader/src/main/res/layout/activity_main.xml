@@ -16,15 +16,6 @@
             app:layout_constraintBottom_toTopOf="@id/b_go_to_search"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--        <androidx.recyclerview.widget.RecyclerView-->
-        <!--            android:id="@+id/rv_rss_list"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="0dp"-->
-        <!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-        <!--            app:layout_constraintBottom_toTopOf="@id/b_go_to_search"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            tools:listitem="@layout/vh_rss" />-->
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/b_go_to_search"
             android:layout_width="match_parent"

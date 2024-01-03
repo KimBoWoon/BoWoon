@@ -16,20 +16,23 @@ import com.bowoon.commonutils.ViewAdapter.onDebounceClickListener
 import com.bowoon.commonutils.ViewUtils.hideSoftKeyboard
 import com.bowoon.rss_reader.R
 import com.bowoon.rss_reader.activities.vm.SearchVM
-import com.bowoon.rss_reader.adapter.ArticleAdapter
+import com.bowoon.rss_reader.adapter.SearchArticleAdapter
 import com.bowoon.rss_reader.base.BaseActivity
 import com.bowoon.rss_reader.databinding.ActivitySearchBinding
-import com.bowoon.rss_reader.producer.ArticleProducer
+import com.bowoon.rss_reader.producer.RssProducer
 import com.bowoon.ui.YesOrNoDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchActivity : BaseActivity<ActivitySearchBinding>(R.layout.activity_search) {
     private val viewModel by viewModels<SearchVM>()
     private var counter = 0
+    @Inject
+    lateinit var rssProducer: RssProducer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,27 +42,34 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(R.layout.activity_sea
         }
         lifecycle.addObserver(viewModel)
 
-        lifecycleScope.launchWhenStarted {
-            updateCounter()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                updateCounter()
+            }
         }
 
         initBinding()
         initFlow()
     }
 
-    private fun initBinding() {
+    override fun onDestroy() {
+        rssProducer.channelClose()
+        super.onDestroy()
+    }
+
+    override fun initBinding() {
         binding.apply {
             rvSearchList.apply {
-                adapter = ArticleAdapter()
+                adapter = SearchArticleAdapter()
                 if (itemDecorationCount == 0) {
                     addItemDecoration(
                         StickyHeaderItemDecoration(
                             object : StickyHeaderItemDecoration.SectionCallback {
                                 override fun isHeader(position: Int): Boolean =
-                                    (adapter as? ArticleAdapter)?.isHeader(position) ?: false
+                                    (adapter as? SearchArticleAdapter)?.isHeader(position) ?: false
 
                                 override fun getHeaderLayoutView(list: RecyclerView, position: Int): View? =
-                                    (adapter as? ArticleAdapter)?.getHeaderLayout(list, position)
+                                    (adapter as? SearchArticleAdapter)?.getHeaderLayout(list, position)
                             }
                         )
                     )
@@ -80,19 +90,19 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(R.layout.activity_sea
             bDoSearch.onDebounceClickListener {
                 root.hideSoftKeyboard()
                 binding.pbLoading.isVisible = true
-                (binding.rvSearchList.adapter as? ArticleAdapter)?.submitList(emptyList())
+                (binding.rvSearchList.adapter as? SearchArticleAdapter)?.submitList(emptyList())
 //                (binding.rvSearchList.adapter as? ArticleAdapter)?.clear()
                 viewModel.fetchRss(binding.etInputKeyword.text.toString())
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        ArticleProducer.reset()
+                        rssProducer.reset()
                     }
                 }
             }
         }
     }
 
-    private fun initFlow() {
+    override fun initFlow() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.rss.collect {
@@ -102,7 +112,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(R.layout.activity_sea
                         }
                         is DataStatus.Success -> {
                             binding.pbLoading.isVisible = false
-                            (binding.rvSearchList.adapter as? ArticleAdapter)?.submitList(it.data)
+                            (binding.rvSearchList.adapter as? SearchArticleAdapter)?.submitList(it.data)
 //                        (binding.rvSearchList.adapter as? ArticleAdapter)?.addItems(it.data)
                             binding.tvArticleCount.text = String.format("Results: %d", it.data.filter { !it.isHeader }.size)
 //                        binding.tvArticleCount.text = String.format("Results: %d", counter)
@@ -111,8 +121,8 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(R.layout.activity_sea
                             binding.pbLoading.isVisible = false
                             YesOrNoDialog.newInstance(
                                 it.throwable.message ?: "잠시후에 다시 시도해주세요.",
-                                "재시도" to { viewModel.fetchRss(binding.etInputKeyword.text.toString()) },
-                                "취소" to {}
+                                "재시도", { viewModel.fetchRss(binding.etInputKeyword.text.toString()) },
+                                "취소", {}
                             ).show(this@SearchActivity)
                         }
                     }
@@ -122,15 +132,15 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(R.layout.activity_sea
     }
 
     private suspend fun updateCounter() {
-        val notifications = ArticleProducer.getNotificationChannel()
+        val notifications = rssProducer.getNotificationChannel()
 
         while (!notifications.isClosedForReceive) {
             val action = notifications.receive()
 
             withContext(Dispatchers.Main) {
                 when (action) {
-                    ArticleProducer.Action.INCREASE -> counter++
-                    ArticleProducer.Action.RESET -> counter = 0
+                    RssProducer.Action.INCREASE -> counter++
+                    RssProducer.Action.RESET -> counter = 0
                 }
                 binding.tvArticleCount.text = String.format("Results: %d", counter)
             }

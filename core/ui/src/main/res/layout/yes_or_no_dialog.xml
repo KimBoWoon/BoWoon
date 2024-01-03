@@ -10,18 +10,18 @@
             type="String" />
 
         <variable
-            name="confirmText"
+            name="leftBtnText"
             type="String" />
 
         <variable
-            name="dismissText"
+            name="rightBtnText"
             type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="@drawable/dialog_bg">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_message_group"
@@ -46,31 +46,39 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_confirm"
+            android:id="@+id/tv_left_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/dialog_left_btn_bg"
+            android:foreground="?attr/selectableItemBackground"
+            android:goneIf="@{leftBtnText.empty}"
             android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="@{confirmText}"
+            android:text="@{leftBtnText}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_dismiss"
+            app:layout_constraintEnd_toStartOf="@id/tv_right_btn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_message_group"
-            tools:text="확인" />
+            tools:text="확인"
+            tools:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_dismiss"
+            android:id="@+id/tv_right_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/dialog_right_btn_bg"
+            android:foreground="?attr/selectableItemBackground"
+            android:goneIf="@{rightBtnText.empty}"
             android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="@{dismissText}"
+            android:text="@{rightBtnText}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_confirm"
+            app:layout_constraintStart_toEndOf="@id/tv_left_btn"
             app:layout_constraintTop_toBottomOf="@id/cl_message_group"
-            tools:text="취소" />
+            tools:text="취소"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

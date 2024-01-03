@@ -11,4 +11,7 @@ open class BaseActivity<VIEW: ViewDataBinding>(
     protected val binding: VIEW by lazy {
         DataBindingUtil.setContentView(this, layout)
     }
+
+    open fun initBinding() {}
+    open fun initFlow() {}
 }

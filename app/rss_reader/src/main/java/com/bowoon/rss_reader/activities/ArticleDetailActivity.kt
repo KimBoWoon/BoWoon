@@ -25,7 +25,7 @@ class ArticleDetailActivity : BaseActivity<ActivityArticleDetailBinding>(R.layou
         initBinding()
     }
 
-    private fun initBinding() {
+    override fun initBinding() {
         binding.apply {
             wvArticleDetail.apply {
                 webViewClient = RssWebViewClient(binding)

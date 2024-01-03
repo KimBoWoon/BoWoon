@@ -11,7 +11,7 @@
 
         <variable
             name="vh"
-            type="com.bowoon.rss_reader.adapter.ArticleAdapter2.ArticleVH" />
+            type="com.bowoon.rss_reader.vh.ArticleVH" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,7 +40,7 @@
             android:layout_marginBottom="5dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{item.title}"
+            android:text="@{item.encodeTitle}"
             android:textColor="@color/black"
             android:textSize="20dp"
             app:layout_constraintBottom_toTopOf="@id/tv_article_description"
@@ -57,7 +57,7 @@
             android:layout_marginBottom="10dp"
             android:ellipsize="end"
             android:maxLines="3"
-            android:text="@{item.description}"
+            android:text="@{item.encodeDescription}"
             android:textColor="@color/black"
             android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_article_image"

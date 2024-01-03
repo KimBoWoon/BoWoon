@@ -16,6 +16,7 @@ dependencies {
         libs.jsoup,
         libs.firebase.performance,
         libs.firebase.analytics,
+        libs.glide,
         project(":core:dataManager"),
         project(":core:commonUtils"),
         project(":core:network"),

@@ -11,7 +11,7 @@
 
         <variable
             name="vh"
-            type="com.bowoon.rss_reader.vh.ArticleVH" />
+            type="com.bowoon.rss_reader.vh.SearchArticleVH" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

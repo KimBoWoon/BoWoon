@@ -12,6 +12,7 @@ import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import java.util.concurrent.TimeUnit
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -20,6 +21,9 @@ object BaseRetrofitModule {
     fun provideOkHttpClient(
         interceptor: HttpLoggingInterceptor
     ): OkHttpClient = OkHttpClient().newBuilder().apply {
+        connectTimeout(1, TimeUnit.MINUTES)
+        readTimeout(30, TimeUnit.SECONDS)
+        writeTimeout(15, TimeUnit.SECONDS)
         addNetworkInterceptor(interceptor)
         addInterceptor(AppInterceptor())
         if (BuildConfig.DEBUG) {

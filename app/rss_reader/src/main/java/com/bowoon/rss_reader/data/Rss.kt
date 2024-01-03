@@ -1,9 +1,11 @@
 package com.bowoon.rss_reader.data
 
+import com.bowoon.rss_reader.util.encodeString
 import com.tickaroo.tikxml.annotation.Attribute
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
+import okio.ByteString.Companion.encode
 
 @Xml(name = "rss")
 data class Rss(
@@ -71,7 +73,10 @@ data class Item(
     val mediaContent: MediaContent? = null,
     @Element(name = "category")
     val category: Category? = null
-)
+) {
+    fun getEncodeTitle(): String? = title.encodeString()
+    fun getEncodeDescription(): String? = title.encodeString()
+}
 
 @Xml(name = "media:group")
 data class MediaGroup(

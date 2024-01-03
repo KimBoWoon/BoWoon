@@ -10,10 +10,10 @@ import com.bowoon.rss_reader.R
 import com.bowoon.rss_reader.data.Article
 import com.bowoon.rss_reader.databinding.VhFeedHeaderBinding
 import com.bowoon.rss_reader.databinding.VhRssBinding
-import com.bowoon.rss_reader.vh.ArticleVH
+import com.bowoon.rss_reader.vh.SearchArticleVH
 import com.bowoon.rss_reader.vh.FeedHeaderVH
 
-class ArticleAdapter : ListAdapter<Article, RecyclerView.ViewHolder>(diff) {
+class SearchArticleAdapter : ListAdapter<Article, RecyclerView.ViewHolder>(diff) {
     companion object {
         val diff = object : DiffUtil.ItemCallback<Article>() {
             override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean =
@@ -26,7 +26,7 @@ class ArticleAdapter : ListAdapter<Article, RecyclerView.ViewHolder>(diff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
         R.layout.vh_feed_header -> FeedHeaderVH(VhFeedHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-        R.layout.vh_rss -> ArticleVH(VhRssBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        R.layout.vh_rss -> SearchArticleVH(VhRssBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         else -> throw RuntimeException("viewholder not found")
     }
 
@@ -34,7 +34,7 @@ class ArticleAdapter : ListAdapter<Article, RecyclerView.ViewHolder>(diff) {
         currentList[position]?.let {
             when (holder) {
                 is FeedHeaderVH -> holder.bind(it)
-                is ArticleVH -> holder.bind(it, currentList.lastIndex)
+                is SearchArticleVH -> holder.bind(it, currentList.lastIndex)
             }
         }
     }

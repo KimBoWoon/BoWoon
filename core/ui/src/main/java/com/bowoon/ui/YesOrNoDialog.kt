@@ -15,14 +15,13 @@ import androidx.fragment.app.FragmentActivity
 import com.bowoon.commonutils.ContextUtils.getScreenWidth
 import com.bowoon.commonutils.Log
 import com.bowoon.commonutils.ViewAdapter.onDebounceClickListener
-import com.bowoon.commonutils.getSafetySerializable
+import com.bowoon.commonutils.getSafetyParcelable
 import com.bowoon.ui.databinding.YesOrNoDialogBinding
 
 class YesOrNoDialog : DialogFragment() {
     companion object {
         private const val MESSAGE = "MESSAGE"
-        private const val LEFT_BTN_PAIR = "LEFT_BTN_PAIR"
-        private const val RIGHT_BTN_PAIR = "RIGHT_BTN_PAIR"
+        private const val LISTENER = "LISTENER"
         private const val WIDTH = "WIDTH"
         private const val HEIGHT = "HEIGHT"
         private const val IS_CANCELABLE = "IS_CANCELABLE"
@@ -30,8 +29,10 @@ class YesOrNoDialog : DialogFragment() {
 
         fun newInstance(
             message: String,
-            leftBtnPair: Pair<String?, (() -> Unit)?> = null to null,
-            rightBtnPair: Pair<String?, (() -> Unit)?> = null to null,
+            leftBtnText: String? = null,
+            leftBtnLambda: (() -> Unit)? = null,
+            rightBtnText: String? = null,
+            rightBtnLambda: (() -> Unit)? = null,
             width: Int? = null,
             height: Int = LayoutParams.WRAP_CONTENT,
             isCancelable: Boolean = false,
@@ -39,8 +40,12 @@ class YesOrNoDialog : DialogFragment() {
         ): YesOrNoDialog = YesOrNoDialog().apply {
             arguments = bundleOf(
                 MESSAGE to message,
-                LEFT_BTN_PAIR to leftBtnPair,
-                RIGHT_BTN_PAIR to rightBtnPair,
+                LISTENER to YesOrNoDialogListener().apply {
+                    this@apply.leftBtnText = leftBtnText
+                    this@apply.leftBtnLambda = leftBtnLambda
+                    this@apply.rightBtnText = rightBtnText
+                    this@apply.rightBtnLambda = rightBtnLambda
+                },
                 WIDTH to width,
                 HEIGHT to height,
                 IS_CANCELABLE to isCancelable,
@@ -61,8 +66,10 @@ class YesOrNoDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         super.onCreateDialog(savedInstanceState).apply {
-            setCancelable((arguments?.getBoolean(IS_CANCELABLE, isCancelable) ?: isCancelable))
-            setCanceledOnTouchOutside((arguments?.getBoolean(IS_CANCELED_ON_TOUCH_OUTSIDE, isCancelable) ?: isCancelable))
+            isCancelable = arguments?.getBoolean(IS_CANCELABLE, false) ?: isCancelable
+
+            setCancelable(isCancelable)
+            setCanceledOnTouchOutside(isCancelable)
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
 
@@ -71,18 +78,16 @@ class YesOrNoDialog : DialogFragment() {
 
         arguments?.let {
             binding?.apply {
-                message = it.getString(MESSAGE) ?: ""
-                it.getSafetySerializable<Pair<String?, (() -> Unit)?>>(LEFT_BTN_PAIR)?.let {
-                    confirmText = it.first
-                    tvConfirm.onDebounceClickListener { _ ->
-                        it.second?.invoke()
+                message = it.getString(MESSAGE)
+                it.getSafetyParcelable<YesOrNoDialogListener>(LISTENER)?.let {
+                    leftBtnText = it.leftBtnText
+                    tvLeftBtn.onDebounceClickListener { _ ->
+                        it.leftBtnLambda?.invoke()
                         dismissAllowingStateLoss()
                     }
-                }
-                it.getSafetySerializable<Pair<String?, (() -> Unit)?>>(RIGHT_BTN_PAIR)?.let {
-                    dismissText = it.first
-                    tvDismiss.onDebounceClickListener { _ ->
-                        it.second?.invoke()
+                    rightBtnText = it.rightBtnText
+                    tvRightBtn.onDebounceClickListener { _ ->
+                        it.rightBtnLambda?.invoke()
                         dismissAllowingStateLoss()
                     }
                 }
