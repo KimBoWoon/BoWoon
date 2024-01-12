@@ -1,11 +1,9 @@
 package com.bowoon.rss_reader.activities.vm
 
 import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bowoon.commonutils.DataStatus
-import com.bowoon.rss_reader.apis.Apis
 import com.bowoon.rss_reader.data.Article
 import com.bowoon.rss_reader.data.Rss
 import com.bowoon.rss_reader.producer.RssProducer
@@ -34,7 +32,9 @@ class SearchVM @Inject constructor(
             emit(
                 mutableListOf<Rss>().apply {
                     repeat(rssProducer.getFeedSize()) {
-                        add(rssProducer.rssChannel.receive())
+                        rssProducer.rssChannel.receive().also { rss ->
+                            rss?.let { add(it) }
+                        }
                     }
                 }
             )

@@ -34,7 +34,9 @@ class MainVM @Inject constructor(
             emit(
                 mutableListOf<Rss>().apply {
                     repeat(rssProducer.getFeedSize()) {
-                        add(rssProducer.rssChannel.receive())
+                        rssProducer.rssChannel.receive().also { rss ->
+                            rss?.let { add(it) }
+                        }
                     }
                 }
             )

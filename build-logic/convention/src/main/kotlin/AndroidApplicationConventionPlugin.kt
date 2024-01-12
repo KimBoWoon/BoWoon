@@ -9,8 +9,6 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 import java.io.File
 import java.io.FileInputStream
-import java.text.SimpleDateFormat
-import java.util.Locale
 import java.util.Properties
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
@@ -108,9 +106,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                             }
                         }
 
-                        SimpleDateFormat(Config.ApplicationSetting.dateFormat, Locale.getDefault()).run {
-                            setProperty("archivesBaseName", "${appName}-v${versionName}-${format(System.currentTimeMillis())}")
-                        }
+//                        SimpleDateFormat(Config.ApplicationSetting.dateFormat, Locale.getDefault()).run {
+//                            setProperty("archivesBaseName", "${appName}-v${versionName}-${format(System.currentTimeMillis())}")
+//                        }
 
                         when (appName) {
                             Config.Application.GpsAlarm.appName -> {
@@ -174,9 +172,19 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     dataBinding = true
                 }
             }
-
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
             dependencies {
+                "implementation"(libs.findLibrary("jetpack.core").get())
+                "implementation"(libs.findLibrary("jetpack.appcompat").get())
+                "implementation"(libs.findLibrary("google.material").get())
+                "implementation"(libs.findLibrary("constraint.layout").get())
+                "implementation"(libs.findLibrary("firebase.performance").get())
+                "implementation"(libs.findLibrary("firebase.analytics").get())
+                "implementation"(libs.findLibrary("firebase.crashlytics").get())
+                "implementation"(platform(libs.findLibrary("firebase.bom").get()))
+                "testImplementation"(libs.findLibrary("test.junit").get())
+                "androidTestImplementation"(libs.findLibrary("test.junit.ext").get())
+                "androidTestImplementation"(libs.findLibrary("test.espresso").get())
             }
         }
     }

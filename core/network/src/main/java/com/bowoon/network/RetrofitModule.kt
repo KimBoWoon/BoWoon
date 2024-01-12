@@ -18,10 +18,12 @@ object RetrofitModule {
     @Provides
     fun provideJsonRetrofit(
         client: OkHttpClient,
+        customCallAdapter: CustomCallAdapter,
         serialization: Json,
         jsonMediaType: MediaType
     ): Retrofit = Retrofit.Builder()
         .baseUrl("https://localhost.com")
+        .addCallAdapterFactory(customCallAdapter)
         .addConverterFactory(serialization.asConverterFactory(jsonMediaType))
         .client(client)
         .build()
@@ -30,9 +32,11 @@ object RetrofitModule {
     @Provides
     fun provideXmlRetrofit(
         client: OkHttpClient,
+        customCallAdapter: CustomCallAdapter,
         tikXmlFactory: TikXmlConverterFactory
     ): Retrofit = Retrofit.Builder()
         .baseUrl("https://localhost.com")
+        .addCallAdapterFactory(customCallAdapter)
         .addConverterFactory(tikXmlFactory)
         .client(client)
         .build()

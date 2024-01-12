@@ -15,6 +15,8 @@ import com.bowoon.rss_reader.activities.vm.MainVM
 import com.bowoon.rss_reader.adapter.RssAdapter
 import com.bowoon.rss_reader.base.BaseActivity
 import com.bowoon.rss_reader.databinding.ActivityMainBinding
+import com.bowoon.rss_reader.databinding.DialogSaveRssBinding
+import com.bowoon.ui.CustomViewDialog
 import com.bowoon.ui.YesOrNoDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -48,6 +50,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             bGoToSearch.onDebounceClickListener {
                 startActivity(Intent(this@MainActivity, SearchActivity::class.java))
             }
+            bSaveRss.onDebounceClickListener {
+                CustomViewDialog.newInstance<DialogSaveRssBinding>(
+                    R.layout.dialog_save_rss,
+                    { dialogBinding ->
+                        dialogBinding.apply {
+                            bSave.onDebounceClickListener {
+                                val address = etRssAddress.text.toString()
+                                Log.d(TAG, address)
+                                dismissAllowingStateLoss()
+                            }
+                            bCancel.onDebounceClickListener {
+                                dismissAllowingStateLoss()
+                            }
+                        }
+                    },
+                    isCancelable = false,
+                    isCanceledOnTouchOutside = false
+                ).show(this@MainActivity)
+            }
         }
     }
 
@@ -58,16 +79,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     when (it) {
                         is DataStatus.Loading -> {
                             binding.pbLoading.isVisible = true
-                            binding.tvLoadingCount.isVisible = true
                         }
                         is DataStatus.Success -> {
                             binding.pbLoading.isVisible = false
-                            binding.tvLoadingCount.isVisible = false
                             (binding.vpRssList.adapter as? RssAdapter)?.submitList(it.data)
                         }
                         is DataStatus.Failure -> {
                             binding.pbLoading.isVisible = false
-                            binding.tvLoadingCount.isVisible = false
                             Log.printStackTrace(it.throwable)
                             YesOrNoDialog.newInstance(
                                 it.throwable.message ?: "잠시후에 다시 시도해주세요.",

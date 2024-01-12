@@ -33,6 +33,9 @@ object BaseRetrofitModule {
     }.build()
 
     @Provides
+    fun provideCustomCallAdapter(): CustomCallAdapter = CustomCallAdapter()
+
+    @Provides
     fun provideKotlinSerialization(): Json = Json {
         ignoreUnknownKeys = true
         prettyPrint = true

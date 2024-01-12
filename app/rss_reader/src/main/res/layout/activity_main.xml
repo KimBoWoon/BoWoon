@@ -18,30 +18,32 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/b_go_to_search"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="기사 찾기"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/b_save_rss"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vp_rss_list" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/b_save_rss"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="RSS 추가"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/b_go_to_search"
             app:layout_constraintTop_toBottomOf="@id/vp_rss_list" />
 
         <ProgressBar
             android:id="@+id/pb_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/tv_loading_count"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
-
-        <TextView
-            android:id="@+id/tv_loading_count"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:textSize="30dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pb_loading" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

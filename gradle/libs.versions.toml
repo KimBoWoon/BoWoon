@@ -58,6 +58,7 @@ jsoup = "1.17.2"
 recyclerView = "1.3.2"
 recyclerView-selection = "1.1.0"
 viewpager2 = "1.0.0"
+firebase-app-distribution = "4.0.0"
 test-junit = "4.13.2"
 test-junit-ext = "1.1.5"
 test-espresso = "3.5.1"
@@ -166,3 +167,4 @@ google-play-service = { id = "com.google.gms.google-services", version.ref = "fi
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-plugin" }
 firebase-performance = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-performance-plugin" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+firebase-app-distribution = { id = "com.google.firebase.appdistribution", version.ref = "firebase-app-distribution" }

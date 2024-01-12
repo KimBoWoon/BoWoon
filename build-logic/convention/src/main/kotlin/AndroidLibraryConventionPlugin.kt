@@ -3,7 +3,10 @@ import com.bowoon.convention.Config
 import com.bowoon.convention.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.getByType
 import java.io.File
 import java.io.FileInputStream
 import java.util.Properties
@@ -45,6 +48,15 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 }
 
                 configureKotlinAndroid(this)
+            }
+            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+            dependencies {
+                "implementation"(libs.findLibrary("jetpack.core").get())
+                "implementation"(libs.findLibrary("jetpack.appcompat").get())
+                "implementation"(libs.findLibrary("google.material").get())
+                "testImplementation"(libs.findLibrary("test.junit").get())
+                "androidTestImplementation"(libs.findLibrary("test.junit.ext").get())
+                "androidTestImplementation"(libs.findLibrary("test.espresso").get())
             }
         }
     }

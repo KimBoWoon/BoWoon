@@ -9,7 +9,6 @@ android {
 
 dependencies {
     arrayOf(
-        libs.jetpack.core,
         libs.jetpack.datastore,
         libs.hilt.android
     ).forEach {
@@ -21,18 +20,5 @@ dependencies {
         libs.hilt.compiler,
     ).forEach {
         kapt(it)
-    }
-
-    arrayOf(
-        libs.test.junit
-    ).forEach {
-        testImplementation(it)
-    }
-
-    arrayOf(
-        libs.test.junit.ext,
-        libs.test.espresso
-    ).forEach {
-        androidTestImplementation(it)
     }
 }
