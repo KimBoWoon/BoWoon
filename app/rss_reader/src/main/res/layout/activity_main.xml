@@ -13,28 +13,30 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@id/b_go_to_search"
+            app:layout_constraintBottom_toTopOf="@id/ll_main_btn_group"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/b_go_to_search"
-            android:layout_width="0dp"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_main_btn_group"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="기사 찾기"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/b_save_rss"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vp_rss_list" />
+            app:layout_constraintTop_toBottomOf="@id/vp_rss_list">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/b_save_rss"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="RSS 추가"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/b_go_to_search"
-            app:layout_constraintTop_toBottomOf="@id/vp_rss_list" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/b_go_to_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="기사 찾기" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/b_save_rss"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="RSS 추가" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <ProgressBar
             android:id="@+id/pb_loading"

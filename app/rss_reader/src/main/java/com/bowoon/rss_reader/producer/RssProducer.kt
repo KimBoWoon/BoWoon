@@ -30,7 +30,7 @@ class RssProducer @Inject constructor(
         Log.printStackTrace(throwable)
     }
     private val initData = listOf(
-        Feed("INV", "afasldkfj"),
+//        Feed("INV", "afasldkfj"),
         Feed("JTBC", "https://fs.jtbc.co.kr/RSS/newsflash.xml"),
         Feed("SBS", "https://news.sbs.co.kr/news/ReplayRssFeed.do?prog_cd=R1&plink=RSSREADER"),
         Feed("비디오머그", "https://news.sbs.co.kr/news/VideoMug_RssFeed.do?plink=RSSREADER"),

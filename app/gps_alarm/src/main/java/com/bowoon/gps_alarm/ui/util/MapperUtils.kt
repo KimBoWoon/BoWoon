@@ -2,6 +2,7 @@ package com.bowoon.gps_alarm.ui.util
 
 import com.bowoon.gps_alarm.data.Address
 import com.bowoon.gps_alarm.data.Addresses
+import com.bowoon.gps_alarm.data.Week
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -14,7 +15,7 @@ inline fun <reified T> T.encode(json: Json): String =
 
 fun dataMapper(
     alarmTitle: String,
-    weekList: List<String>,
+    weekList: List<Week>,
     addresses: Addresses
 ): Address = Address(
     alarmTitle,

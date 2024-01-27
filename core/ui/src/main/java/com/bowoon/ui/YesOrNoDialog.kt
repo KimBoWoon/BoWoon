@@ -22,8 +22,6 @@ class YesOrNoDialog : DialogFragment() {
     companion object {
         private const val MESSAGE = "MESSAGE"
         private const val LISTENER = "LISTENER"
-        private const val WIDTH = "WIDTH"
-        private const val HEIGHT = "HEIGHT"
         private const val IS_CANCELABLE = "IS_CANCELABLE"
         private const val IS_CANCELED_ON_TOUCH_OUTSIDE = "IS_CANCELED_ON_TOUCH_OUTSIDE"
 
@@ -33,8 +31,6 @@ class YesOrNoDialog : DialogFragment() {
             leftBtnLambda: (() -> Unit)? = null,
             rightBtnText: String? = null,
             rightBtnLambda: (() -> Unit)? = null,
-            width: Int? = null,
-            height: Int = LayoutParams.WRAP_CONTENT,
             isCancelable: Boolean = false,
             isCanceledOnTouchOutside: Boolean = false
         ): YesOrNoDialog = YesOrNoDialog().apply {
@@ -46,8 +42,6 @@ class YesOrNoDialog : DialogFragment() {
                     this@apply.rightBtnText = rightBtnText
                     this@apply.rightBtnLambda = rightBtnLambda
                 },
-                WIDTH to width,
-                HEIGHT to height,
                 IS_CANCELABLE to isCancelable,
                 IS_CANCELED_ON_TOUCH_OUTSIDE to isCanceledOnTouchOutside
             )
@@ -99,14 +93,8 @@ class YesOrNoDialog : DialogFragment() {
         super.onStart()
 
         dialog?.window?.setLayout(
-            arguments?.getInt(WIDTH)?.let {
-                if (it == 0) {
-                    (0.8 * (context?.getScreenWidth()?.toFloat() ?: 0f)).toInt()
-                } else {
-                    it
-                }
-            } ?: (0.8 * (context?.getScreenWidth()?.toFloat() ?: 0f)).toInt(),
-            arguments?.getInt(HEIGHT, LayoutParams.WRAP_CONTENT) ?: LayoutParams.WRAP_CONTENT
+            (0.8 * (context?.getScreenWidth()?.toFloat() ?: 0f)).toInt(),
+            LayoutParams.WRAP_CONTENT
         )
     }
 

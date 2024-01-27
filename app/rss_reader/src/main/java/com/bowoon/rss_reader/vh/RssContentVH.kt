@@ -11,7 +11,10 @@ class RssContentVH(
     fun bind(items: Rss) {
         binding.apply {
             rvRssList.apply {
-                adapter = RssArticleAdapter().apply {
+                adapter = RssArticleAdapter {
+                    scrollToPosition(it)
+//                    setCurrentItem(it, true)
+                }.apply {
                     submitList(items.channel?.items)
                 }
             }

@@ -7,15 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bowoon.commonutils.ContextUtils.showToast
 import com.bowoon.commonutils.Log
 import com.bowoon.commonutils.getSafetyParcelableExtra
+import com.bowoon.gpsAlarm.R
 import com.bowoon.gpsAlarm.databinding.CreateAlarmFragmentBinding
 import com.bowoon.gps_alarm.base.BaseFragment
 import com.bowoon.gps_alarm.data.Geocode
+import com.bowoon.gps_alarm.data.Week
 import com.bowoon.gps_alarm.ui.viewmodel.AlarmVM
 import com.bowoon.gps_alarm.webview.AddressWebViewActivity
 import com.naver.maps.geometry.LatLng
@@ -39,8 +42,10 @@ class CreateAlarmFragment : BaseFragment() {
     private var geocode: Geocode? = null
     private val activityResultCallback = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == ADDRESS_DATA_RESULT_CODE) {
-            geocode = result?.data?.getSafetyParcelableExtra<Geocode>(RESULT_ADDRESS)
+            binding.tvResultAddress.isVisible = true
             binding.mapView.isVisible = true
+            binding.includeWeek.root.isVisible = true
+            geocode = result?.data?.getSafetyParcelableExtra<Geocode>(RESULT_ADDRESS)
             binding.mapView.getMapAsync { naverMap ->
                 LatLng(geocode?.addresses?.firstOrNull()?.latitude ?: 0.0, geocode?.addresses?.firstOrNull()?.longitude ?: 0.0).also {
                     naverMap.moveCamera(CameraUpdate.scrollTo(it))
@@ -85,7 +90,6 @@ class CreateAlarmFragment : BaseFragment() {
 
     override fun initBinding() {
         binding.apply {
-
         }
     }
 
@@ -105,6 +109,34 @@ class CreateAlarmFragment : BaseFragment() {
             } else {
                 viewModel.addAlarm(binding.etAlarmTitle.text.toString(), geocode?.addresses?.firstOrNull())
                 findNavController().popBackStack()
+            }
+        }
+
+        fun onWeek(day: String) {
+            Week.valueOf(day).also {
+                val backgroundResource = ResourcesCompat.getDrawable(resources, R.drawable.choose_day_bg, null)
+
+                if (viewModel.week.contains(it)) {
+                    viewModel.week.remove(it)
+                } else {
+                    viewModel.week.add(it)
+                }
+
+                when (it) {
+                    Week.MONDAY -> binding.includeWeek.tvMonday
+                    Week.TUESDAY -> binding.includeWeek.tvTuesday
+                    Week.WEDNESDAY -> binding.includeWeek.tvWednesday
+                    Week.THURSDAY -> binding.includeWeek.tvThursday
+                    Week.FRIDAY -> binding.includeWeek.tvFriday
+                    Week.SATURDAY -> binding.includeWeek.tvSaturday
+                    Week.SUNDAY -> binding.includeWeek.tvSunday
+                }.run {
+                    background = if (!viewModel.week.contains(it)) {
+                        null
+                    } else {
+                        backgroundResource
+                    }
+                }
             }
         }
     }

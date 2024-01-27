@@ -4,11 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.bowoon.rss_reader.data.Item
 import com.bowoon.rss_reader.data.Rss
-import com.bowoon.rss_reader.databinding.VhArticleBinding
 import com.bowoon.rss_reader.databinding.VhRssContentBinding
-import com.bowoon.rss_reader.vh.ArticleVH
 import com.bowoon.rss_reader.vh.RssContentVH
 
 class RssAdapter : ListAdapter<Rss, RssContentVH>(diff) {

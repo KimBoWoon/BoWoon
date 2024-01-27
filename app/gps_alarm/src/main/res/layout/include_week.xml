@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="handler"
+            type="com.bowoon.gps_alarm.ui.alarm.CreateAlarmFragment.ClickHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <TextView
+            android:id="@+id/tv_monday"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="월"
+            app:layout_constraintEnd_toStartOf="@id/tv_tuesday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:onDebounceClickListener="@{() -> handler.onWeek(&quot;MONDAY&quot;)}" />
+
+        <TextView
+            android:id="@+id/tv_tuesday"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="화"
+            app:layout_constraintEnd_toStartOf="@id/tv_wednesday"
+            app:layout_constraintStart_toEndOf="@id/tv_monday"
+            app:layout_constraintTop_toTopOf="parent"
+            app:onDebounceClickListener="@{() -> handler.onWeek(&quot;TUESDAY&quot;)}" />
+
+        <TextView
+            android:id="@+id/tv_wednesday"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="수"
+            app:layout_constraintEnd_toStartOf="@id/tv_thursday"
+            app:layout_constraintStart_toEndOf="@id/tv_tuesday"
+            app:layout_constraintTop_toTopOf="parent"
+            app:onDebounceClickListener="@{() -> handler.onWeek(&quot;WEDNESDAY&quot;)}" />
+
+        <TextView
+            android:id="@+id/tv_thursday"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="목"
+            app:layout_constraintEnd_toStartOf="@id/tv_friday"
+            app:layout_constraintStart_toEndOf="@id/tv_wednesday"
+            app:layout_constraintTop_toTopOf="parent"
+            app:onDebounceClickListener="@{() -> handler.onWeek(&quot;THURSDAY&quot;)}" />
+
+        <TextView
+            android:id="@+id/tv_friday"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="금"
+            app:layout_constraintEnd_toStartOf="@id/tv_saturday"
+            app:layout_constraintStart_toEndOf="@id/tv_thursday"
+            app:layout_constraintTop_toTopOf="parent"
+            app:onDebounceClickListener="@{() -> handler.onWeek(&quot;FRIDAY&quot;)}" />
+
+        <TextView
+            android:id="@+id/tv_saturday"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="토"
+            app:layout_constraintEnd_toStartOf="@id/tv_sunday"
+            app:layout_constraintStart_toEndOf="@id/tv_friday"
+            app:layout_constraintTop_toTopOf="parent"
+            app:onDebounceClickListener="@{() -> handler.onWeek(&quot;SATURDAY&quot;)}" />
+
+        <TextView
+            android:id="@+id/tv_sunday"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="일"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_saturday"
+            app:layout_constraintTop_toTopOf="parent"
+            app:onDebounceClickListener="@{() -> handler.onWeek(&quot;SUNDAY&quot;)}" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

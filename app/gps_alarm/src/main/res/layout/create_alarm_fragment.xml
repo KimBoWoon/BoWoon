@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -28,21 +29,33 @@
             app:layout_constraintTop_toBottomOf="@id/et_alarm_title"
             app:onDebounceClickListener="@{() -> handler.openAddressWebView()}" />
 
-        <!--        <androidx.appcompat.widget.AppCompatTextView-->
-        <!--            android:id="@+id/tv_result_address"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:textSize="40dp"-->
-        <!--            app:layout_constraintBottom_toTopOf="@id/map_view"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/b_search_address" />-->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_result_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="40dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/map_view"
+            app:layout_constraintTop_toBottomOf="@id/b_search_address" />
 
         <com.naver.maps.map.MapView
             android:id="@+id/map_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/include_week"
+            app:layout_constraintTop_toBottomOf="@id/tv_result_address"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/include_week"
+            layout="@layout/include_week"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:visibility="gone"
+            app:handler="@{handler}"
             app:layout_constraintBottom_toTopOf="@id/b_save_address"
-            app:layout_constraintTop_toBottomOf="@id/b_search_address" />
+            app:layout_constraintTop_toBottomOf="@id/map_view" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/b_save_address"

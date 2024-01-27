@@ -13,6 +13,7 @@ import com.bowoon.gps_alarm.data.GpsAlarmConstant
 import com.bowoon.gps_alarm.ui.util.AlarmManager
 import com.bowoon.gps_alarm.ui.util.dataMapper
 import com.bowoon.commonutils.DataStatus
+import com.bowoon.gps_alarm.data.Week
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +36,7 @@ class AlarmVM @Inject constructor(
     }
 
     val geocode = MutableStateFlow<DataStatus<Geocode>>(DataStatus.Loading)
-    val week = mutableSetOf<String>()
+    val week = mutableSetOf<Week>()
     val alarmList = MutableStateFlow<DataStatus<List<Address>?>>(DataStatus.Loading)
 
     init {

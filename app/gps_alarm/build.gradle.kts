@@ -23,7 +23,8 @@ dependencies {
         project(":core:dataManager"),
         project(":core:commonUtils"),
         project(":core:network"),
-        project(":core:ui")
+        project(":core:ui"),
+        project(":feat:permissionManager")
     ).forEach {
         implementation(it)
     }

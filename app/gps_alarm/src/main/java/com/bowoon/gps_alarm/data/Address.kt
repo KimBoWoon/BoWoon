@@ -20,5 +20,5 @@ data class Address(
     val longitude: Double? = null,
     @SerialName("y")
     val latitude: Double? = null,
-    val weekList: List<String>? = null
+    val weekList: List<Week>? = null
 ) : Parcelable

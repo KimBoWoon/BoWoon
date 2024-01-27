@@ -15,7 +15,8 @@ dependencies {
         project(":core:commonUtils"),
         project(":core:network"),
         project(":core:ui"),
-        project(":core:imageLoader")
+        project(":core:imageLoader"),
+        project(":feat:timer")
     ).forEach {
         implementation(it)
     }
