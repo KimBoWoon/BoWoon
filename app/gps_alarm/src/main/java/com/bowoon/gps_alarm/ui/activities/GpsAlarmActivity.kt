@@ -13,7 +13,6 @@ import com.bowoon.gpsAlarm.databinding.GpsAlarmActivityBinding
 import com.bowoon.gps_alarm.base.BaseActivity
 import com.bowoon.gps_alarm.ui.viewmodel.GpsAlarmVM
 import com.bowoon.permissionmanager.requestMultiplePermission
-import com.bowoon.permissionmanager.requestPermission
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,25 +52,25 @@ class GpsAlarmActivity : BaseActivity() {
     }
 
     private fun needPermission(): Array<String> {
-        val result = mutableListOf(
+        val requestPermissionList = mutableListOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            result.add(Manifest.permission.POST_NOTIFICATIONS)
-            result.add(Manifest.permission.USE_EXACT_ALARM)
+            requestPermissionList.add(Manifest.permission.POST_NOTIFICATIONS)
+//            requestPermissionList.add(Manifest.permission.USE_EXACT_ALARM)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            result.add(Manifest.permission.SCHEDULE_EXACT_ALARM)
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            result.add(Manifest.permission.FOREGROUND_SERVICE)
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            result.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            requestPermissionList.add(Manifest.permission.SCHEDULE_EXACT_ALARM)
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//            requestPermissionList.add(Manifest.permission.FOREGROUND_SERVICE)
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            requestPermissionList.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+//        }
 
-        return result.toTypedArray()
+        return requestPermissionList.toTypedArray()
     }
 }

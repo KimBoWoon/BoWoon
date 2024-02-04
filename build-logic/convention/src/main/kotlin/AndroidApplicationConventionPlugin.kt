@@ -23,6 +23,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("com.google.firebase.firebase-perf")
                 apply("com.google.firebase.crashlytics")
                 apply("com.google.gms.google-services")
+                apply("androidx.navigation.safeargs.kotlin")
             }
 
             extensions.configure<ApplicationExtension> {

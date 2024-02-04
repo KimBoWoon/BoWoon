@@ -1,5 +1,6 @@
 package com.bowoon.gps_alarm.ui.alarm
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,14 +12,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
+import com.bowoon.commonutils.DataStatus
 import com.bowoon.commonutils.Log
+import com.bowoon.commonutils.ScreenUtils.dp
 import com.bowoon.gpsAlarm.R
 import com.bowoon.gpsAlarm.databinding.AlarmFragmentBinding
 import com.bowoon.gps_alarm.base.BaseFragment
 import com.bowoon.gps_alarm.data.Address
 import com.bowoon.gps_alarm.ui.util.setFadeAnimation
 import com.bowoon.gps_alarm.ui.viewmodel.AlarmVM
-import com.bowoon.commonutils.DataStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -68,6 +71,28 @@ class AlarmFragment : BaseFragment() {
             }
             rvGpsAlarmList.apply {
                 adapter = alarmAdapter
+                if (itemDecorationCount == 0) {
+                    addItemDecoration(object : RecyclerView.ItemDecoration() {
+                        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                            super.getItemOffsets(outRect, view, parent, state)
+
+                            when (parent.getChildLayoutPosition(view)) {
+                                0 -> {
+                                    outRect.top = 16.dp
+                                    outRect.bottom = 5.dp
+                                }
+                                parent.adapter?.itemCount -> {
+                                    outRect.top = 5.dp
+                                    outRect.bottom = 16.dp
+                                }
+                                else -> {
+                                    outRect.top = 5.dp
+                                    outRect.bottom = 5.dp
+                                }
+                            }
+                        }
+                    })
+                }
             }
         }
     }
@@ -112,6 +137,11 @@ class AlarmFragment : BaseFragment() {
                 viewModel.removeAlarm(it)
                 viewModel.fetchAlarmList()
             }
+        }
+
+        fun goToDetail(address: Address) {
+            val action = AlarmFragmentDirections.actionAlarmFragmentToDetailAlarmFragment(address)
+            findNavController().navigate(action)
         }
     }
 }

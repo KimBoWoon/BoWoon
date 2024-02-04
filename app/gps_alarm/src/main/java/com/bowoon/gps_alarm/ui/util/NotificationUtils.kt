@@ -1,17 +1,21 @@
 package com.bowoon.gps_alarm.ui.util
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.bowoon.gpsAlarm.R
 import com.bowoon.gps_alarm.ui.activities.GpsAlarmActivity
 
-fun SendNotification(context: Context, notificationId: Int?) {
+
+fun sendNotification(context: Context, notificationId: Int?) {
     val CHANNEL_ID = context.getString(R.string.notification_channel_id)
     val message = "목적지를 확인하세요."
 
@@ -21,7 +25,7 @@ fun SendNotification(context: Context, notificationId: Int?) {
     }
     val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-        .setSmallIcon(R.drawable.ic_launcher_background)
+        .setSmallIcon(R.drawable.ic_notifications_24)
         .setContentTitle("GPS 알람")
         .setContentText(message)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -34,6 +38,11 @@ fun SendNotification(context: Context, notificationId: Int?) {
 
     with(NotificationManagerCompat.from(context)) {
         // notificationId is a unique int for each notification that you must define
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                return
+            }
+        }
         notify(notificationId ?: 0, notification)
     }
 }

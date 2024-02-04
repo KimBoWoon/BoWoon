@@ -21,10 +21,6 @@ import com.bowoon.gps_alarm.data.Geocode
 import com.bowoon.gps_alarm.data.Week
 import com.bowoon.gps_alarm.ui.viewmodel.AlarmVM
 import com.bowoon.gps_alarm.webview.AddressWebViewActivity
-import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.LocationTrackingMode
-import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,26 +39,12 @@ class CreateAlarmFragment : BaseFragment() {
     private val activityResultCallback = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == ADDRESS_DATA_RESULT_CODE) {
             binding.tvResultAddress.isVisible = true
-            binding.mapView.isVisible = true
             binding.includeWeek.root.isVisible = true
             geocode = result?.data?.getSafetyParcelableExtra<Geocode>(RESULT_ADDRESS)
-            binding.mapView.getMapAsync { naverMap ->
-                LatLng(geocode?.addresses?.firstOrNull()?.latitude ?: 0.0, geocode?.addresses?.firstOrNull()?.longitude ?: 0.0).also {
-                    naverMap.moveCamera(CameraUpdate.scrollTo(it))
-                    Marker().apply {
-                        position = it
-                        map = naverMap
-                    }
-                }
-                naverMap.minZoom = 16.0
-                naverMap.maxZoom = 16.0
-                naverMap.locationTrackingMode = LocationTrackingMode.None
-                naverMap.isIndoorEnabled = true
-                naverMap.uiSettings.apply {
-                    isZoomControlEnabled = false
-                    isLocationButtonEnabled = false
-                    isScrollGesturesEnabled = false
-                }
+            binding.mapView.apply {
+                isVisible = true
+                latitude = geocode?.addresses?.firstOrNull()?.latitude
+                longitude = geocode?.addresses?.firstOrNull()?.longitude
             }
         }
     }

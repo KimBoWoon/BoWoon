@@ -14,7 +14,7 @@ import androidx.core.app.NotificationCompat
 import com.bowoon.gpsAlarm.R
 import com.bowoon.gps_alarm.data.Address
 import com.bowoon.gps_alarm.data.SettingInfo
-import com.bowoon.gps_alarm.ui.util.SendNotification
+import com.bowoon.gps_alarm.ui.util.sendNotification
 import com.bowoon.commonutils.Log
 import com.bowoon.commonutils.getSafetyParcelable
 import com.bowoon.commonutils.getSafetyParcelableArrayExtra
@@ -55,7 +55,7 @@ class GpsAlarmService @Inject constructor() : Service() {
                         this.longitude = address.longitude ?: 0.0
                     }
                     if (location.distanceTo(destination) <= (settingInfo?.circleSize ?: 0)) {
-                        SendNotification(this@GpsAlarmService, 0)
+                        sendNotification(this@GpsAlarmService, 0)
                     }
                 }
             }

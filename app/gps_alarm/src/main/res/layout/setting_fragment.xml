@@ -1,20 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="handler"
+            type="com.bowoon.gps_alarm.ui.setting.SettingFragment.ClickHandler" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_main"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_permission_group"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Setting"
-            android:textSize="50dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_permission_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="권한 허용" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/b_go_to_setting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="설정으로 이동"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/tv_permission_title"
+                app:onDebounceClickListener="@{() -> handler.goToSetting()}" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/cl_permission_group">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_circle_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="원 반경"
+                android:textSize="30dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_circle_area"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_circle_area"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/b_save_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="설정 저장"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:onDebounceClickListener="@{() -> handler.saveSetting()}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

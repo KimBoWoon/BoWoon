@@ -41,6 +41,12 @@ class AlarmVH(
         }
     }
 
+    fun goToDetail(address: Address?) {
+        address?.let {
+            handler.goToDetail(address)
+        }
+    }
+
     fun removeAlarm(address: Address?) {
         address?.let {
             handler.removeAlarm(it)

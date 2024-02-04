@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="alarm"
+            type="com.bowoon.gps_alarm.data.Address" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_alarm_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{alarm.name}"
+            android:textSize="30dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_alarm_jibun_address"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_alarm_jibun_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{alarm.jibunAddress}"
+            android:textSize="30dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_alarm_road_address"
+            app:layout_constraintTop_toBottomOf="@id/tv_alarm_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_alarm_road_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{alarm.roadAddress}"
+            android:textSize="30dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_alarm_jibun_address" />
+
+        <include
+            android:id="@+id/include_week"
+            layout="@layout/include_week"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:layout_constraintBottom_toTopOf="@id/map_view"
+            app:layout_constraintTop_toBottomOf="@id/tv_alarm_road_address" />
+
+        <com.bowoon.gps_alarm.ui.view.FixedNaverMapView
+            android:id="@+id/map_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/include_week" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

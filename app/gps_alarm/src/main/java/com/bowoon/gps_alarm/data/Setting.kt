@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class SettingInfo(
-    val isFollowing: Boolean = false,
-    val circleSize: Int = 0
+    val isFollowing: Boolean? = null,
+    val circleSize: Int? = null
 ) : Parcelable
