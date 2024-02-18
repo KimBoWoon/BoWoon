@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!--Context.getFilesDir()-->
+    <files-path
+        name="myimages"
+        path="images/" />
+
+    <!--getCacheDir()-->
+    <cache-path
+        name="cache"
+        path="." />
+
+    <!--Environment.getExternalStorageDirectory()-->
+    <external-path
+        name="externalPath"
+        path="." />
+
+    <!--Context.getExternalFilesDir(null)-->
+    <external-files-path
+        name="externalFilesPath"
+        path="." />
+
+    <!--Context.getExternalCacheDir()-->
+    <external-cache-path
+        name="externalCachePath"
+        path="." />
+
+    <!--only available on API 21+ devices.-->
+    <!--Context.getExternalMediaDirs()-->
+    <external-media-path
+        name="externalMediaPath"
+        path="." />
+</paths>

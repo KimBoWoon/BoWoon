@@ -20,9 +20,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.android")
                 apply("org.jetbrains.kotlin.plugin.serialization")
                 apply("org.jetbrains.kotlin.plugin.parcelize")
-                apply("com.google.firebase.firebase-perf")
-                apply("com.google.firebase.crashlytics")
-                apply("com.google.gms.google-services")
+//                apply("com.google.firebase.firebase-perf")
+//                apply("com.google.firebase.crashlytics")
+//                apply("com.google.gms.google-services")
                 apply("androidx.navigation.safeargs.kotlin")
             }
 
@@ -33,6 +33,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                         Config.Application.RssReader.appName -> Config.Application.RssReader
                         Config.Application.Lol.appName -> Config.Application.Lol
                         Config.Application.Practice.appName -> Config.Application.Practice
+                        Config.Application.FileProvider.appName -> Config.Application.FileProvider
                         else -> throw RuntimeException("This is an undefined app. $name")
                     }.apply {
                         compileSdk = compileSdkVersion

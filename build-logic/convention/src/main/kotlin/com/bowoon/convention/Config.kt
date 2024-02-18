@@ -135,5 +135,33 @@ object Config {
                 }
             }
         }
+
+        object FileProvider : Application(
+            appName = "fileprovider",
+            applicationId = "com.bowoon.fileprovider",
+            compileSdkVersion = ApplicationSetting.COMPILE_SDK_VERSION,
+            minSdkVersion = ApplicationSetting.MIN_SDK_VERSION,
+            targetSdkVersion = ApplicationSetting.COMPILE_SDK_VERSION,
+            versionCode = 1,
+            versionName = "1.0.0"
+        ) {
+            object Sign {
+                object Release {
+                    const val name = "release"
+                    const val storeFile = "store_file_path"
+                    const val storePassword = "store_password"
+                    const val keyAlias = "key_alias"
+                    const val keyPassword = "key_password"
+                }
+
+                object Debug {
+                    const val name = "debug"
+                    const val storeFile = "store_file_path"
+                    const val storePassword = "store_password"
+                    const val keyAlias = "key_alias"
+                    const val keyPassword = "key_password"
+                }
+            }
+        }
     }
 }
