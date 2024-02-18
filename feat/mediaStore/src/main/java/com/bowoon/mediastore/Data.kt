@@ -15,7 +15,7 @@ data class Video(
     val name: String? = null,
     val duration: Int? = null,
     val size: Int? = null
-)
+) : Serializable
 
 data class Audio(
     val uri: String? = null,

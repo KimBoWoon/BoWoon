@@ -22,6 +22,7 @@ jetpack-room = "2.6.1"
 jetpack-work-manager = "2.9.0"
 jetpack-splash = "1.0.1"
 jetpack-startup = "1.1.1"
+jetpack-media3 = "1.2.1"
 constraint-layout = "2.1.4"
 swiperefresh-layout = "1.1.0"
 retrofit2 = "2.9.0"
@@ -95,6 +96,18 @@ jetpack-work-manager = { module = "androidx.work:work-runtime-ktx", version.ref 
 jetpack-room-paging = { module = "androidx.room:room-paging", version.ref = "jetpack-room" }
 jetpack-splash = { module = "androidx.core:core-splashscreen", version.ref = "jetpack-splash" }
 jetpack-startup = { module = "androidx.startup:startup-runtime", version.ref = "jetpack-startup" }
+jetpack-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "jetpack-media3" }
+jetpack-media3-exoplayer-session = { module = "androidx.media3:media3-session", version.ref = "jetpack-media3" }
+jetpack-media3-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "jetpack-media3" }
+jetpack-media3-exoplayer-hls = { module = "androidx.media3:media3-exoplayer-hls", version.ref = "jetpack-media3" }
+jetpack-media3-exoplayer-rtsp = { module = "androidx.media3:media3-exoplayer-rtsp", version.ref = "jetpack-media3" }
+jetpack-media3-exoplayer-midi = { module = "androidx.media3:media3-exoplayer-midi", version.ref = "jetpack-media3" }
+jetpack-media3-exoplayer-ima = { module = "androidx.media3:media3-exoplayer-ima", version.ref = "jetpack-media3" }
+jetpack-media3-exoplayer-cronet = { module = "androidx.media3:media3-datasource-cronet", version.ref = "jetpack-media3" }
+jetpack-media3-exoplayer-okhttp = { module = "androidx.media3:media3-datasource-okhttp", version.ref = "jetpack-media3" }
+jetpack-media3-exoplayer-librtmp = { module = "androidx.media3:media3-datasource-rtmp", version.ref = "jetpack-media3" }
+jetpack-media3-exoplayer-transformer = { module = "androidx.media3:media3-transformer", version.ref = "jetpack-media3" }
+jetpack-media3-exoplayer-ui = { module = "androidx.media3:media3-ui", version.ref = "jetpack-media3" }
 constraint-layout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraint-layout" }
 swiperefresh-layout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefresh-layout" }
 retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit2" }

@@ -22,7 +22,6 @@ import com.bowoon.mediastore.Video
 import com.bowoon.permissionmanager.requestMultiplePermission
 import com.bowoon.permissionmanager.requestPermission
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -46,40 +45,50 @@ class MainActivity : AppCompatActivity() {
     }
     private val getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
-            mediaStore.getPath(it)?.let { path ->
-                File(cacheDir, "test.jpg").apply {
-                    if (this.exists()) {
-                        this.delete()
-                    }
-                    if (createNewFile()) {
-                        File(path).copyTo(this, true)
-//                        Log.d(TAG, path)
-//                        Log.d(TAG, uri.path.toString())
-//                        Log.d(TAG, getExternalFilesDir(Environment.DIRECTORY_DCIM)?.path ?: "")
-//                        Log.d(TAG, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)?.path ?: "")
-//                        Log.d(TAG, File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "android_logo.png").path ?: "")
-//                        Log.d(TAG, mediaStore.getUri(this@MainActivity, File(mediaStore.getExternalPublicStorageDirectory(Environment.DIRECTORY_DCIM), "android_logo.png").path).toString())
-                        mediaStore.saveFile(
-                            File(path).copyTo(this, true),
-                            "mediaTypeText.jpg",
-                            MediaStore.MediaType.IMAGE,
-                            { Log.d(TAG, "file save success") },
-                            { Log.d(TAG, "file save failure") }
-                        )
-                    }
-                }
-            }
+//            mediaStore.getPath(it)?.let { path ->
+//                File(cacheDir, "test.jpg").apply {
+//                    if (this.exists()) {
+//                        this.delete()
+//                    }
+//                    if (createNewFile()) {
+//                        File(path).copyTo(this, true)
+////                        Log.d(TAG, path)
+////                        Log.d(TAG, uri.path.toString())
+////                        Log.d(TAG, getExternalFilesDir(Environment.DIRECTORY_DCIM)?.path ?: "")
+////                        Log.d(TAG, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)?.path ?: "")
+////                        Log.d(TAG, File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "android_logo.png").path ?: "")
+////                        Log.d(TAG, mediaStore.getUri(this@MainActivity, File(mediaStore.getExternalPublicStorageDirectory(Environment.DIRECTORY_DCIM), "android_logo.png").path).toString())
+//                        mediaStore.saveFile(
+//                            File(path).copyTo(this, true),
+//                            "mediaTypeText.jpg",
+//                            MediaStore.MediaType.IMAGE,
+//                            { Log.d(TAG, "file save success") },
+//                            { Log.d(TAG, "file save failure") }
+//                        )
+//                    }
+//                }
+//            }
 //            startActivity(Intent(this@MainActivity, ContentsActivity::class.java).apply {
-//                putExtra(ContentsActivity.CONTENTS, ChooseItemList(list = listOf(Image(it.toString()))))
+//                putExtra(ContentsActivity.CONTENTS, ChooseItemList(imageList = listOf(Image(it.toString()))))
 //            })
+            startActivity(Intent(this@MainActivity, ContentsActivity::class.java).apply {
+                putExtra(ContentsActivity.CONTENTS, ChooseItemList(videoList = listOf(Video(it.toString()))))
+            })
         }
     }
     private val getMultipleContentLauncher = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uriList ->
+//        uriList.map {
+//            Image(it.toString())
+//        }.run {
+//            startActivity(Intent(this@MainActivity, ContentsActivity::class.java).apply {
+//                putExtra(ContentsActivity.CONTENTS, ChooseItemList(imageList = this@run))
+//            })
+//        }
         uriList.map {
-            Image(it.toString())
+            Video(it.toString())
         }.run {
             startActivity(Intent(this@MainActivity, ContentsActivity::class.java).apply {
-                putExtra(ContentsActivity.CONTENTS, ChooseItemList(this@run))
+                putExtra(ContentsActivity.CONTENTS, ChooseItemList(videoList = this@run))
             })
         }
     }
@@ -209,8 +218,8 @@ class MainActivity : AppCompatActivity() {
     private fun initBinding() {
         binding.apply {
             binding.bImage.setOnClickListener {
-                getContentLauncher.launch(MediaType.IMAGE.label)
-//                getMultipleContentLauncher.launch(MediaType.IMAGE.label)
+//                getContentLauncher.launch(MediaType.VIDEO.label)
+                getMultipleContentLauncher.launch(MediaType.VIDEO.label)
             }
         }
     }
