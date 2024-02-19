@@ -31,7 +31,10 @@ class MediaStore @Inject constructor(
     }
 
     enum class MediaType(val mimeType: String) {
-        IMAGE("image/*"), VIDEO("video/*"), AUDIO("audio/*"), FILE("text/*")
+        IMAGE("image/*"),
+        VIDEO("video/*"),
+        AUDIO("audio/*"),
+        FILE("text/*")
     }
 
     @SuppressLint("InlinedApi")

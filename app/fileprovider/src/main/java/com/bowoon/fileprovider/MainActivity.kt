@@ -13,9 +13,11 @@ import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import androidx.databinding.DataBindingUtil
 import com.bowoon.commonutils.Log
+import com.bowoon.commonutils.ViewAdapter.onDebounceClickListener
 import com.bowoon.commonutils.fromApi
 import com.bowoon.fileprovider.databinding.ActivityMainBinding
 import com.bowoon.mediastore.Audio
+import com.bowoon.mediastore.ChooseItemList
 import com.bowoon.mediastore.Image
 import com.bowoon.mediastore.MediaStore
 import com.bowoon.mediastore.Video
@@ -32,63 +34,43 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "#MainActivity"
     }
 
-    enum class MediaType(val label: String) {
-        IMAGE("image/*"),
-        VIDEO("video/*"),
-        AUDIO("audio/*")
-    }
-
-    @Inject
-    lateinit var mediaStore: MediaStore
     private val binding: ActivityMainBinding by lazy {
         DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
     }
+    @Inject
+    lateinit var mediaStore: MediaStore
+    private lateinit var selectedType: MediaStore.MediaType
     private val getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
-//            mediaStore.getPath(it)?.let { path ->
-//                File(cacheDir, "test.jpg").apply {
-//                    if (this.exists()) {
-//                        this.delete()
-//                    }
-//                    if (createNewFile()) {
-//                        File(path).copyTo(this, true)
-////                        Log.d(TAG, path)
-////                        Log.d(TAG, uri.path.toString())
-////                        Log.d(TAG, getExternalFilesDir(Environment.DIRECTORY_DCIM)?.path ?: "")
-////                        Log.d(TAG, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)?.path ?: "")
-////                        Log.d(TAG, File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "android_logo.png").path ?: "")
-////                        Log.d(TAG, mediaStore.getUri(this@MainActivity, File(mediaStore.getExternalPublicStorageDirectory(Environment.DIRECTORY_DCIM), "android_logo.png").path).toString())
-//                        mediaStore.saveFile(
-//                            File(path).copyTo(this, true),
-//                            "mediaTypeText.jpg",
-//                            MediaStore.MediaType.IMAGE,
-//                            { Log.d(TAG, "file save success") },
-//                            { Log.d(TAG, "file save failure") }
-//                        )
-//                    }
-//                }
-//            }
-//            startActivity(Intent(this@MainActivity, ContentsActivity::class.java).apply {
-//                putExtra(ContentsActivity.CONTENTS, ChooseItemList(imageList = listOf(Image(it.toString()))))
-//            })
             startActivity(Intent(this@MainActivity, ContentsActivity::class.java).apply {
-                putExtra(ContentsActivity.CONTENTS, ChooseItemList(videoList = listOf(Video(it.toString()))))
+                putExtra(
+                    ContentsActivity.CONTENTS,
+                    ChooseItemList(
+                        list = when (selectedType) {
+                            MediaStore.MediaType.IMAGE -> listOf(Image(it.toString()))
+                            MediaStore.MediaType.VIDEO -> listOf(Video(it.toString()))
+                            MediaStore.MediaType.AUDIO -> listOf(Audio(it.toString()))
+                            MediaStore.MediaType.FILE -> listOf(Image(it.toString()))
+                        }
+                    )
+                )
             })
         }
     }
     private val getMultipleContentLauncher = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uriList ->
-//        uriList.map {
-//            Image(it.toString())
-//        }.run {
-//            startActivity(Intent(this@MainActivity, ContentsActivity::class.java).apply {
-//                putExtra(ContentsActivity.CONTENTS, ChooseItemList(imageList = this@run))
-//            })
-//        }
         uriList.map {
-            Video(it.toString())
+            when (selectedType) {
+                MediaStore.MediaType.IMAGE -> Image(it.toString())
+                MediaStore.MediaType.VIDEO -> Video(it.toString())
+                MediaStore.MediaType.AUDIO -> Audio(it.toString())
+                MediaStore.MediaType.FILE -> Image(it.toString())
+            }
         }.run {
             startActivity(Intent(this@MainActivity, ContentsActivity::class.java).apply {
-                putExtra(ContentsActivity.CONTENTS, ChooseItemList(videoList = this@run))
+                putExtra(
+                    ContentsActivity.CONTENTS,
+                    ChooseItemList(list = this@run)
+                )
             })
         }
     }
@@ -102,7 +84,6 @@ class MainActivity : AppCompatActivity() {
             ),
             sortOrder = "${android.provider.MediaStore.Images.Media.DISPLAY_NAME} ASC",
             action = { cursor ->
-                val result = mutableListOf<Image>()
                 val idColumn = cursor.getColumnIndex(android.provider.MediaStore.Images.Media._ID)
                 val nameColumn = cursor.getColumnIndex(android.provider.MediaStore.Images.Media.DISPLAY_NAME)
                 val sizeColumn = cursor.getColumnIndex(android.provider.MediaStore.Images.Media.SIZE)
@@ -114,16 +95,10 @@ class MainActivity : AppCompatActivity() {
                             val name = cursor.getStringOrNull(nameColumn)
                             val size = cursor.getIntOrNull(sizeColumn)
                             val contentUri = ContentUris.withAppendedId(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id ?: continue).toString()
-
-                            result.add(Image(contentUri, name, size))
                         }
                         false -> Log.e(TAG, "column not found...")
                     }
                 }
-
-//                result.forEach {
-//                    Log.d(TAG, it.toString())
-//                }
             }
         )
         mediaStore.findVideo(
@@ -137,7 +112,6 @@ class MainActivity : AppCompatActivity() {
             selectionArgs = arrayOf(TimeUnit.MILLISECONDS.convert(0, TimeUnit.MINUTES).toString()),
             sortOrder = "${android.provider.MediaStore.Video.Media.DISPLAY_NAME} ASC",
             action = { cursor ->
-                val result = mutableListOf<Video>()
                 val idColumn = cursor.getColumnIndex(android.provider.MediaStore.Video.Media._ID)
                 val nameColumn = cursor.getColumnIndex(android.provider.MediaStore.Video.Media.DISPLAY_NAME)
                 val durationColumn = cursor.getColumnIndex(android.provider.MediaStore.Video.Media.DURATION)
@@ -151,16 +125,10 @@ class MainActivity : AppCompatActivity() {
                             val duration = cursor.getIntOrNull(durationColumn)
                             val size = cursor.getIntOrNull(sizeColumn)
                             val contentUri = ContentUris.withAppendedId(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id ?: continue).toString()
-
-                            result.add(Video(contentUri, name, size))
                         }
                         false -> Log.e(TAG, "column not found...")
                     }
                 }
-
-//                result.forEach {
-//                    Log.d(TAG, it.toString())
-//                }
             }
         )
         mediaStore.findAudio(
@@ -172,7 +140,6 @@ class MainActivity : AppCompatActivity() {
             ),
             sortOrder = "${android.provider.MediaStore.Audio.Media.DISPLAY_NAME} ASC",
             action = { cursor ->
-                val result = mutableListOf<Audio>()
                 val idColumn = cursor.getColumnIndexOrThrow(android.provider.MediaStore.Audio.Media._ID)
                 val nameColumn = cursor.getColumnIndexOrThrow(android.provider.MediaStore.Audio.Media.DISPLAY_NAME)
                 val durationColumn = cursor.getColumnIndexOrThrow(android.provider.MediaStore.Audio.Media.DURATION)
@@ -184,13 +151,7 @@ class MainActivity : AppCompatActivity() {
                     val duration = cursor.getIntOrNull(durationColumn)
                     val size = cursor.getIntOrNull(sizeColumn)
                     val contentUri = ContentUris.withAppendedId(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id ?: continue).toString()
-
-                    result.add(Audio(contentUri, name, duration, size))
                 }
-
-//                result.forEach {
-//                    Log.d(TAG, it.toString())
-//                }
             }
         )
     }
@@ -217,9 +178,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun initBinding() {
         binding.apply {
-            binding.bImage.setOnClickListener {
-//                getContentLauncher.launch(MediaType.VIDEO.label)
-                getMultipleContentLauncher.launch(MediaType.VIDEO.label)
+            bImage.onDebounceClickListener {
+                selectedType = MediaStore.MediaType.IMAGE
+//                getContentLauncher.launch(MediaStore.MediaType.IMAGE.mimeType)
+                getMultipleContentLauncher.launch(MediaStore.MediaType.IMAGE.mimeType)
+            }
+            bVideo.onDebounceClickListener {
+                selectedType = MediaStore.MediaType.VIDEO
+//                getContentLauncher.launch(MediaStore.MediaType.VIDEO.mimeType)
+                getMultipleContentLauncher.launch(MediaStore.MediaType.VIDEO.mimeType)
+            }
+            bAudio.onDebounceClickListener {
+                selectedType = MediaStore.MediaType.AUDIO
+//                getContentLauncher.launch(MediaStore.MediaType.AUDIO.mimeType)
+                getMultipleContentLauncher.launch(MediaStore.MediaType.AUDIO.mimeType)
             }
         }
     }

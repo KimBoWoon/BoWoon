@@ -103,6 +103,17 @@ object ContextUtils {
 
         return null
     }
+
+    fun Context?.sixteenByNineHeight(): Int {
+        this ?: run {
+            Log.e("getScreenWidth context is null!")
+            return 0
+        }
+
+        val sixteenByNineRate = 9f / 16f
+
+        return ((getScreenWidth()?.toFloat() ?: 0f) * sixteenByNineRate).toInt()
+    }
 }
 
 object ViewUtils {
