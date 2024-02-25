@@ -8,8 +8,9 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bowoon.commonutils.ContextUtils.getScreenWidth
 import com.bowoon.commonutils.ContextUtils.sixteenByNineHeight
+import com.bowoon.commonutils.Log
+import com.bowoon.fileprovider.databinding.VhContentFileBinding
 import com.bowoon.fileprovider.databinding.VhContentImageBinding
 import com.bowoon.fileprovider.databinding.VhContentVideoBinding
 import com.bowoon.mediastore.Audio
@@ -20,6 +21,7 @@ import com.bowoon.mediastore.Video
 
 class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(diff) {
     companion object {
+        private const val TAG = "fileprovider_contents_adapter"
         private val diff = object : DiffUtil.ItemCallback<MediaDataClass>() {
             override fun areItemsTheSame(oldItem: MediaDataClass, newItem: MediaDataClass): Boolean =
                 when {
@@ -47,6 +49,7 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
             R.layout.vh_content_image -> ImageContentVH(VhContentImageBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             R.layout.vh_content_video -> VideoContentVH(VhContentVideoBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             R.layout.vh_content_audio -> AudioContentVH(VhContentVideoBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.vh_content_file -> FileContentVH(VhContentFileBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> throw RuntimeException("view holder not found...")
         }
 
@@ -56,6 +59,7 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
                 is ImageContentVH -> holder.bind(it as? Image)
                 is VideoContentVH -> holder.bind(it as? Video)
                 is AudioContentVH -> holder.bind(it as? Audio)
+                is FileContentVH -> holder.bind(it as? File)
             }
         }
     }
@@ -64,7 +68,7 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
         currentList[position]?.let { mediaItem ->
             when (mediaItem) {
                 is Audio -> R.layout.vh_content_audio
-                is File -> R.layout.vh_content_image
+                is File -> R.layout.vh_content_file
                 is Image -> R.layout.vh_content_image
                 is Video -> R.layout.vh_content_video
                 else -> -1
@@ -120,6 +124,19 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    inner class FileContentVH(
+        private val binding: VhContentFileBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(content: File?) {
+            Log.d(TAG, content.toString())
+            content?.let {
+                binding.apply {
+                    tvContent.text = content.name
                 }
             }
         }

@@ -29,7 +29,23 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:text="Audio"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/b_text"
             app:layout_constraintTop_toBottomOf="@id/b_video" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/b_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="Text"
+            app:layout_constraintBottom_toTopOf="@id/b_document"
+            app:layout_constraintTop_toBottomOf="@id/b_audio" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/b_document"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="Document"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/b_text" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

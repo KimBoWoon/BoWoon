@@ -2,8 +2,8 @@
 <paths>
     <!--Context.getFilesDir()-->
     <files-path
-        name="myimages"
-        path="images/" />
+        name="files"
+        path="." />
 
     <!--getCacheDir()-->
     <cache-path

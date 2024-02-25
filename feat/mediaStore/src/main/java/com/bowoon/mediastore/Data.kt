@@ -33,11 +33,12 @@ data class File(
     val size: Int? = null
 ) : MediaDataClass, Serializable
 
+data class FileInfo(
+    val name: String? = null,
+    val mimeType: String? = null
+)
+
 @Parcelize
 data class ChooseItemList(
     val list: @RawValue List<MediaDataClass>? = null
-//    val imageList: List<Image>? = null,
-//    val videoList: List<Video>? = null,
-//    val audioList: List<Audio>? = null,
-//    val fileList: List<File>? = null
 ) : Parcelable

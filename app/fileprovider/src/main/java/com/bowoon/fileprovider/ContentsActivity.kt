@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ContentsActivity : AppCompatActivity() {
     companion object {
-        private const val TAG = "#ContentsActivity"
+        private const val TAG = "fileprovider_contents_activity"
         const val CONTENTS = "CONTENTS"
     }
 
@@ -41,7 +41,7 @@ class ContentsActivity : AppCompatActivity() {
     private fun initBinding() {
         binding.apply {
             rvContentsList.apply {
-                val spanCount = if (list.firstOrNull() is Image) 3 else 1
+                val spanCount = 1 // if (list.firstOrNull() is Image) 3 else 1
 
                 layoutManager = GridLayoutManager(this@ContentsActivity, spanCount, RecyclerView.VERTICAL, false)
                 adapter = ContentsAdapter().apply {

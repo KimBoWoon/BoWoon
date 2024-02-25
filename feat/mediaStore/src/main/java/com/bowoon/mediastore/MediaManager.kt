@@ -23,7 +23,7 @@ import java.io.FileOutputStream
 import javax.inject.Inject
 
 
-class MediaStore @Inject constructor(
+class MediaManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     companion object {
@@ -31,10 +31,11 @@ class MediaStore @Inject constructor(
     }
 
     enum class MediaType(val mimeType: String) {
+        ALL("*/*"),
         IMAGE("image/*"),
         VIDEO("video/*"),
         AUDIO("audio/*"),
-        FILE("text/*")
+        TEXT("text/*")
     }
 
     @SuppressLint("InlinedApi")
@@ -42,22 +43,64 @@ class MediaStore @Inject constructor(
         when (fromApi(Build.VERSION_CODES.Q, true)) {
             true -> {
                 when (type) {
+                    MediaType.ALL -> MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL)
                     MediaType.IMAGE -> MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
                     MediaType.VIDEO -> MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
                     MediaType.AUDIO -> MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
-                    MediaType.FILE -> MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                    MediaType.TEXT -> MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL)
                 }
             }
-
             false -> {
                 when (type) {
+                    MediaType.ALL -> MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL)
                     MediaType.IMAGE -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                     MediaType.VIDEO -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
                     MediaType.AUDIO -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                    MediaType.FILE -> MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                    MediaType.TEXT -> MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL)
                 }
             }
         }
+
+    fun find(
+        uri: Uri,
+        projection: Array<String>? = null,
+        selection: String? = null,
+        selectionArgs: Array<String>? = null,
+        sortOrder: String? = null,
+        action: ((cursor: Cursor) -> Unit)? = null
+    ) {
+        context.contentResolver.query(
+            uri,
+            projection,
+            selection,
+            selectionArgs,
+            sortOrder
+        )?.use { cursor ->
+            action?.invoke(cursor)
+        } ?: run {
+            Log.e(TAG, "content not found...")
+        }
+    }
+
+    fun getFileInfo(
+        uri: Uri,
+        projection: Array<String>? = null,
+        selection: String? = null,
+        selectionArgs: Array<String>? = null,
+        sortOrder: String? = null,
+        action: ((cursor: Cursor) -> FileInfo)
+    ): FileInfo = context.contentResolver.query(
+        uri,
+        projection,
+        selection,
+        selectionArgs,
+        sortOrder
+    )?.use { cursor ->
+        action.invoke(cursor)
+    } ?: run {
+        Log.e(TAG, "content not found...")
+        FileInfo(null, null)
+    }
 
     fun findImage(
         projection: Array<String>? = null,
@@ -65,16 +108,15 @@ class MediaStore @Inject constructor(
         selectionArgs: Array<String>? = null,
         sortOrder: String? = null,
         action: ((cursor: Cursor) -> Unit)? = null
-    ) = context.contentResolver.query(
-        getMediaStoreUri(MediaType.IMAGE),
-        projection,
-        selection,
-        selectionArgs,
-        sortOrder
-    )?.use { cursor ->
-        action?.invoke(cursor)
-    } ?: run {
-        Log.e(TAG, "content not found...")
+    ) {
+        find(
+            getMediaStoreUri(MediaType.IMAGE),
+            projection,
+            selection,
+            selectionArgs,
+            sortOrder,
+            action
+        )
     }
 
     fun findVideo(
@@ -83,16 +125,15 @@ class MediaStore @Inject constructor(
         selectionArgs: Array<String>? = null,
         sortOrder: String? = null,
         action: ((cursor: Cursor) -> Unit)? = null
-    ) = context.contentResolver.query(
-        getMediaStoreUri(MediaType.VIDEO),
-        projection,
-        selection,
-        selectionArgs,
-        sortOrder
-    )?.use { cursor ->
-        action?.invoke(cursor)
-    } ?: run {
-        Log.e(TAG, "content not found...")
+    ) {
+        find(
+            getMediaStoreUri(MediaType.VIDEO),
+            projection,
+            selection,
+            selectionArgs,
+            sortOrder,
+            action
+        )
     }
 
     fun findAudio(
@@ -101,19 +142,35 @@ class MediaStore @Inject constructor(
         selectionArgs: Array<String>? = null,
         sortOrder: String? = null,
         action: ((cursor: Cursor) -> Unit)? = null
-    ) = context.contentResolver.query(
-        getMediaStoreUri(MediaType.AUDIO),
-        projection,
-        selection,
-        selectionArgs,
-        sortOrder
-    )?.use { cursor ->
-        action?.invoke(cursor)
-    } ?: run {
-        Log.e(TAG, "content not found...")
+    ) {
+        find(
+            getMediaStoreUri(MediaType.AUDIO),
+            projection,
+            selection,
+            selectionArgs,
+            sortOrder,
+            action
+        )
     }
 
-    fun saveFile(
+    fun findText(
+        projection: Array<String>? = null,
+        selection: String? = null,
+        selectionArgs: Array<String>? = null,
+        sortOrder: String? = null,
+        action: ((cursor: Cursor) -> Unit)? = null
+    ) {
+        find(
+            getMediaStoreUri(MediaType.TEXT),
+            projection,
+            selection,
+            selectionArgs,
+            sortOrder,
+            action
+        )
+    }
+
+    fun save(
         file: File,
         name: String,
         type: MediaType,
@@ -149,6 +206,8 @@ class MediaStore @Inject constructor(
         }
     }
 
+    fun getMimeType(uri: Uri): String? = context.contentResolver.getType(uri)
+
     fun getPath(contentUri: Uri): String? {
         val proj = arrayOf(MediaStore.MediaColumns.DATA)
         context.contentResolver.query(
@@ -166,7 +225,6 @@ class MediaStore @Inject constructor(
                         }
                     }
                 }
-
                 false -> Log.e(TAG, "cursor has no item...")
             }
         }
@@ -196,7 +254,6 @@ class MediaStore @Inject constructor(
                         }
                     }
                 }
-
                 false -> Log.e(TAG, "cursor has no item...")
             }
         }
