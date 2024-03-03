@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="handler"
+            type="com.bowoon.fileprovider.MainActivity.ClickHandler" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,7 +21,8 @@
             android:layout_height="0dp"
             android:text="Image"
             app:layout_constraintBottom_toTopOf="@id/b_video"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:onDebounceClickListener="@{() -> handler.getImageContent()}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/b_video"
@@ -22,7 +30,8 @@
             android:layout_height="0dp"
             android:text="Video"
             app:layout_constraintBottom_toTopOf="@id/b_audio"
-            app:layout_constraintTop_toBottomOf="@id/b_image" />
+            app:layout_constraintTop_toBottomOf="@id/b_image"
+            app:onDebounceClickListener="@{() -> handler.getVideoContent()}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/b_audio"
@@ -30,14 +39,25 @@
             android:layout_height="0dp"
             android:text="Audio"
             app:layout_constraintBottom_toTopOf="@id/b_document"
-            app:layout_constraintTop_toBottomOf="@id/b_video" />
+            app:layout_constraintTop_toBottomOf="@id/b_video"
+            app:onDebounceClickListener="@{() -> handler.getAudioContent()}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/b_document"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:text="Document"
+            app:layout_constraintBottom_toTopOf="@id/b_delete_cache_dir"
+            app:layout_constraintTop_toBottomOf="@id/b_audio"
+            app:onDebounceClickListener="@{() -> handler.getDocumentContent()}" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/b_delete_cache_dir"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="Delete Cache Directory"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/b_audio" />
+            app:layout_constraintTop_toBottomOf="@id/b_document"
+            app:onDebounceClickListener="@{() -> handler.deleteInternalFiles()}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

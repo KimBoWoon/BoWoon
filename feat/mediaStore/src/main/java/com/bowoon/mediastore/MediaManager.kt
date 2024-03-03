@@ -206,14 +206,32 @@ class MediaManager @Inject constructor(
         uri: Uri,
         contentValues: ContentValues? = null,
         where: String? = null,
-        selectionArgs: Array<String>? = null
-    ): Int = context.contentResolver.update(uri, contentValues, where, selectionArgs)
+        selectionArgs: Array<String>? = null,
+        onSuccess: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ): Int = context.contentResolver.update(uri, contentValues, where, selectionArgs).run {
+        if (this > 0) {
+            onSuccess?.invoke()
+        } else {
+            onFailure?.invoke()
+        }
+        this
+    }
 
     fun delete(
         uri: Uri,
         where: String? = null,
-        selectionArgs: Array<String>? = null
-    ): Int = context.contentResolver.delete(uri, where, selectionArgs)
+        selectionArgs: Array<String>? = null,
+        onSuccess: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ): Int = context.contentResolver.delete(uri, where, selectionArgs).run {
+        if (this > 0) {
+            onSuccess?.invoke()
+        } else {
+            onFailure?.invoke()
+        }
+        this
+    }
 
     fun getFileInfo(
         uri: Uri,

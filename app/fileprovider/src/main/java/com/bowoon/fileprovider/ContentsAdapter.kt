@@ -1,5 +1,6 @@
 package com.bowoon.fileprovider
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.net.toUri
@@ -77,23 +78,42 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
             }
         } ?: -1
 
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+
+        when (holder) {
+            is VideoContentVH -> holder.attach()
+            is AudioContentVH -> holder.attach()
+        }
+    }
+
+    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+
+        when (holder) {
+            is VideoContentVH -> holder.release()
+            is AudioContentVH -> holder.release()
+        }
+    }
+
     inner class ImageContentVH(
         private val binding: VhContentImageBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(content: Image?) {
             content?.let {
                 binding.apply {
-                    when (it.uri?.toUri()?.scheme) {
-                        "file" -> {
-                            it.uri?.toUri()?.let { uri ->
-                                Log.d(TAG, uri.toString())
-                                ivContent.setImageURI(uri)
-                            }
-                        }
-                        "content" -> {
-                            ivContent.setImageURI(content.uri?.toUri())
-                        }
-                    }
+                    ivContent.setImageURI(content.uri?.toUri())
+//                    when {
+//                        it.uri?.toUri()?.scheme.equals(ContentResolver.SCHEME_FILE, true) -> {
+//                            it.uri?.toUri()?.let { uri ->
+//                                Log.d(TAG, uri.toString())
+//                                ivContent.setImageURI(uri)
+//                            }
+//                        }
+//                        it.uri?.toUri()?.scheme.equals(ContentResolver.SCHEME_CONTENT, true) -> {
+//                            ivContent.setImageURI(content.uri?.toUri())
+//                        }
+//                    }
                 }
             }
         }
@@ -106,18 +126,42 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
             content?.let {
                 binding.apply {
                     exoplayer.apply {
-                        layoutParams.height = binding.root.context.sixteenByNineHeight()
-                        player = ExoPlayer.Builder(binding.root.context).build().also {
-//                        val session = MediaSession.Builder(binding.root.context, this).build()
-                            it.repeatMode = Player.REPEAT_MODE_ALL
-                            MediaItem.fromUri(content.uri ?: "").apply {
-                                it.setMediaItem(this)
-                                it.prepare()
-                            }
+                        player?.let { player ->
+//                            val session = MediaSession.Builder(binding.root.context, it).build()
+                            setMediaData(content.uri?.toUri())
+                        } ?: run {
+                            attach()
+                            setMediaData(content.uri?.toUri())
                         }
                     }
                 }
             }
+        }
+
+        fun setMediaData(uri: Uri?) {
+            uri?.let {
+                binding.root.post {
+                    MediaItem.fromUri(it).also { item ->
+                        binding.exoplayer.player?.setMediaItem(item)
+                        binding.exoplayer.player?.prepare()
+                    }
+                }
+            } ?: run {
+                Log.e(TAG, "unknown uri...")
+            }
+        }
+
+        fun attach() {
+            binding.exoplayer.apply {
+                layoutParams.height = binding.root.context.sixteenByNineHeight()
+                player = ExoPlayer.Builder(binding.root.context).build().also {
+                    it.repeatMode = Player.REPEAT_MODE_ALL
+                }
+            }
+        }
+
+        fun release() {
+            binding.exoplayer.player?.release()
         }
     }
 
@@ -128,18 +172,42 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
             content?.let {
                 binding.apply {
                     exoplayer.apply {
-                        layoutParams.height = binding.root.context.sixteenByNineHeight()
-                        player = ExoPlayer.Builder(binding.root.context).build().also {
-//                        val session = MediaSession.Builder(binding.root.context, this).build()
-                            it.repeatMode = Player.REPEAT_MODE_ALL
-                            MediaItem.fromUri(content.uri ?: "").apply {
-                                it.setMediaItem(this)
-                                it.prepare()
-                            }
+                        player?.let { player ->
+//                            val session = MediaSession.Builder(binding.root.context, it).build()
+                            setMediaData(content.uri?.toUri())
+                        } ?: run {
+                            attach()
+                            setMediaData(content.uri?.toUri())
                         }
                     }
                 }
             }
+        }
+
+        fun setMediaData(uri: Uri?) {
+            uri?.let {
+                binding.root.post {
+                    MediaItem.fromUri(it).also { item ->
+                        binding.exoplayer.player?.setMediaItem(item)
+                        binding.exoplayer.player?.prepare()
+                    }
+                }
+            } ?: run {
+                Log.e(TAG, "unknown uri...")
+            }
+        }
+
+        fun attach() {
+            binding.exoplayer.apply {
+                layoutParams.height = binding.root.context.sixteenByNineHeight()
+                player = ExoPlayer.Builder(binding.root.context).build().also {
+                    it.repeatMode = Player.REPEAT_MODE_ALL
+                }
+            }
+        }
+
+        fun release() {
+            binding.exoplayer.player?.release()
         }
     }
 

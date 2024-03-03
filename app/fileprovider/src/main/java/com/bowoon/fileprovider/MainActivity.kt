@@ -2,35 +2,24 @@ package com.bowoon.fileprovider
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ContentUris
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.database.getIntOrNull
-import androidx.core.database.getLongOrNull
-import androidx.core.database.getStringOrNull
-import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import com.bowoon.commonutils.ContextUtils.showToast
 import com.bowoon.commonutils.Log
-import com.bowoon.commonutils.ViewAdapter.onDebounceClickListener
 import com.bowoon.commonutils.fromApi
 import com.bowoon.fileprovider.databinding.ActivityMainBinding
-import com.bowoon.mediastore.Audio
 import com.bowoon.mediastore.ChooseItemList
-import com.bowoon.mediastore.Image
 import com.bowoon.mediastore.MediaDataClass
 import com.bowoon.mediastore.MediaManager
-import com.bowoon.mediastore.Video
 import com.bowoon.permissionmanager.requestMultiplePermission
 import com.bowoon.permissionmanager.requestPermission
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -207,20 +196,23 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //        )
-        mediaManager.getInternalCacheFiles { files ->
-            files.map { file ->
-                mediaManager.getWrapFile(file.toUri())
-            }.run {
-                this.forEach {
-                    Log.d(TAG, it.toString())
-                }
-//                startActivity(this.filterNotNull())
-            }
-        }
+//        mediaManager.getInternalCacheFiles { files ->
+//            files.map { file ->
+//                mediaManager.getWrapFile(file.toUri())
+//            }.run {
+//                this.forEach {
+//                    Log.d(TAG, it.toString())
+//                }
+////                startActivity(this.filterNotNull())
+//            }
+//        }
 //        mediaManager.getExternalCacheFiles { files ->
 //            files.map { file ->
 //                mediaManager.getWrapFile(file.toUri())
 //            }.run {
+//                this.forEach {
+//                    Log.d(TAG, it.toString())
+//                }
 ////                startActivity(this.filterNotNull())
 //            }
 //        }
@@ -228,6 +220,9 @@ class MainActivity : AppCompatActivity() {
 //            files.map { file ->
 //                mediaManager.getWrapFile(file.toUri())
 //            }.run {
+//                this.forEach {
+//                    Log.d(TAG, it.toString())
+//                }
 ////                startActivity(this.filterNotNull())
 //            }
 //        }
@@ -273,28 +268,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initBinding() {
         binding.apply {
-            bImage.onDebounceClickListener {
-//                getContentLauncher.launch(MediaStore.MediaType.IMAGE.mimeType)
-                getMultipleContentLauncher.launch(MediaManager.MediaType.IMAGE.mimeType)
-            }
-            bVideo.onDebounceClickListener {
-//                getContentLauncher.launch(MediaStore.MediaType.VIDEO.mimeType)
-                getMultipleContentLauncher.launch(MediaManager.MediaType.VIDEO.mimeType)
-            }
-            bAudio.onDebounceClickListener {
-//                getContentLauncher.launch(MediaStore.MediaType.AUDIO.mimeType)
-                getMultipleContentLauncher.launch(MediaManager.MediaType.AUDIO.mimeType)
-            }
-            bDocument.onDebounceClickListener {
-                getMultipleDocumentLauncher.launch(
-                    arrayOf(
-                        MediaManager.MediaType.IMAGE.mimeType,
-                        MediaManager.MediaType.VIDEO.mimeType,
-                        MediaManager.MediaType.AUDIO.mimeType
-//                        MediaManager.MediaType.ALL.mimeType
-                    )
-                )
-            }
+            handler = ClickHandler()
         }
     }
 
@@ -308,6 +282,55 @@ class MainActivity : AppCompatActivity() {
                         ChooseItemList(mediaList)
                     )
                 })
+            }
+        }
+    }
+
+    inner class ClickHandler() {
+        fun getImageContent() {
+//            getContentLauncher.launch(MediaManager.MediaType.IMAGE.mimeType)
+            getMultipleContentLauncher.launch(MediaManager.MediaType.IMAGE.mimeType)
+        }
+
+        fun getVideoContent() {
+//            getContentLauncher.launch(MediaManager.MediaType.VIDEO.mimeType)
+            getMultipleContentLauncher.launch(MediaManager.MediaType.VIDEO.mimeType)
+        }
+
+        fun getAudioContent() {
+//            getContentLauncher.launch(MediaManager.MediaType.AUDIO.mimeType)
+            getMultipleContentLauncher.launch(MediaManager.MediaType.AUDIO.mimeType)
+        }
+
+        fun getDocumentContent() {
+            getMultipleDocumentLauncher.launch(
+                arrayOf(
+                    MediaManager.MediaType.IMAGE.mimeType,
+                    MediaManager.MediaType.VIDEO.mimeType,
+                    MediaManager.MediaType.AUDIO.mimeType
+//                        MediaManager.MediaType.ALL.mimeType
+                )
+            )
+        }
+
+        fun deleteInternalFiles() {
+            cacheDir.listFiles()?.forEach {
+                Log.d(TAG, it.name)
+                it.delete()
+            }
+            filesDir.listFiles()?.forEach {
+                Log.d(TAG, it.name)
+                it.delete()
+            }
+            externalCacheDir?.listFiles()?.forEach {
+                Log.d(TAG, it.name)
+                it.delete()
+            }
+            externalMediaDirs?.forEach { mediaFile ->
+                mediaFile?.listFiles()?.forEach { file ->
+                    Log.d(TAG, file.name)
+                    file.delete()
+                }
             }
         }
     }
