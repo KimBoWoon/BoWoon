@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -18,6 +19,8 @@ import com.bowoon.mediastore.File
 import com.bowoon.mediastore.Image
 import com.bowoon.mediastore.MediaDataClass
 import com.bowoon.mediastore.Video
+import java.io.FileInputStream
+import java.io.InputStreamReader
 
 class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(diff) {
     companion object {
@@ -40,7 +43,6 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
                     oldItem is File && newItem is File -> oldItem.uri == newItem.uri && oldItem.name == newItem.name
                     else -> false
                 }
-
         }
     }
 
@@ -81,7 +83,17 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
         fun bind(content: Image?) {
             content?.let {
                 binding.apply {
-                    ivContent.setImageURI(content.uri?.toUri())
+                    when (it.uri?.toUri()?.scheme) {
+                        "file" -> {
+                            it.uri?.toUri()?.let { uri ->
+                                Log.d(TAG, uri.toString())
+                                ivContent.setImageURI(uri)
+                            }
+                        }
+                        "content" -> {
+                            ivContent.setImageURI(content.uri?.toUri())
+                        }
+                    }
                 }
             }
         }
@@ -97,6 +109,7 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
                         layoutParams.height = binding.root.context.sixteenByNineHeight()
                         player = ExoPlayer.Builder(binding.root.context).build().also {
 //                        val session = MediaSession.Builder(binding.root.context, this).build()
+                            it.repeatMode = Player.REPEAT_MODE_ALL
                             MediaItem.fromUri(content.uri ?: "").apply {
                                 it.setMediaItem(this)
                                 it.prepare()
@@ -118,6 +131,7 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
                         layoutParams.height = binding.root.context.sixteenByNineHeight()
                         player = ExoPlayer.Builder(binding.root.context).build().also {
 //                        val session = MediaSession.Builder(binding.root.context, this).build()
+                            it.repeatMode = Player.REPEAT_MODE_ALL
                             MediaItem.fromUri(content.uri ?: "").apply {
                                 it.setMediaItem(this)
                                 it.prepare()
@@ -133,10 +147,28 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
         private val binding: VhContentFileBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(content: File?) {
-            Log.d(TAG, content.toString())
             content?.let {
                 binding.apply {
-                    tvContent.text = content.name
+                    content.takeIf {
+                        it.mime?.matches("(?i)text/(?i)plain".toRegex()) ?: false
+                    }?.run {
+                        uri?.let {
+                            FileInputStream(it).use { fis ->
+                                InputStreamReader(fis).use { isr ->
+                                    val data = isr.readLines()
+                                    Log.d(TAG, data.toString())
+                                    when (data.isEmpty()) {
+                                        true -> tvContent.text = String.format("%s is empty", this.name)
+                                        false -> {
+                                            data.forEach { str ->
+                                                tvContent.text = String.format("%s %s", tvContent.text.toString(), str)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

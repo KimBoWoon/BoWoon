@@ -10,27 +10,35 @@ sealed interface MediaDataClass
 data class Image(
     val uri: String? = null,
     val name: String? = null,
-    val size: Int? = null
+    val size: String? = null,
+    val mime: String? = null,
+    val extension: String? = null
 ) : MediaDataClass, Serializable
 
 data class Video(
     val uri: String? = null,
     val name: String? = null,
-    val duration: Int? = null,
-    val size: Int? = null
+    val duration: Long? = null,
+    val size: String? = null,
+    val mime: String? = null,
+    val extension: String? = null
 ) : MediaDataClass, Serializable
 
 data class Audio(
     val uri: String? = null,
     val name: String? = null,
-    val duration: Int? = null,
-    val size: Int? = null
+    val duration: Long? = null,
+    val size: String? = null,
+    val mime: String? = null,
+    val extension: String? = null
 ) : MediaDataClass, Serializable
 
 data class File(
     val uri: String? = null,
     val name: String? = null,
-    val size: Int? = null
+    val size: String? = null,
+    val mime: String? = null,
+    val extension: String? = null
 ) : MediaDataClass, Serializable
 
 data class FileInfo(
