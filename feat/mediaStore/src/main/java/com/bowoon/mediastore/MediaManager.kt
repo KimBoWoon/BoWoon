@@ -370,13 +370,17 @@ class MediaManager @Inject constructor(
     fun getFileExtension(uri: Uri): String? =
         when {
             uri.scheme.equals(ContentResolver.SCHEME_CONTENT, true) -> MimeTypeMap.getSingleton().getExtensionFromMimeType(getMimeType(uri))
-            else -> {
+            uri.scheme.equals(ContentResolver.SCHEME_FILE, true) -> {
                 uri.path?.let { path ->
-                    MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(File(path)).toString())
+                    MimeTypeMap.getFileExtensionFromUrl(path)
                 } ?: run {
                     Log.e(TAG, "file extension not found...")
                     null
                 }
+            }
+            else -> {
+                Log.e(TAG, "uri scheme not supported...")
+                null
             }
         }
 

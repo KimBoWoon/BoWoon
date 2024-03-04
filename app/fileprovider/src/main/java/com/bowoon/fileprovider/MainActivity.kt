@@ -286,7 +286,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    inner class ClickHandler() {
+    inner class ClickHandler {
         fun getImageContent() {
 //            getContentLauncher.launch(MediaManager.MediaType.IMAGE.mimeType)
             getMultipleContentLauncher.launch(MediaManager.MediaType.IMAGE.mimeType)
@@ -307,30 +307,44 @@ class MainActivity : AppCompatActivity() {
                 arrayOf(
                     MediaManager.MediaType.IMAGE.mimeType,
                     MediaManager.MediaType.VIDEO.mimeType,
-                    MediaManager.MediaType.AUDIO.mimeType
-//                        MediaManager.MediaType.ALL.mimeType
+                    MediaManager.MediaType.AUDIO.mimeType,
+//                    MediaManager.MediaType.ALL.mimeType
                 )
             )
         }
 
         fun deleteInternalFiles() {
-            cacheDir.listFiles()?.forEach {
-                Log.d(TAG, it.name)
-                it.delete()
-            }
-            filesDir.listFiles()?.forEach {
-                Log.d(TAG, it.name)
-                it.delete()
-            }
-            externalCacheDir?.listFiles()?.forEach {
-                Log.d(TAG, it.name)
-                it.delete()
-            }
-            externalMediaDirs?.forEach { mediaFile ->
-                mediaFile?.listFiles()?.forEach { file ->
-                    Log.d(TAG, file.name)
-                    file.delete()
+            cacheDir.listFiles()
+                ?.filter { it.name.startsWith("copyFile_") }
+                ?.forEach {
+                    Log.d(TAG, it.name)
+                    it.delete()
                 }
+            cacheDir.listFiles()
+                ?.filter { it.name.startsWith("copyFile_") }
+                ?.forEach {
+                    Log.d(TAG, it.name)
+                    it.delete()
+                }
+            filesDir.listFiles()
+                ?.filter { it.name.startsWith("copyFile_") }
+                ?.forEach {
+                    Log.d(TAG, it.name)
+                    it.delete()
+                }
+            externalCacheDir?.listFiles()
+                ?.filter { it.name.startsWith("copyFile_") }
+                ?.forEach {
+                    Log.d(TAG, it.name)
+                    it.delete()
+                }
+            externalMediaDirs?.forEach { mediaFile ->
+                mediaFile?.listFiles()
+                    ?.filter { it.name.startsWith("copyFile_") }
+                    ?.forEach { file ->
+                        Log.d(TAG, file.name)
+                        file.delete()
+                    }
             }
         }
     }

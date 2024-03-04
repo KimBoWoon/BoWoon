@@ -103,17 +103,6 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
             content?.let {
                 binding.apply {
                     ivContent.setImageURI(content.uri?.toUri())
-//                    when {
-//                        it.uri?.toUri()?.scheme.equals(ContentResolver.SCHEME_FILE, true) -> {
-//                            it.uri?.toUri()?.let { uri ->
-//                                Log.d(TAG, uri.toString())
-//                                ivContent.setImageURI(uri)
-//                            }
-//                        }
-//                        it.uri?.toUri()?.scheme.equals(ContentResolver.SCHEME_CONTENT, true) -> {
-//                            ivContent.setImageURI(content.uri?.toUri())
-//                        }
-//                    }
                 }
             }
         }
@@ -122,92 +111,100 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
     inner class VideoContentVH(
         private val binding: VhContentVideoBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        private lateinit var content: Uri
+        private val listener = ExoPlayerListener()
+
         fun bind(content: Video?) {
             content?.let {
                 binding.apply {
                     exoplayer.apply {
-                        player?.let { player ->
-//                            val session = MediaSession.Builder(binding.root.context, it).build()
-                            setMediaData(content.uri?.toUri())
-                        } ?: run {
-                            attach()
-                            setMediaData(content.uri?.toUri())
-                        }
+//                        val session = MediaSession.Builder(binding.root.context, it).build()
+                        layoutParams.height = binding.root.context.sixteenByNineHeight()
+                        createPlayer(Uri.parse(content.uri))
                     }
                 }
             }
         }
 
-        fun setMediaData(uri: Uri?) {
-            uri?.let {
-                binding.root.post {
-                    MediaItem.fromUri(it).also { item ->
-                        binding.exoplayer.player?.setMediaItem(item)
-                        binding.exoplayer.player?.prepare()
-                    }
-                }
-            } ?: run {
-                Log.e(TAG, "unknown uri...")
+        fun createPlayer(uri: Uri) {
+            content = uri
+            binding.exoplayer.player = ExoPlayer.Builder(binding.root.context).build().apply {
+                repeatMode = Player.REPEAT_MODE_ALL
             }
+        }
+
+        fun setMediaData(uri: Uri) {
+            MediaItem.Builder().setUri(uri).build().apply {
+                binding.exoplayer.player?.setMediaItem(this)
+                binding.exoplayer.player?.prepare()
+            }
+            binding.exoplayer.player?.addListener(listener)
         }
 
         fun attach() {
-            binding.exoplayer.apply {
-                layoutParams.height = binding.root.context.sixteenByNineHeight()
-                player = ExoPlayer.Builder(binding.root.context).build().also {
-                    it.repeatMode = Player.REPEAT_MODE_ALL
-                }
+            Log.d(TAG, "VideoContentVH attach")
+            if (binding.exoplayer.player == null) {
+                Log.d(TAG, "VideoContentVH player is null")
+                createPlayer(content)
             }
+            setMediaData(content)
         }
 
         fun release() {
+            Log.d(TAG, "VideoContentVH release")
+            binding.exoplayer.player?.removeListener(listener)
             binding.exoplayer.player?.release()
+            binding.exoplayer.player = null
         }
     }
 
     inner class AudioContentVH(
         private val binding: VhContentVideoBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        private lateinit var content: Uri
+        private val listener = ExoPlayerListener()
+
         fun bind(content: Audio?) {
             content?.let {
                 binding.apply {
                     exoplayer.apply {
-                        player?.let { player ->
-//                            val session = MediaSession.Builder(binding.root.context, it).build()
-                            setMediaData(content.uri?.toUri())
-                        } ?: run {
-                            attach()
-                            setMediaData(content.uri?.toUri())
-                        }
+//                        val session = MediaSession.Builder(binding.root.context, it).build()
+                        layoutParams.height = binding.root.context.sixteenByNineHeight()
+                        createPlayer(Uri.parse(content.uri))
                     }
                 }
             }
         }
 
-        fun setMediaData(uri: Uri?) {
-            uri?.let {
-                binding.root.post {
-                    MediaItem.fromUri(it).also { item ->
-                        binding.exoplayer.player?.setMediaItem(item)
-                        binding.exoplayer.player?.prepare()
-                    }
-                }
-            } ?: run {
-                Log.e(TAG, "unknown uri...")
+        fun createPlayer(uri: Uri) {
+            content = uri
+            binding.exoplayer.player = ExoPlayer.Builder(binding.root.context).build().apply {
+                repeatMode = Player.REPEAT_MODE_ALL
             }
+        }
+
+        fun setMediaData(uri: Uri) {
+            MediaItem.Builder().setUri(uri).build().apply {
+                binding.exoplayer.player?.setMediaItem(this)
+                binding.exoplayer.player?.prepare()
+            }
+            binding.exoplayer.player?.addListener(listener)
         }
 
         fun attach() {
-            binding.exoplayer.apply {
-                layoutParams.height = binding.root.context.sixteenByNineHeight()
-                player = ExoPlayer.Builder(binding.root.context).build().also {
-                    it.repeatMode = Player.REPEAT_MODE_ALL
-                }
+            Log.d(TAG, "VideoContentVH attach")
+            if (binding.exoplayer.player == null) {
+                Log.d(TAG, "VideoContentVH player is null")
+                createPlayer(content)
             }
+            setMediaData(content)
         }
 
         fun release() {
+            Log.d(TAG, "VideoContentVH release")
+            binding.exoplayer.player?.removeListener(listener)
             binding.exoplayer.player?.release()
+            binding.exoplayer.player = null
         }
     }
 
@@ -239,6 +236,28 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
                     }
                 }
             }
+        }
+    }
+}
+
+class ExoPlayerListener : Player.Listener {
+    companion object {
+        private const val TAG = "fileprovider_exoplayer_listener"
+    }
+    override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+        if (playWhenReady) {
+            Log.d(TAG, "onPlayWhenReadyChanged true")
+        } else {
+            Log.d(TAG, "onPlayWhenReadyChanged false")
+        }
+    }
+
+    override fun onPlaybackStateChanged(playbackState: Int) {
+        when (playbackState) {
+            Player.STATE_READY -> Log.d(TAG, "STATE_READY")
+            Player.STATE_BUFFERING -> Log.d(TAG, "STATE_BUFFERING")
+            Player.STATE_ENDED -> Log.d(TAG, "STATE_ENDED")
+            Player.STATE_IDLE -> Log.d(TAG, "STATE_IDLE")
         }
     }
 }
