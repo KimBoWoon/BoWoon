@@ -17,6 +17,7 @@ import android.webkit.MimeTypeMap
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.database.getIntOrNull
+import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import androidx.core.net.toFile
 import androidx.core.net.toUri
@@ -336,9 +337,7 @@ class MediaManager @Inject constructor(
                 }
                 getCapacity(size / 1024, suffix)
             }
-            false -> {
-                Pair(size, suffix.first())
-            }
+            false -> Pair(size, suffix.first())
         }
 
     fun getDuration(path: String): Long =
@@ -385,6 +384,40 @@ class MediaManager @Inject constructor(
         }
 
     fun getWrapFile(fileUri: Uri): MediaDataClass? =
+//        context.contentResolver.query(
+//            fileUri,
+//            arrayOf(MediaStore.MediaColumns.DISPLAY_NAME, MediaStore.MediaColumns.DURATION, MediaStore.MediaColumns.SIZE, MediaStore.MediaColumns.MIME_TYPE),
+//            null,
+//            null,
+//            null
+//        )?.use { cursor ->
+//            val nameColumn = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME)
+//            val durationColumn = cursor.getColumnIndex(MediaStore.MediaColumns.DURATION)
+//            val sizeColumn = cursor.getColumnIndex(MediaStore.MediaColumns.SIZE)
+//            val mimeColumn = cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE)
+//            cursor.moveToNext()
+//            Log.d(TAG, cursor.getStringOrNull(mimeColumn).toString())
+//            Log.d(TAG, cursor.getIntOrNull(durationColumn).toString())
+//
+//            FileInfo(
+//                cursor.getStringOrNull(nameColumn),
+//                cursor.getStringOrNull(mimeColumn),
+//                getCapacity((cursor.getLongOrNull(sizeColumn) ?: 0).toFloat(), capacitySuffix).run { "$first$second" },
+//                cursor.getIntOrNull(durationColumn)?.toLong()
+//            )
+//        }?.run {
+//            when {
+//                mimeType?.matches("(?i)image/(?i)[a-zA-Z0-9]*".toRegex()) == true -> Image(fileUri, name, size, mimeType, getFileExtension(fileUri))
+//                mimeType?.matches("(?i)video/(?i)[a-zA-Z0-9]*".toRegex()) == true -> Video(fileUri, name, size, mimeType, getFileExtension(fileUri), duration)
+//                mimeType?.matches("(?i)audio/(?i)[a-zA-Z0-9]*".toRegex()) == true -> Audio(fileUri, name, size, mimeType, getFileExtension(fileUri), duration)
+//                mimeType?.matches("(?i)text/(?i)[a-zA-Z0-9]*".toRegex()) == true -> File(fileUri, name, size, mimeType, getFileExtension(fileUri))
+//                mimeType?.matches("(?i)[a-zA-Z0-9]*/(?i)[a-zA-Z0-9]*".toRegex()) == true -> File(fileUri, name, size, mimeType, getFileExtension(fileUri))
+//                else -> {
+//                    Log.e(TAG, "mime not found...")
+//                    null
+//                }
+//            }
+//        }
         when {
             fileUri.scheme.equals(ContentResolver.SCHEME_FILE, true) -> fileUri.toFile()
             fileUri.scheme.equals(ContentResolver.SCHEME_CONTENT, true) -> {
@@ -405,11 +438,11 @@ class MediaManager @Inject constructor(
             getMimeType(file.toUri())?.let { mime ->
                 val size = getCapacity(file.length().toFloat(), capacitySuffix).run { "$first$second" }
                 when {
-                    mime.matches("(?i)image/(?i)[a-zA-Z0-9]*".toRegex()) -> Image(file.toUri().toString(), file.name, size, mime, getFileExtension(file.toUri()))
-                    mime.matches("(?i)video/(?i)[a-zA-Z0-9]*".toRegex()) -> Video(file.toUri().toString(), file.name, getDuration(file.path), size, mime, getFileExtension(file.toUri()))
-                    mime.matches("(?i)audio/(?i)[a-zA-Z0-9]*".toRegex()) -> Audio(file.toUri().toString(), file.name, getDuration(file.path), size, mime, getFileExtension(file.toUri()))
-                    mime.matches("(?i)text/(?i)[a-zA-Z0-9]*".toRegex()) -> File(file.toUri().toString(), file.name, size, mime, getFileExtension(file.toUri()))
-                    mime.matches("(?i)[a-zA-Z0-9]*/(?i)[a-zA-Z0-9]*".toRegex()) -> File(file.toUri().toString(), file.name, size, mime, getFileExtension(file.toUri()))
+                    mime.matches("(?i)image/(?i)[a-zA-Z0-9]*".toRegex()) -> Image(file.toUri(), file.name, size, mime, getFileExtension(file.toUri()))
+                    mime.matches("(?i)video/(?i)[a-zA-Z0-9]*".toRegex()) -> Video(file.toUri(), file.name, size, mime, getFileExtension(file.toUri()), getDuration(file.path))
+                    mime.matches("(?i)audio/(?i)[a-zA-Z0-9]*".toRegex()) -> Audio(file.toUri(), file.name, size, mime, getFileExtension(file.toUri()), getDuration(file.path))
+                    mime.matches("(?i)text/(?i)[a-zA-Z0-9]*".toRegex()) -> File(file.toUri(), file.name, size, mime, getFileExtension(file.toUri()))
+                    mime.matches("(?i)[a-zA-Z0-9]*/(?i)[a-zA-Z0-9]*".toRegex()) -> File(file.toUri(), file.name, size, mime, getFileExtension(file.toUri()))
                     else -> {
                         Log.e(TAG, "mime not found...")
                         null

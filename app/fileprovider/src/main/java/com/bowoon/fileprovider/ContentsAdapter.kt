@@ -3,7 +3,7 @@ package com.bowoon.fileprovider
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.net.toUri
+import androidx.core.net.toFile
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -102,7 +102,7 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
         fun bind(content: Image?) {
             content?.let {
                 binding.apply {
-                    ivContent.setImageURI(content.uri?.toUri())
+                    ivContent.setImageURI(content.uri)
                 }
             }
         }
@@ -111,12 +111,12 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
     inner class VideoContentVH(
         private val binding: VhContentVideoBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        private lateinit var content: Uri
+        private var content: Uri? = null
         private val listener = ExoPlayerListener()
 
         fun bind(content: Video?) {
             content?.let {
-                this@VideoContentVH.content = Uri.parse(content.uri)
+                this@VideoContentVH.content = content.uri
 
                 binding.apply {
                     exoplayer.apply {
@@ -164,12 +164,12 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
     inner class AudioContentVH(
         private val binding: VhContentVideoBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        private lateinit var content: Uri
+        private var content: Uri? = null
         private val listener = ExoPlayerListener()
 
         fun bind(content: Audio?) {
             content?.let {
-                this@AudioContentVH.content = Uri.parse(content.uri)
+                this@AudioContentVH.content = content.uri
 
                 binding.apply {
                     exoplayer.apply {
@@ -224,7 +224,7 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
                         it.mime?.matches("(?i)text/(?i)plain".toRegex()) ?: false
                     }?.run {
                         uri?.let {
-                            FileInputStream(it).use { fis ->
+                            FileInputStream(it.toFile()).use { fis ->
                                 InputStreamReader(fis).use { isr ->
                                     val data = isr.readLines()
                                     Log.d(TAG, data.toString())
@@ -250,6 +250,7 @@ class ExoPlayerListener : Player.Listener {
     companion object {
         private const val TAG = "fileprovider_exoplayer_listener"
     }
+
     override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
         if (playWhenReady) {
             Log.d(TAG, "onPlayWhenReadyChanged true")

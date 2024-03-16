@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bowoon.commonutils.getSafetyParcelableExtra
 import com.bowoon.fileprovider.databinding.ActivityContentsBinding
 import com.bowoon.mediastore.ChooseItemList
-import com.bowoon.mediastore.Image
-import com.bowoon.mediastore.MediaDataClass
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,7 +20,7 @@ class ContentsActivity : AppCompatActivity() {
     private val binding: ActivityContentsBinding by lazy {
         DataBindingUtil.setContentView(this@ContentsActivity, R.layout.activity_contents)
     }
-    private lateinit var list: List<MediaDataClass>
+    private val adapter = ContentsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +30,9 @@ class ContentsActivity : AppCompatActivity() {
         }
 
         intent.getSafetyParcelableExtra<ChooseItemList>(CONTENTS)?.run {
-            this.list?.let { this@ContentsActivity.list = it }
+            this.list?.let {
+                adapter.submitList(it)
+            }
         }
 
         initBinding()
@@ -41,12 +41,10 @@ class ContentsActivity : AppCompatActivity() {
     private fun initBinding() {
         binding.apply {
             rvContentsList.apply {
-                val spanCount = 1 // if (list.firstOrNull() is Image) 3 else 1
+                val spanCount = 1
 
                 layoutManager = GridLayoutManager(this@ContentsActivity, spanCount, RecyclerView.VERTICAL, false)
-                adapter = ContentsAdapter().apply {
-                    submitList(list)
-                }
+                adapter = this@ContentsActivity.adapter
             }
         }
     }

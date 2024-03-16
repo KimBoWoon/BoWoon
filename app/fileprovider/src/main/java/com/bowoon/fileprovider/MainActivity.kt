@@ -43,12 +43,14 @@ class MainActivity : AppCompatActivity() {
                     true -> showToast("선택한 파일이 없습니다.", Toast.LENGTH_SHORT)
                     false -> {
                         mediaManager.getWrapFile(uri)?.let {
-                            startActivity(Intent(this@MainActivity, ContentsActivity::class.java).apply {
-                                putExtra(
-                                    ContentsActivity.CONTENTS,
-                                    ChooseItemList(list = listOf(it))
-                                )
-                            })
+                            startActivity(
+                                Intent(this@MainActivity, ContentsActivity::class.java).apply {
+                                    putExtra(
+                                        ContentsActivity.CONTENTS,
+                                        ChooseItemList(listOf(it))
+                                    )
+                                }
+                            )
                         }
                     }
                 }
@@ -76,12 +78,14 @@ class MainActivity : AppCompatActivity() {
                     true -> showToast("선택한 파일이 없습니다.", Toast.LENGTH_SHORT)
                     false -> {
                         mediaManager.getWrapFile(uri)?.let {
-                            startActivity(Intent(this@MainActivity, ContentsActivity::class.java).apply {
-                                putExtra(
-                                    ContentsActivity.CONTENTS,
-                                    ChooseItemList(list = listOf(it))
-                                )
-                            })
+                            startActivity(
+                                Intent(this@MainActivity, ContentsActivity::class.java).apply {
+                                    putExtra(
+                                        ContentsActivity.CONTENTS,
+                                        ChooseItemList(listOf(it))
+                                    )
+                                }
+                            )
                         }
                     }
                 }
@@ -196,36 +200,6 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //        )
-//        mediaManager.getInternalCacheFiles { files ->
-//            files.map { file ->
-//                mediaManager.getWrapFile(file.toUri())
-//            }.run {
-//                this.forEach {
-//                    Log.d(TAG, it.toString())
-//                }
-////                startActivity(this.filterNotNull())
-//            }
-//        }
-//        mediaManager.getExternalCacheFiles { files ->
-//            files.map { file ->
-//                mediaManager.getWrapFile(file.toUri())
-//            }.run {
-//                this.forEach {
-//                    Log.d(TAG, it.toString())
-//                }
-////                startActivity(this.filterNotNull())
-//            }
-//        }
-//        mediaManager.getInternalFiles { files ->
-//            files.map { file ->
-//                mediaManager.getWrapFile(file.toUri())
-//            }.run {
-//                this.forEach {
-//                    Log.d(TAG, it.toString())
-//                }
-////                startActivity(this.filterNotNull())
-//            }
-//        }
     }
     private val deniedLambda: () -> Unit = {
         Log.d(TAG, "denied")
@@ -276,12 +250,14 @@ class MainActivity : AppCompatActivity() {
         when (mediaList.isEmpty()) {
             true -> showToast("선택한 파일이 없습니다.", Toast.LENGTH_SHORT)
             false -> {
-                startActivity(Intent(this@MainActivity, ContentsActivity::class.java).apply {
-                    putExtra(
-                        ContentsActivity.CONTENTS,
-                        ChooseItemList(mediaList)
-                    )
-                })
+                startActivity(
+                    Intent(this@MainActivity, ContentsActivity::class.java).apply {
+                        putExtra(
+                            ContentsActivity.CONTENTS,
+                            ChooseItemList(mediaList)
+                        )
+                    }
+                )
             }
         }
     }

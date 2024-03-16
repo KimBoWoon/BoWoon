@@ -1,49 +1,61 @@
 package com.bowoon.mediastore
 
+import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
-import java.io.Serializable
 
-sealed interface MediaDataClass
+sealed interface MediaDataClass {
+    val uri: Uri?
+    val name: String?
+    val size: String?
+    val mime: String?
+    val extension: String?
+}
 
+@Parcelize
 data class Image(
-    val uri: String? = null,
-    val name: String? = null,
-    val size: String? = null,
-    val mime: String? = null,
-    val extension: String? = null
-) : MediaDataClass, Serializable
+    override val uri: Uri? = null,
+    override val name: String? = null,
+    override val size: String? = null,
+    override val mime: String? = null,
+    override val extension: String? = null,
+) : MediaDataClass, Parcelable
 
+@Parcelize
 data class Video(
-    val uri: String? = null,
-    val name: String? = null,
-    val duration: Long? = null,
-    val size: String? = null,
-    val mime: String? = null,
-    val extension: String? = null
-) : MediaDataClass, Serializable
+    override val uri: Uri? = null,
+    override val name: String? = null,
+    override val size: String? = null,
+    override val mime: String? = null,
+    override val extension: String? = null,
+    val duration: Long? = null
+) : MediaDataClass, Parcelable
 
+@Parcelize
 data class Audio(
-    val uri: String? = null,
-    val name: String? = null,
-    val duration: Long? = null,
-    val size: String? = null,
-    val mime: String? = null,
-    val extension: String? = null
-) : MediaDataClass, Serializable
+    override val uri: Uri? = null,
+    override val name: String? = null,
+    override val size: String? = null,
+    override val mime: String? = null,
+    override val extension: String? = null,
+    val duration: Long? = null
+) : MediaDataClass, Parcelable
 
+@Parcelize
 data class File(
-    val uri: String? = null,
-    val name: String? = null,
-    val size: String? = null,
-    val mime: String? = null,
-    val extension: String? = null
-) : MediaDataClass, Serializable
+    override val uri: Uri? = null,
+    override val name: String? = null,
+    override val size: String? = null,
+    override val mime: String? = null,
+    override val extension: String? = null
+) : MediaDataClass, Parcelable
 
 data class FileInfo(
     val name: String? = null,
-    val mimeType: String? = null
+    val mimeType: String? = null,
+    val size: String? = null,
+    val duration: Long? = null
 )
 
 @Parcelize
