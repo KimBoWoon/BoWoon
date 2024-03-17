@@ -1,6 +1,8 @@
 package com.bowoon.timer
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -8,42 +10,51 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class Timer {
-    private var timerJob: Job? = Job()
-    private var start = 0
+    companion object {
+        private const val TAG = "feat_module_timer"
+    }
+    private var timerJob: Job? = null
+    private var period: Long = 1
     val timerFlow = MutableStateFlow<TimerStatus>(TimerStatus.UnInitialized)
 
-    fun startPeriodTimer(period: Long, action: () -> Unit) {
-        timerJob = CoroutineScope(Dispatchers.IO).launch {
-            while (true) {
-                action.invoke()
-                delay(period)
+    fun ready(period: Long) {
+        timerFlow.value = TimerStatus.Ready
+        this@Timer.period = period
+    }
+
+    fun start(action: () -> Unit) {
+        if (timerJob == null) {
+            timerJob = CoroutineScope(Dispatchers.IO).launch(start = CoroutineStart.LAZY) {
+                while (timerFlow.value == TimerStatus.Start) {
+                    action.invoke()
+                    delay(period)
+                }
             }
         }
         timerFlow.value = TimerStatus.Start
+        timerJob?.start()
     }
 
-    fun startTimer(afterTime: Long, action: () -> Unit) {
-        timerJob = CoroutineScope(Dispatchers.IO).launch {
-            while (start < afterTime) {
-                delay(1000)
-                start += 1000
-            }
-            action.invoke()
-        }
-    }
-
-    fun stopTimer() {
+    fun pause() {
         timerJob?.let {
-            if (it.isActive) {
-                it.cancel()
+            if (it.isActive && timerFlow.value == TimerStatus.Start) {
+                timerFlow.value = TimerStatus.Pause
             }
-            timerJob = null
         }
-        timerFlow.value = TimerStatus.Stop
     }
 
-    fun pauseTimer() {
-        timerFlow.value = TimerStatus.Pause
+    fun stop() {
+        if (timerFlow.value == TimerStatus.Start) {
+            timerJob?.let {
+                if (it.isActive) {
+                    it.cancel()
+                }
+                timerJob = null
+            }
+            timerFlow.value = TimerStatus.Stop
+        } else {
+            Log.d(TAG, "timer status is not start...")
+        }
     }
 }
 

@@ -12,14 +12,14 @@ dependencies {
         libs.serialization.kotlin,
         libs.serialization.converter,
         libs.retrofit2,
-        libs.okhttp.bom,
         libs.okhttp.okhttp,
         libs.okhttp.logging,
         libs.okhttp.profiler,
         libs.tikxml.annotation,
         libs.tikxml.retrofitConverter,
         libs.tikxml.core,
-        project(":core:commonUtils")
+        project(":core:commonUtils"),
+        platform(libs.okhttp.bom)
     ).forEach {
         implementation(it)
     }
