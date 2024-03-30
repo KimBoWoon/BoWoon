@@ -17,7 +17,13 @@ import com.bowoon.commonutils.DataStatus
 import com.bowoon.commonutils.Log
 import com.bowoon.commonutils.ScreenUtils.dp
 import com.bowoon.commonutils.ViewAdapter.onDebounceClickListener
+import com.bowoon.commonutils.getActiveNetwork
+import com.bowoon.commonutils.getDeviceUniqueId
+import com.bowoon.commonutils.getVersionCode
+import com.bowoon.commonutils.getVersionName
+import com.bowoon.commonutils.getWifi
 import com.bowoon.commonutils.recyclerView
+import com.bowoon.imageloader.ImageLoader
 import com.bowoon.rss_reader.R
 import com.bowoon.rss_reader.activities.vm.MainVM
 import com.bowoon.rss_reader.adapter.RssAdapter
@@ -34,7 +40,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     companion object {
-        private const val TAG = "MainActivity"
+        private const val TAG = "rss_reader_main_activity"
     }
 
     private val viewModel by viewModels<MainVM>()
@@ -47,8 +53,26 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
         lifecycle.addObserver(viewModel)
 
+//        ImageLoader.download(this@MainActivity, "https://i.namu.wiki/i/-FQ7KnBEx8Ag4Qvl3Xs9Tfep5pdHqAJAG03vbf3jzk_-lPFpJvPU5s4gdVz1Qlbar1m2LTuRcRGBJnyv7j4pm0thRzg_mMHplR8sZUJZLcaZMp6sfUf4Uxoy0dZzFJY1ylbEK2btbYvIYMW691a6gA.webp")
+
+        Log.d(TAG, getActiveNetwork().toString())
+        Log.d(TAG, getWifi().toString())
+        Log.d(TAG, getDeviceUniqueId())
+        Log.d(TAG, getVersionName())
+        Log.d(TAG, getVersionCode().toString())
+
         initBinding()
         initFlow()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (binding.vpRssList.recyclerView.findViewHolderForAdapterPosition(binding.vpRssList.currentItem) as? RssContentVH)?.startAutoScroll()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (binding.vpRssList.recyclerView.findViewHolderForAdapterPosition(binding.vpRssList.currentItem) as? RssContentVH)?.stopAutoScroll()
     }
 
     override fun initBinding() {
@@ -141,9 +165,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.rss.collectLatest {
                     when (it) {
-                        is DataStatus.Loading -> {
-                            binding.pbLoading.isVisible = true
-                        }
+                        is DataStatus.Loading -> binding.pbLoading.isVisible = true
                         is DataStatus.Success -> {
                             binding.pbLoading.isVisible = false
                             (binding.vpRssList.adapter as? RssAdapter)?.submitList(it.data)

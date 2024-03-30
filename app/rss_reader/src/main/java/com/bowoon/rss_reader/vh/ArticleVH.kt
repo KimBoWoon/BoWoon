@@ -11,10 +11,8 @@ import com.bowoon.rss_reader.activities.ArticleDetailActivity
 import com.bowoon.rss_reader.data.Item
 import com.bowoon.rss_reader.databinding.VhArticleBinding
 import com.bowoon.timer.Timer
-import com.bowoon.timer.TimerStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
@@ -74,7 +72,7 @@ class ArticleVH(
                                 .attr("content")
                         }.onSuccess { imgUrl ->
                             withContext(Dispatchers.Main) {
-                                ImageLoader.load(
+                                ImageLoader.backgroundLoad(
                                     binding.root.context,
                                     ivArticleImage,
                                     imgUrl,

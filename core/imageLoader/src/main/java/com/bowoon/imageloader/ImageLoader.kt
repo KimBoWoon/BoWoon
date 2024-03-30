@@ -10,6 +10,9 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object ImageLoader {
     private const val TAG = "#ImageLoader"
@@ -50,13 +53,55 @@ object ImageLoader {
             .into(imageView)
     }
 
+    fun backgroundLoad(
+        context: Context,
+        imageView: ImageView,
+        source: Any,
+        option: ImageOptions? = null
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            Glide.with(context)
+                .load(source)
+                .apply(option ?: RequestOptions())
+                .listener(
+                    object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            Log.printStackTrace(e)
+                            return false
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            Log.d(TAG, "model > [$model], dataSource > [$dataSource], width > [${resource?.intrinsicWidth}], height > [${resource?.intrinsicHeight}]")
+                            imageView.setImageDrawable(resource)
+                            return false
+                        }
+                    }
+                )
+                .submit()
+                .get()
+        }
+    }
+
     fun download(
         context: Context,
         source: String
     ) {
-        Glide.with(context)
-            .download(source)
-            .submit()
-            .get()
+        CoroutineScope(Dispatchers.IO).launch {
+            Glide.with(context)
+                .download(source)
+                .submit()
+                .get()
+        }
     }
 }

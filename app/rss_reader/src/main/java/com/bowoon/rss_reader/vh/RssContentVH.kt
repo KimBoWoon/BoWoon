@@ -22,25 +22,36 @@ class RssContentVH(
         const val DELAY_TIME_SECOND = 2000L
     }
 
-    private var job: Job? = null
+    private var autoScrollJob: Job? = null
 
     fun bind(items: Rss) {
         binding.apply {
             rvRssList.apply {
 //                offscreenPageLimit = items.channel?.items?.size ?: 1
                 adapter = InfiniteScrollAdapter().apply {
-                    submitList(items.channel?.items)
+                    submitList(items.channel?.items?.take(3))
                 }
                 setCurrentItem(1, false)
                 registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
                     override fun onPageSelected(position: Int) {}
                     override fun onPageScrollStateChanged(state: Int) {
+                        val listSize = (adapter?.itemCount ?: 0)
                         when (state) {
-                            ViewPager2.SCROLL_STATE_IDLE, ViewPager2.SCROLL_STATE_DRAGGING -> {
+                            ViewPager2.SCROLL_STATE_IDLE -> {
+                                if (autoScrollJob?.isCancelled == true) {
+                                    Log.d(TAG, "auto scroll start")
+                                    startAutoScroll()
+                                }
                                 when (currentItem) {
-                                    0 -> setCurrentItem((adapter?.itemCount ?: 0) - 2, false)
-                                    (adapter?.itemCount ?: 0) - 1 -> setCurrentItem(1, false)
+                                    listSize - 1 -> setCurrentItem(1, false)
+                                    0 -> setCurrentItem(listSize - 2, false)
+                                }
+                            }
+                            ViewPager2.SCROLL_STATE_DRAGGING -> {
+                                if (autoScrollJob?.isActive == true) {
+                                    Log.d(TAG, "auto scroll cancel")
+                                    autoScrollJob?.cancel()
                                 }
                             }
                             ViewPager2.SCROLL_STATE_SETTLING -> Log.d(TAG, "ViewPager2.SCROLL_STATE_SETTLING")
@@ -53,7 +64,7 @@ class RssContentVH(
 
     fun startAutoScroll() {
         Log.d(TAG, "start auto scroll")
-        job = flow {
+        autoScrollJob = flow {
             while (true) {
                 delay(DELAY_TIME_SECOND)
                 emit(Unit)
@@ -66,7 +77,7 @@ class RssContentVH(
     }
 
     fun stopAutoScroll() {
-        job?.cancel()
-        job = null
+        autoScrollJob?.cancel()
+        autoScrollJob = null
     }
 }

@@ -29,19 +29,19 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
         private val diff = object : DiffUtil.ItemCallback<MediaDataClass>() {
             override fun areItemsTheSame(oldItem: MediaDataClass, newItem: MediaDataClass): Boolean =
                 when {
-                    oldItem is Image && newItem is Image -> oldItem == newItem
-                    oldItem is Video && newItem is Video -> oldItem == newItem
-                    oldItem is Audio && newItem is Audio -> oldItem == newItem
-                    oldItem is File && newItem is File -> oldItem == newItem
+                    oldItem is Image && newItem is Image -> oldItem.name == newItem.name
+                    oldItem is Video && newItem is Video -> oldItem.name == newItem.name
+                    oldItem is Audio && newItem is Audio -> oldItem.name == newItem.name
+                    oldItem is File && newItem is File -> oldItem.name == newItem.name
                     else -> false
                 }
 
             override fun areContentsTheSame(oldItem: MediaDataClass, newItem: MediaDataClass): Boolean =
                 when {
-                    oldItem is Image && newItem is Image -> oldItem.uri == newItem.uri && oldItem.name == newItem.name
-                    oldItem is Video && newItem is Video -> oldItem.uri == newItem.uri && oldItem.name == newItem.name
-                    oldItem is Audio && newItem is Audio -> oldItem.uri == newItem.uri && oldItem.name == newItem.name
-                    oldItem is File && newItem is File -> oldItem.uri == newItem.uri && oldItem.name == newItem.name
+                    oldItem is Image && newItem is Image -> oldItem.uri == newItem.uri && oldItem.size == newItem.size && oldItem.mime == newItem.mime
+                    oldItem is Video && newItem is Video -> oldItem.uri == newItem.uri && oldItem.size == newItem.size && oldItem.mime == newItem.mime
+                    oldItem is Audio && newItem is Audio -> oldItem.uri == newItem.uri && oldItem.size == newItem.size && oldItem.mime == newItem.mime
+                    oldItem is File && newItem is File -> oldItem.uri == newItem.uri && oldItem.size == newItem.size && oldItem.mime == newItem.mime
                     else -> false
                 }
         }
@@ -90,10 +90,10 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
         super.onViewDetachedFromWindow(holder)
 
-        when (holder) {
-            is VideoContentVH -> holder.release()
-            is AudioContentVH -> holder.release()
-        }
+//        when (holder) {
+//            is VideoContentVH -> holder.release()
+//            is AudioContentVH -> holder.release()
+//        }
     }
 
     inner class ImageContentVH(
