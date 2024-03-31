@@ -1,7 +1,7 @@
 package com.bowoon.component.utils
 
 import com.bowoon.component.data.Component
-import com.bowoon.component.adapters.ComponentType
+import com.bowoon.component.data.ComponentType
 import com.bowoon.component.data.Components
 
 class ComponentUtils {

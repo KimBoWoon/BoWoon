@@ -57,7 +57,3 @@ class ComponentAdapter : ListAdapter<Components, RecyclerView.ViewHolder>(DIFF) 
         }
     } ?: NO_ID
 }
-
-enum class ComponentType {
-    TEXT, IMAGE, TAB
-}
