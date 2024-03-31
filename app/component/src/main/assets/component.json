@@ -1,0 +1,142 @@
+{
+  "components": [
+    {
+      "type": "TAB",
+      "content": {
+        "width": -1,
+        "height": -1,
+        "mode": 1,
+        "tabs": [
+          {
+            "name": "a",
+            "component": [
+              {
+                "type": "TEXT",
+                "content": {
+                  "width": -1,
+                  "height": -2,
+                  "topMargin": 16,
+                  "startMargin": 16,
+                  "endMargin": 16,
+                  "text": "Hello, World!",
+                  "size": 30,
+                  "color": "#0000FF",
+                  "style": [
+                    "bold",
+                    "italic",
+                    "underline"
+                  ]
+                }
+              },
+              {
+                "type": "IMAGE",
+                "content": {
+                  "width": -1,
+                  "height": -1,
+                  "url": "https://i.namu.wiki/i/jblejVdGY8aClUhN3DK9lTI4QHmaZguml-xk86gEp5O5DNFjKsK4XTomkGVLdYdnbLWQBhulDaKSaYqNOrSs1k86t391jpSTdXjs1rsMEYJnUl_DB49gpbDVX3MAvourfKHBslS7ObZ-HjSKdtxtbw.webp"
+                }
+              }
+            ]
+          },
+          {
+            "name": "b",
+            "component": [
+              {
+                "type": "TEXT",
+                "content": {
+                  "width": -1,
+                  "height": -2,
+                  "topMargin": 16,
+                  "startMargin": 16,
+                  "endMargin": 16,
+                  "text": "Hello, World!",
+                  "size": 30,
+                  "color": "#00FF00",
+                  "style": [
+                    "bold",
+                    "italic",
+                    "underline"
+                  ]
+                }
+              },
+              {
+                "type": "IMAGE",
+                "content": {
+                  "width": -1,
+                  "height": -1,
+                  "url": "https://i.namu.wiki/i/8M4yMvHKOXisFTvxGNHB6PAcI1zNe5nmeR_viieCOLHy7T5U_uCnFOaG0Jl_MS1shhTcb4PbHzwFsWoII-1DWa5MRTlm7JtqkXhO01THfOyRo5dEcdSU9lwxYHoXJw4JC_iz6Iy296pkyCe3FdQBNQ.webp"
+                }
+              }
+            ]
+          },
+          {
+            "name": "c",
+            "component": [
+              {
+                "type": "TEXT",
+                "content": {
+                  "width": -1,
+                  "height": -2,
+                  "topMargin": 16,
+                  "startMargin": 16,
+                  "endMargin": 16,
+                  "text": "Hello, World!",
+                  "size": 30,
+                  "color": "#FF0000",
+                  "style": [
+                    "bold",
+                    "italic",
+                    "underline"
+                  ]
+                }
+              },
+              {
+                "type": "IMAGE",
+                "content": {
+                  "width": -1,
+                  "height": -1,
+                  "url": "https://i.namu.wiki/i/06EmHycxfaEhtvI-bfXMSKFNgkR0TpYJELwDgQm0pr9FTqnHtoDNmzv726ODfTf4tOdNllNZbxf7jksP00s_KPoCrwp-422LPfOzp9TNRT8N4DrIdqGqK_6sLjGz9OYKWmlBX84fLCjvIfUtzlt7Ug.webp"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "TEXT",
+      "content": {
+        "width": -1,
+        "height": -2,
+        "topMargin": 16,
+        "startMargin": 16,
+        "endMargin": 16,
+        "text": "Hello, World!",
+        "size": 30,
+        "color": "#FFFF00",
+        "style": [
+          "bold",
+          "italic",
+          "underline"
+        ]
+      }
+    },
+    {
+      "type": "IMAGE",
+      "content": {
+        "width": -1,
+        "height": -1,
+        "startMargin": 16,
+        "endMargin": 16,
+        "topMargin": 16,
+        "bottomMargin": 16,
+        "url": "https://i.namu.wiki/i/QUy2iyjPWEhs5ayzgVCiVLTmrB8LoXd7EoJ4lFm6-fZjDb9i0s_kzzV0DRlrw2Fo3Bun-Go1qURFySHTAu6oqWkHhUnyIwnwCSxwyx3apyfnsPcfYHIRNPK1_N9X74tkg6XQ8FmN_ahNyvEqmXfAWA.webp",
+        "radius": 0,
+        "topLeftRadius": 10.0,
+        "topRightRadius": 20.0,
+        "bottomLeftRadius": 30.0,
+        "bottomRightRadius": 40.0
+      }
+    }
+  ]
+}

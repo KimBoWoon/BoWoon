@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="content"
+            type="com.bowoon.component.data.Components.ImageComponent" />
+    </data>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_image_component"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:bottomLeft="@{content.bottomLeftRadius}"
+        app:bottomRight="@{content.bottomRightRadius}"
+        app:radius="@{content.radius}"
+        app:source="@{content.url}"
+        app:topLeft="@{content.topLeftRadius}"
+        app:topRight="@{content.topRightRadius}" />
+</layout>

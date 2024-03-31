@@ -9,7 +9,7 @@ import com.bumptech.glide.request.target.Target
 object BindingAdapter {
     @JvmStatic
     @BindingAdapter(
-        "loadImage",
+        "source",
         "width",
         "height",
         "placeholder",

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.bowoon.commonutils.UtilsKt" />
+
+        <import type="android.graphics.Color" />
+
+        <variable
+            name="content"
+            type="com.bowoon.component.data.Components.TextComponent" />
+    </data>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_text_component"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{content.text}"
+        android:textColor="@{Color.parseColor(content.color)}"
+        android:textSize="@{UtilsKt.dp(content.size)}" />
+</layout>

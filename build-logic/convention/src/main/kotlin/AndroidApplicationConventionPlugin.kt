@@ -20,10 +20,20 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.android")
                 apply("org.jetbrains.kotlin.plugin.serialization")
                 apply("org.jetbrains.kotlin.plugin.parcelize")
-//                apply("com.google.firebase.firebase-perf")
-//                apply("com.google.firebase.crashlytics")
-//                apply("com.google.gms.google-services")
                 apply("androidx.navigation.safeargs.kotlin")
+
+                when (name) {
+                    Config.Application.GpsAlarm.appName,
+                    Config.Application.RssReader.appName -> {
+                        apply("com.google.firebase.firebase-perf")
+                        apply("com.google.firebase.crashlytics")
+                        apply("com.google.gms.google-services")
+                    }
+                    Config.Application.Lol.appName,
+                    Config.Application.Practice.appName,
+                    Config.Application.FileProvider.appName,
+                    Config.Application.Component.appName -> {}
+                }
             }
 
             extensions.configure<ApplicationExtension> {
@@ -34,6 +44,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                         Config.Application.Lol.appName -> Config.Application.Lol
                         Config.Application.Practice.appName -> Config.Application.Practice
                         Config.Application.FileProvider.appName -> Config.Application.FileProvider
+                        Config.Application.Component.appName -> Config.Application.Component
                         else -> throw RuntimeException("This is an undefined app. $name")
                     }.apply {
                         compileSdk = compileSdkVersion
@@ -104,6 +115,20 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                                             keyPassword = getProp(Config.Application.RssReader.Sign.Debug.keyPassword)
                                         }
                                     }
+                                    Config.Application.Component.appName -> {
+                                        create(Config.Application.Component.Sign.Release.name) {
+                                            storeFile = file(getProp(Config.Application.Component.Sign.Release.storeFile))
+                                            storePassword = getProp(Config.Application.Component.Sign.Release.storePassword)
+                                            keyAlias = getProp(Config.Application.Component.Sign.Release.keyAlias)
+                                            keyPassword = getProp(Config.Application.Component.Sign.Release.keyPassword)
+                                        }
+                                        getByName(Config.Application.Component.Sign.Debug.name) {
+                                            storeFile = file(getProp(Config.Application.Component.Sign.Debug.storeFile))
+                                            storePassword = getProp(Config.Application.Component.Sign.Debug.storePassword)
+                                            keyAlias = getProp(Config.Application.Component.Sign.Debug.keyAlias)
+                                            keyPassword = getProp(Config.Application.Component.Sign.Debug.keyPassword)
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -146,6 +171,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                             Config.Application.RssReader.applicationId -> {
                                 signingConfigs.getByName(Config.Application.RssReader.Sign.Release.name)
                             }
+                            Config.Application.Component.applicationId -> {
+                                signingConfigs.getByName(Config.Application.Component.Sign.Release.name)
+                            }
                         }
                     }
                     debug {
@@ -163,6 +191,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                             }
                             Config.Application.RssReader.applicationId -> {
                                 signingConfigs.getByName(Config.Application.RssReader.Sign.Debug.name)
+                            }
+                            Config.Application.Component.applicationId -> {
+                                signingConfigs.getByName(Config.Application.Component.Sign.Debug.name)
                             }
                         }
                     }

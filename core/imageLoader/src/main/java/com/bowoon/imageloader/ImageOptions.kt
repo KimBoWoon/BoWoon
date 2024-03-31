@@ -42,7 +42,7 @@ data class ImageOptions(
         }
 
         when {
-            radius != null -> transform(RoundedCorners(radius.dp))
+            radius != null && radius > 0 -> transform(RoundedCorners(radius.dp))
             topLeftRadius != -1f || topRightRadius != -1f || bottomLeftRadius != -1f || bottomRightRadius != -1f ->
                 transform(GranularRoundedCorners(topLeftRadius, topRightRadius, bottomRightRadius, bottomLeftRadius))
             else -> null

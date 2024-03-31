@@ -17,6 +17,8 @@ object ScreenUtils {
     val Int.dp: Int get() = (this.toFloat() * Resources.getSystem().displayMetrics.density).roundToInt()
 }
 
+fun Int.dp(): Int = (this.toFloat() * Resources.getSystem().displayMetrics.density).roundToInt()
+
 object ContextUtils {
     fun Context?.showToast(message: String, duration: Int) {
         Toast.makeText(this, message, duration).show()
