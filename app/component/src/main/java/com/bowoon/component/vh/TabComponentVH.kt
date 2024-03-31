@@ -1,15 +1,12 @@
 package com.bowoon.component.vh
 
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bowoon.commonutils.ScreenUtils.dp
+import com.bowoon.component.adapters.TabContentAdapter
 import com.bowoon.component.data.Components
-import com.bowoon.component.data.Tab
 import com.bowoon.component.databinding.VhTabComponentBinding
-import com.bowoon.component.ui.ContentFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -45,7 +42,7 @@ class TabComponentVH(
                 }
 
                 vpTabContent.apply {
-                    adapter = ViewPagerAdapter(binding.root.context as FragmentActivity, it.tabs)
+                    adapter = TabContentAdapter(binding.root.context as FragmentActivity, it.tabs)
                 }
 
                 TabLayoutMediator(tlTabComponent, vpTabContent) { tab, index ->
@@ -54,14 +51,4 @@ class TabComponentVH(
             }
         }
     }
-}
-
-class ViewPagerAdapter(
-    private val fa: FragmentActivity,
-    private val items: List<Tab>? = null
-) : FragmentStateAdapter(fa) {
-    override fun getItemCount(): Int = items?.size ?: 0
-
-    override fun createFragment(position: Int): Fragment =
-        ContentFragment(items?.get(position))
 }
