@@ -21,8 +21,11 @@ object ImageLoader {
         context: Context,
         imageView: ImageView,
         source: Any,
-        option: ImageOptions? = null
+        option: ImageOptions? = null,
+        listener: ImageLoadListener? = null
     ) {
+        listener?.onStart()
+
         Glide.with(context)
             .load(source)
             .apply(option ?: RequestOptions())
@@ -35,6 +38,7 @@ object ImageLoader {
                         isFirstResource: Boolean
                     ): Boolean {
                         Log.printStackTrace(e)
+                        listener?.onFailed(e, model)
                         return false
                     }
 
@@ -46,11 +50,48 @@ object ImageLoader {
                         isFirstResource: Boolean
                     ): Boolean {
                         Log.d(TAG, "model > [$model], dataSource > [$dataSource], width > [${resource?.intrinsicWidth}], height > [${resource?.intrinsicHeight}]")
+                        listener?.onSuccess(resource, model, dataSource)
                         return false
                     }
                 }
             )
             .into(imageView)
+    }
+
+    fun preload(
+        context: Context,
+        source: Any,
+        option: ImageOptions? = null
+    ) {
+        Glide.with(context)
+            .load(source)
+            .apply(option ?: RequestOptions())
+            .preload()
+//            .listener(
+//                object : RequestListener<Drawable> {
+//                    override fun onLoadFailed(
+//                        e: GlideException?,
+//                        model: Any?,
+//                        target: Target<Drawable>?,
+//                        isFirstResource: Boolean
+//                    ): Boolean {
+//                        Log.printStackTrace(e)
+//                        return false
+//                    }
+//
+//                    override fun onResourceReady(
+//                        resource: Drawable?,
+//                        model: Any?,
+//                        target: Target<Drawable>?,
+//                        dataSource: DataSource?,
+//                        isFirstResource: Boolean
+//                    ): Boolean {
+//                        Log.d(TAG, "model > [$model], dataSource > [$dataSource], width > [${resource?.intrinsicWidth}], height > [${resource?.intrinsicHeight}]")
+//                        return false
+//                    }
+//                }
+//            )
+//            .into(imageView)
     }
 
     fun backgroundLoad(

@@ -1,13 +1,14 @@
 package com.bowoon.component.ui
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bowoon.commonutils.Log
+import com.bowoon.component.R
 import com.bowoon.component.adapters.ComponentAdapter
 import com.bowoon.component.data.ComponentData
 import com.bowoon.component.data.Components
-import com.bowoon.component.R
 import com.bowoon.component.databinding.ActivityMainBinding
 import com.bowoon.component.utils.ComponentUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,19 +29,15 @@ class MainActivity : AppCompatActivity() {
     lateinit var json: Json
     @Inject
     lateinit var componentUtils: ComponentUtils
+    private val viewModel by viewModels<MainVM>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
-//        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
 
         binding.apply {
             lifecycleOwner = this@MainActivity
         }
+        lifecycle.addObserver(viewModel)
 
         assets.open("component.json").use { inputStream ->
             runCatching {
@@ -52,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                         add(componentUtils.createComponent(component))
                     }
                 }.run {
-                    binding.rvComponentList.adapter = ComponentAdapter().apply {
+                    binding.rvComponentList.adapter = ComponentAdapter(viewModel).apply {
                         submitList(this@run)
                     }
                 }

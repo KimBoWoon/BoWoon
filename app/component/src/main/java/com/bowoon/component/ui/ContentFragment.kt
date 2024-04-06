@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.bowoon.component.adapters.ComponentAdapter
 import com.bowoon.component.data.Components
 import com.bowoon.component.data.Tab
@@ -21,6 +22,7 @@ class ContentFragment(
 
     @Inject
     lateinit var componentUtils: ComponentUtils
+    private val viewModel by activityViewModels<MainVM>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,12 +36,14 @@ class ContentFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        lifecycle.addObserver(viewModel)
+
         mutableListOf<Components>().apply {
             items?.components?.forEach { component ->
                 add(componentUtils.createComponent(component))
             }
         }.run {
-            binding?.rvComponentList?.adapter = ComponentAdapter().apply {
+            binding?.rvComponentList?.adapter = ComponentAdapter(viewModel).apply {
                 submitList(this@run)
             }
         }

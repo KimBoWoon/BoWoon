@@ -1,5 +1,7 @@
 package com.bowoon.imageloader
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -55,7 +57,7 @@ object BindingAdapter {
                 height = height ?: Target.SIZE_ORIGINAL,
                 placeholder = placeholder,
                 error = error,
-                placeholderDrawable = placeholderDrawable,
+                placeholderDrawable = placeholderDrawable ?: ColorDrawable(Color.TRANSPARENT),
                 errorDrawable = errorDrawable,
                 radius = radius,
                 topLeftRadius = topLeft ?: 0f,

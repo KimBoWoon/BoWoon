@@ -18,7 +18,7 @@ class TabComponentVH(
             binding.apply {
                 this.content = it
 
-                tlTabComponent.apply {
+                llTabComponentRoot.apply {
                     layoutParams.apply {
                         (this as? ViewGroup.MarginLayoutParams)?.apply {
                             setMargins((it.startMargin ?: 0).dp, (it.topMargin ?: 0).dp, (it.endMargin ?: 0).dp, (it.bottomMargin ?: 0).dp)
@@ -38,6 +38,9 @@ class TabComponentVH(
                             it.height?.dp
                         } ?: 0
                     }
+                }
+
+                tlTabComponent.apply {
                     tabMode = it.mode ?: TabLayout.MODE_FIXED
                 }
 

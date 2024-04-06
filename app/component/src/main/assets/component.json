@@ -1,10 +1,26 @@
 {
   "components": [
     {
+      "type": "LIST",
+      "content": {
+        "width": -1,
+        "height": -2,
+        "startMargin": 16,
+        "endMargin": 16,
+        "topMargin": 16,
+        "bottomMargin": 16,
+        "spanCount": 2,
+        "betweenMargin": 10,
+        "orientation": 0,
+        "url": "https://pokeapi.co/api/v2/pokemon",
+        "listData": []
+      }
+    },
+    {
       "type": "TAB",
       "content": {
         "width": -1,
-        "height": -1,
+        "height": -2,
         "mode": 1,
         "tabs": [
           {
@@ -20,7 +36,7 @@
                   "endMargin": 16,
                   "text": "Hello, World!",
                   "size": 30,
-                  "color": "#0000FF",
+                  "color": "#FF0000FF",
                   "style": [
                     "bold",
                     "italic",
@@ -33,7 +49,7 @@
                 "content": {
                   "width": -1,
                   "height": -1,
-                  "url": "https://i.namu.wiki/i/jblejVdGY8aClUhN3DK9lTI4QHmaZguml-xk86gEp5O5DNFjKsK4XTomkGVLdYdnbLWQBhulDaKSaYqNOrSs1k86t391jpSTdXjs1rsMEYJnUl_DB49gpbDVX3MAvourfKHBslS7ObZ-HjSKdtxtbw.webp"
+                  "url": "https://i.namu.wiki/i/iux1O77j-Y5qdXfZi25JINSWdnrBqL6XL2DXoMwuhrP08_pPlLTtIokvXoHNAPq5l2iYKI1XNRmQtEn9FOutr3AAcrdYhRbkNxIOdDhyGlheLVGvD1BNVYlY4BecEv51t83eqD39l0GomPTMO3CRsw.webp"
                 }
               }
             ]
@@ -51,7 +67,7 @@
                   "endMargin": 16,
                   "text": "Hello, World!",
                   "size": 30,
-                  "color": "#00FF00",
+                  "color": "#FF00FF00",
                   "style": [
                     "bold",
                     "italic",
@@ -64,7 +80,7 @@
                 "content": {
                   "width": -1,
                   "height": -1,
-                  "url": "https://i.namu.wiki/i/8M4yMvHKOXisFTvxGNHB6PAcI1zNe5nmeR_viieCOLHy7T5U_uCnFOaG0Jl_MS1shhTcb4PbHzwFsWoII-1DWa5MRTlm7JtqkXhO01THfOyRo5dEcdSU9lwxYHoXJw4JC_iz6Iy296pkyCe3FdQBNQ.webp"
+                  "url": "https://i.namu.wiki/i/2uk3nkaVrZTgI4g7Tl9xoY2sq9GHkFXRFiX-4YDobOFqNZmZPfp2oBB3Qhir-2oAh4koZdIFdrzY1ASjv3IUGkXTW53cdcBUeo8H6BEa5CFWkWCJzKIR5Xm1uPQshDHGUQJvS-RjQCt0pO6tHcrZmA.webp"
                 }
               }
             ]
@@ -82,7 +98,7 @@
                   "endMargin": 16,
                   "text": "Hello, World!",
                   "size": 30,
-                  "color": "#FF0000",
+                  "color": "#FFFF0000",
                   "style": [
                     "bold",
                     "italic",
@@ -95,7 +111,7 @@
                 "content": {
                   "width": -1,
                   "height": -1,
-                  "url": "https://i.namu.wiki/i/06EmHycxfaEhtvI-bfXMSKFNgkR0TpYJELwDgQm0pr9FTqnHtoDNmzv726ODfTf4tOdNllNZbxf7jksP00s_KPoCrwp-422LPfOzp9TNRT8N4DrIdqGqK_6sLjGz9OYKWmlBX84fLCjvIfUtzlt7Ug.webp"
+                  "url": "https://i.namu.wiki/i/uQ_z3PGZqbnXJDQrXx-4waORO8eHRv9QBETF5RxOmW-yQW6-98shxHoLfAWf5ijUYUrmmcQ1f6sdKBNyRpOv8ZKamU0Oui8CCnQNLZKHS2KEk339fSN5divuviVWmCO_LmeXJp_R0n02N0wzlbElhA.webp"
                 }
               }
             ]
@@ -113,7 +129,7 @@
         "endMargin": 16,
         "text": "Hello, World!",
         "size": 30,
-        "color": "#FFFF00",
+        "color": "#FFFFFF00",
         "style": [
           "bold",
           "italic",

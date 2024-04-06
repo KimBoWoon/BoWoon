@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vh"
+            type="com.bowoon.component.vh.PokemonVH" />
+
+        <variable
+            name="dto"
+            type="com.bowoon.component.data.Pokemon" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_pokemon_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tv_pokemon_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{dto.name}"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            app:layout_constraintEnd_toEndOf="@id/iv_pokemon_image"
+            app:layout_constraintStart_toStartOf="@id/iv_pokemon_image"
+            app:layout_constraintTop_toBottomOf="@id/iv_pokemon_image"
+            tools:text="Hello, World!" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

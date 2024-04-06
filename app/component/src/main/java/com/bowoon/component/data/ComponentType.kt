@@ -1,5 +1,5 @@
 package com.bowoon.component.data
 
 enum class ComponentType {
-    TEXT, IMAGE, TAB
+    TEXT, IMAGE, TAB, LIST
 }

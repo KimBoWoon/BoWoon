@@ -54,7 +54,15 @@ data class Content(
     @SerialName("mode")
     val mode: Int? = null,
     @SerialName("tabs")
-    val tabs: List<Tab>? = null
+    val tabs: List<Tab>? = null,
+    @SerialName("betweenMargin")
+    val betweenMargin: Int? = null,
+    @SerialName("orientation")
+    val orientation: Int? = null,
+    @SerialName("listData")
+    val listData: List<Components>? = null,
+    @SerialName("spanCount")
+    val spanCount: Int? = null
 )
 
 @Serializable
@@ -142,5 +150,30 @@ sealed interface Components {
         val mode: Int? = null,
         @SerialName("tabs")
         val tabs: List<Tab>? = null
+    ) : Components
+
+    data class ListComponent(
+        @SerialName("width")
+        override val width: Int? = null,
+        @SerialName("height")
+        override val height: Int? = null,
+        @SerialName("topMargin")
+        override val topMargin: Int? = null,
+        @SerialName("startMargin")
+        override val startMargin: Int? = null,
+        @SerialName("endMargin")
+        override val endMargin: Int? = null,
+        @SerialName("bottomMargin")
+        override val bottomMargin: Int? = null,
+        @SerialName("betweenMargin")
+        val betweenMargin: Int? = null,
+        @SerialName("spanCount")
+        val spanCount: Int? = null,
+        @SerialName("orientation")
+        val orientation: Int? = null,
+        @SerialName("url")
+        val url: String? = null,
+        @SerialName("url")
+        val listData: List<Components>? = null
     ) : Components
 }

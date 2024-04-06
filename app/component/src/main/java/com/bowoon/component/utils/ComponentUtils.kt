@@ -43,5 +43,18 @@ class ComponentUtils {
                 component.content?.mode,
                 component.content?.tabs
             )
+            ComponentType.LIST -> Components.ListComponent(
+                component.content?.width,
+                component.content?.height,
+                component.content?.topMargin,
+                component.content?.startMargin,
+                component.content?.endMargin,
+                component.content?.bottomMargin,
+                component.content?.betweenMargin,
+                component.content?.spanCount,
+                component.content?.orientation,
+                component.content?.url,
+                component.content?.listData
+            )
         }
 }

@@ -10,6 +10,10 @@ import com.bowoon.component.databinding.VhImageComponentBinding
 class ImageComponentVH(
     private val binding: VhImageComponentBinding
 ) : RecyclerView.ViewHolder(binding.root) {
+    companion object {
+        private const val TAG = "component_image_component_vh"
+    }
+
     fun bind(content: Components.ImageComponent?) {
         content?.let {
             binding.apply {
@@ -36,6 +40,37 @@ class ImageComponentVH(
                         } ?: 0
                     }
                 }
+
+//                ImageLoader.load(
+//                    binding.root.context,
+//                    ivImageComponent,
+//                    it.url ?: "",
+//                    ImageOptions(
+//                        placeholderDrawable = ColorDrawable(Color.TRANSPARENT),
+//                        radius = it.radius,
+//                        topLeftRadius = it.topLeftRadius ?: 0f,
+//                        topRightRadius = it.topRightRadius ?: 0f,
+//                        bottomLeftRadius = it.bottomLeftRadius ?: 0f,
+//                        bottomRightRadius = it.bottomRightRadius ?: 0f,
+//                    ),
+//                    object : ImageLoadListener {
+//                        override fun onStart() {
+//                            Log.d(TAG, "load start!")
+//                        }
+//
+//                        override fun onFailed(e: GlideException?, model: Any?) {
+//                            Log.d(TAG, "load failed!")
+//                        }
+//
+//                        override fun onSuccess(
+//                            resource: Drawable?,
+//                            model: Any?,
+//                            dataSource: DataSource?
+//                        ) {
+//                            Log.d(TAG, "load success!")
+//                        }
+//                    }
+//                )
             }
         }
     }
