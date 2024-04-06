@@ -2,9 +2,11 @@ package com.bowoon.component.ui
 
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.bowoon.component.source.PagingSource
 import com.bowoon.component.apis.Apis
 import com.bowoon.component.data.Pokemon
@@ -20,5 +22,5 @@ class MainVM @Inject constructor(
         PagingConfig(pageSize = 20, initialLoadSize = 20, prefetchDistance = 5)
     ) {
         PagingSource(apis)
-    }.flow
+    }.flow.cachedIn(viewModelScope)
 }
