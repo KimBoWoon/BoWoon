@@ -9,5 +9,5 @@ import javax.inject.Singleton
 class Apis @Inject constructor(
     @JsonConverterRetrofit private val retrofit: Retrofit
 ) {
-    val pokemonApi: PokemonApiService = retrofit.create(PokemonApiService::class.java)
+    val pagingService: ListService = retrofit.create(ListService::class.java)
 }

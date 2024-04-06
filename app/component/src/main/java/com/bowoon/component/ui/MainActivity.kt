@@ -8,11 +8,9 @@ import com.bowoon.commonutils.Log
 import com.bowoon.component.R
 import com.bowoon.component.adapters.ComponentAdapter
 import com.bowoon.component.data.ComponentData
-import com.bowoon.component.data.Components
 import com.bowoon.component.databinding.ActivityMainBinding
 import com.bowoon.component.utils.ComponentUtils
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
@@ -44,11 +42,7 @@ class MainActivity : AppCompatActivity() {
                 json.decodeFromString<ComponentData>(String(inputStream.readBytes(), Charsets.UTF_8))
             }.onSuccess {
                 Log.d(TAG, it.toString())
-                mutableListOf<Components>().apply {
-                    it.components?.filterNotNull()?.forEach { component ->
-                        add(componentUtils.createComponent(component))
-                    }
-                }.run {
+                it.components?.filterNotNull()?.map { component -> componentUtils.createComponent(component) }?.run {
                     binding.rvComponentList.adapter = ComponentAdapter(viewModel).apply {
                         submitList(this@run)
                     }

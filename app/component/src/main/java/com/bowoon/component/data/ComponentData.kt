@@ -173,7 +173,7 @@ sealed interface Components {
         val orientation: Int? = null,
         @SerialName("url")
         val url: String? = null,
-        @SerialName("url")
+        @SerialName("listData")
         val listData: List<Components>? = null
     ) : Components
 }

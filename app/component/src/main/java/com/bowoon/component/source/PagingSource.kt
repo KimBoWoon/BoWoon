@@ -11,7 +11,7 @@ class PagingSource(
 ) : PagingSource<Int, Pokemon>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Pokemon> {
         runCatching {
-            apis.pokemonApi.getAllPokemon(params.loadSize, params.key ?: 0)
+            apis.pagingService.getListData("https://pokeapi.co/api/v2/pokemon?limit=${params.loadSize}&offset=${params.key ?: 0}")
         }.onSuccess { response ->
             return LoadResult.Page(
                 data = response.results ?: emptyList(),

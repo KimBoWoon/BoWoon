@@ -12,7 +12,7 @@
         "spanCount": 2,
         "betweenMargin": 10,
         "orientation": 0,
-        "url": "https://pokeapi.co/api/v2/pokemon",
+        "url": "https://pokeapi.co/api/v2/pokemon?limit={limit}&offset={offset}",
         "listData": []
       }
     },
