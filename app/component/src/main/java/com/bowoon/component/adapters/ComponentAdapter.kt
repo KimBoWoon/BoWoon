@@ -69,4 +69,8 @@ class ComponentAdapter(
             is Components.ListComponent -> R.layout.vh_list_component
         }
     } ?: NO_ID
+
+    fun loadMore() {
+
+    }
 }

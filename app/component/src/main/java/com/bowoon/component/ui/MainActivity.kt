@@ -9,11 +9,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bowoon.commonutils.DataStatus
+import com.bowoon.commonutils.LoadMore
 import com.bowoon.commonutils.Log
+import com.bowoon.commonutils.RecyclerViewScrollEventListener
+import com.bowoon.commonutils.scrollPercent
 import com.bowoon.component.R
 import com.bowoon.component.adapters.ComponentAdapter
 import com.bowoon.component.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -37,8 +42,11 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.fetchComponent(this@MainActivity)
 
+        initBinding()
         initFlow()
     }
+
+    private fun initBinding() {}
 
     private fun initFlow() {
         lifecycleScope.launch {

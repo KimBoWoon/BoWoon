@@ -6,8 +6,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bowoon.commonutils.GridSpacingItemDecoration
+import com.bowoon.commonutils.LoadMore
+import com.bowoon.commonutils.RecyclerViewScrollEventListener
 import com.bowoon.commonutils.ScreenUtils.dp
 import com.bowoon.component.adapters.PokemonPagingAdapter
+import com.bowoon.component.adapters.PokemonPagingAdapterTemp
 import com.bowoon.component.base.BaseComponentVH
 import com.bowoon.component.data.Components
 import com.bowoon.component.databinding.VhListComponentBinding
@@ -52,6 +55,19 @@ class ListComponentVH(
                             }
                         }
                     }
+//                    adapter = PokemonPagingAdapterTemp().apply {
+//                        submitList()
+//                    }
+//                    clearOnScrollListeners()
+//                    addOnScrollListener(
+//                        RecyclerViewScrollEventListener(
+//                            object : LoadMore {
+//                                override fun loadMore() {
+//                                    (adapter as? PokemonPagingAdapterTemp)?.submitList()
+//                                }
+//                            }
+//                        )
+//                    )
                 }
             }
         }
