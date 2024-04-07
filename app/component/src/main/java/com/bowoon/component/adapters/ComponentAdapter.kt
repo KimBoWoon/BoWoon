@@ -18,7 +18,8 @@ import com.bowoon.component.vh.TabComponentVH
 import com.bowoon.component.vh.TextComponentVH
 
 class ComponentAdapter(
-    private val vm: MainVM
+    private val vm: MainVM,
+    private val tabEvent: ((Int) -> Unit)? = null
 ) : ListAdapter<Components, RecyclerView.ViewHolder>(diff) {
     companion object {
         private const val NO_ID = -1
@@ -42,8 +43,8 @@ class ComponentAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
-        R.layout.vh_text_component -> TextComponentVH(VhTextComponentBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-        R.layout.vh_image_component -> ImageComponentVH(VhImageComponentBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        R.layout.vh_text_component -> TextComponentVH(VhTextComponentBinding.inflate(LayoutInflater.from(parent.context), parent, false), tabEvent)
+        R.layout.vh_image_component -> ImageComponentVH(VhImageComponentBinding.inflate(LayoutInflater.from(parent.context), parent, false), tabEvent)
         R.layout.vh_tab_component -> TabComponentVH(VhTabComponentBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         R.layout.vh_list_component -> ListComponentVH(VhListComponentBinding.inflate(LayoutInflater.from(parent.context), parent, false), vm)
         else -> throw RuntimeException("viewholder not found...")

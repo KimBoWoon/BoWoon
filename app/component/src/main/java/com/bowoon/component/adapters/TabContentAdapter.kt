@@ -8,10 +8,11 @@ import com.bowoon.component.ui.ContentFragment
 
 class TabContentAdapter(
     private val fa: FragmentActivity,
-    private val items: List<Tab>? = null
+    private val items: List<Tab>? = null,
+    private val tabEvent: ((Int) -> Unit)? = null
 ) : FragmentStateAdapter(fa) {
     override fun getItemCount(): Int = items?.size ?: 0
 
     override fun createFragment(position: Int): Fragment =
-        ContentFragment(items?.get(position))
+        ContentFragment(items?.get(position), tabEvent)
 }

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bowoon.commonutils.GridSpacingItemDecoration
 import com.bowoon.commonutils.ScreenUtils.dp
 import com.bowoon.component.adapters.PokemonPagingAdapter
+import com.bowoon.component.base.BaseComponentVH
 import com.bowoon.component.data.Components
 import com.bowoon.component.databinding.VhListComponentBinding
 import com.bowoon.component.ui.MainVM
@@ -16,9 +17,9 @@ import kotlinx.coroutines.launch
 class ListComponentVH(
     private val binding: VhListComponentBinding,
     private val vm: MainVM
-) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(content: Components.ListComponent?) {
-        content?.let {
+) : BaseComponentVH<Components.ListComponent>(binding) {
+    override fun bind(component: Components.ListComponent?) {
+        component?.let {
             binding.apply {
                 rvListComponent.apply {
                     layoutParams.apply {
@@ -39,34 +40,9 @@ class ListComponentVH(
                     }
 
                     if (itemDecorationCount == 0) {
-                        addItemDecoration(GridSpacingItemDecoration((content.spanCount ?: 1).dp, (content.betweenMargin ?: 0).dp) /*{
-                            override fun getItemOffsets(
-                                outRect: Rect,
-                                view: View,
-                                parent: RecyclerView,
-                                state: RecyclerView.State
-                            ) {
-                                val position = parent.getChildAdapterPosition(view)
-                                val size = parent.adapter?.itemCount ?: 0
-
-                                when (position) {
-                                    0 -> {
-                                        outRect.left = it.startMargin ?: 0
-                                        outRect.right = if (it.betweenMargin != null && it.betweenMargin != 0) it.betweenMargin / 2 else 0
-                                    }
-                                    size - 1 -> {
-                                        outRect.left = if (it.betweenMargin != null && it.betweenMargin != 0) it.betweenMargin / 2 else 0
-                                        outRect.right = it.endMargin ?: 0
-                                    }
-                                    else -> {
-                                        outRect.left = if (it.betweenMargin != null && it.betweenMargin != 0) it.betweenMargin / 2 else 0
-                                        outRect.right = if (it.betweenMargin != null && it.betweenMargin != 0) it.betweenMargin / 2 else 0
-                                    }
-                                }
-                            }
-                        }*/)
+                        addItemDecoration(GridSpacingItemDecoration((it.spanCount ?: 1).dp, (it.betweenMargin ?: 0).dp))
                     }
-                    layoutManager = GridLayoutManager(binding.root.context, content.spanCount ?: 1, content.orientation ?: RecyclerView.VERTICAL, false)
+                    layoutManager = GridLayoutManager(binding.root.context, it.spanCount ?: 1, it.orientation ?: RecyclerView.VERTICAL, false)
                     adapter = PokemonPagingAdapter().apply {
                         (root.context as? FragmentActivity)?.let { fa ->
                             fa.lifecycleScope.launch {

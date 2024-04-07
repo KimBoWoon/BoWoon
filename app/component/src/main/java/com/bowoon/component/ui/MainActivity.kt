@@ -3,16 +3,18 @@ package com.bowoon.component.ui
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.bowoon.commonutils.DataStatus
 import com.bowoon.commonutils.Log
 import com.bowoon.component.R
 import com.bowoon.component.adapters.ComponentAdapter
-import com.bowoon.component.data.ComponentData
 import com.bowoon.component.databinding.ActivityMainBinding
-import com.bowoon.component.utils.ComponentUtils
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.serialization.json.Json
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -23,10 +25,6 @@ class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
         DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
     }
-    @Inject
-    lateinit var json: Json
-    @Inject
-    lateinit var componentUtils: ComponentUtils
     private val viewModel by viewModels<MainVM>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,18 +35,32 @@ class MainActivity : AppCompatActivity() {
         }
         lifecycle.addObserver(viewModel)
 
-        assets.open("component.json").use { inputStream ->
-            runCatching {
-                json.decodeFromString<ComponentData>(String(inputStream.readBytes(), Charsets.UTF_8))
-            }.onSuccess {
-                Log.d(TAG, it.toString())
-                it.components?.filterNotNull()?.map { component -> componentUtils.createComponent(component) }?.run {
-                    binding.rvComponentList.adapter = ComponentAdapter(viewModel).apply {
-                        submitList(this@run)
+        viewModel.fetchComponent(this@MainActivity)
+
+        initFlow()
+    }
+
+    private fun initFlow() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.componentData.collect { componentData ->
+                    when (componentData) {
+                        is DataStatus.Loading -> {
+                            binding.pbLoading.isVisible = true
+                            Log.d(TAG, "component data loading...")
+                        }
+                        is DataStatus.Success -> {
+                            binding.pbLoading.isVisible = false
+                            binding.rvComponentList.adapter = ComponentAdapter(viewModel).apply {
+                                submitList(componentData.data)
+                            }
+                        }
+                        is DataStatus.Failure -> {
+                            binding.pbLoading.isVisible = false
+                            Log.printStackTrace(componentData.throwable)
+                        }
                     }
                 }
-            }.onFailure { e ->
-                Log.printStackTrace(e)
             }
         }
     }

@@ -15,7 +15,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ContentFragment(
-    private val items: Tab? = null
+    private val items: Tab? = null,
+    private val tabEvent: ((Int) -> Unit)? = null
 ) : Fragment() {
     private var binding: FragmentContentBinding? = null
 
@@ -38,7 +39,7 @@ class ContentFragment(
         lifecycle.addObserver(viewModel)
 
         items?.components?.map { component -> componentUtils.createComponent(component) }?.run {
-            binding?.rvComponentList?.adapter = ComponentAdapter(viewModel).apply {
+            binding?.rvComponentList?.adapter = ComponentAdapter(viewModel, tabEvent).apply {
                 submitList(this@run)
             }
         }

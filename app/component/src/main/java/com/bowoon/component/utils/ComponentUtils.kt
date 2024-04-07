@@ -18,6 +18,7 @@ class ComponentUtils {
                 component.content?.size,
                 component.content?.color,
                 component.content?.style,
+                component.content?.clickEvent
             )
             ComponentType.IMAGE -> Components.ImageComponent(
                 component.content?.width,
@@ -31,7 +32,8 @@ class ComponentUtils {
                 component.content?.topLeftRadius,
                 component.content?.topRightRadius,
                 component.content?.bottomLeftRadius,
-                component.content?.bottomRightRadius
+                component.content?.bottomRightRadius,
+                component.content?.clickEvent
             )
             ComponentType.TAB -> Components.TabComponent(
                 component.content?.width,

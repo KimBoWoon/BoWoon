@@ -1,17 +1,20 @@
 package com.bowoon.component.source
 
+import android.net.Uri
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.bowoon.commonutils.Log
+import com.bowoon.commonutils.replaceUriParameter
 import com.bowoon.component.apis.Apis
 import com.bowoon.component.data.Pokemon
 
 class PagingSource(
-    private val apis: Apis
+    private val apis: Apis,
+    private val url: String
 ) : PagingSource<Int, Pokemon>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Pokemon> {
         runCatching {
-            apis.pagingService.getListData("https://pokeapi.co/api/v2/pokemon?limit=${params.loadSize}&offset=${params.key ?: 0}")
+            apis.pagingService.getListData(replaceUriParameter(Uri.parse(url), listOf(Pair("limit", "${params.loadSize}"), Pair("offset", "${params.key ?: 0}"))).toString())
         }.onSuccess { response ->
             return LoadResult.Page(
                 data = response.results ?: emptyList(),

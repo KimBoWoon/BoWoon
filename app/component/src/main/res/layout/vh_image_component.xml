@@ -5,7 +5,7 @@
     <data>
 
         <variable
-            name="content"
+            name="component"
             type="com.bowoon.component.data.Components.ImageComponent" />
     </data>
 
@@ -13,10 +13,10 @@
         android:id="@+id/iv_image_component"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:bottomLeft="@{content.bottomLeftRadius}"
-        app:bottomRight="@{content.bottomRightRadius}"
-        app:radius="@{content.radius}"
-        app:source="@{content.url}"
-        app:topLeft="@{content.topLeftRadius}"
-        app:topRight="@{content.topRightRadius}" />
+        app:bottomLeft="@{component.bottomLeftRadius}"
+        app:bottomRight="@{component.bottomRightRadius}"
+        app:radius="@{component.radius}"
+        app:source="@{component.url}"
+        app:topLeft="@{component.topLeftRadius}"
+        app:topRight="@{component.topRightRadius}" />
 </layout>

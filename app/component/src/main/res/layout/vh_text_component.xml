@@ -8,7 +8,7 @@
         <import type="android.graphics.Color" />
 
         <variable
-            name="content"
+            name="component"
             type="com.bowoon.component.data.Components.TextComponent" />
     </data>
 
@@ -16,7 +16,7 @@
         android:id="@+id/tv_text_component"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@{content.text}"
-        android:textColor="@{Color.parseColor(content.color)}"
-        android:textSize="@{UtilsKt.dp(content.size)}" />
+        android:text="@{component.text}"
+        android:textColor="@{Color.parseColor(component.color)}"
+        android:textSize="@{UtilsKt.dp(component.size)}" />
 </layout>

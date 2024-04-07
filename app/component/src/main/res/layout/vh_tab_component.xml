@@ -4,7 +4,7 @@
     <data>
 
         <variable
-            name="content"
+            name="component"
             type="com.bowoon.component.data.Components" />
     </data>
 

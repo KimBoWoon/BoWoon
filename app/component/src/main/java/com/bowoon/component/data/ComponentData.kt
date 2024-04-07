@@ -62,7 +62,9 @@ data class Content(
     @SerialName("listData")
     val listData: List<Components>? = null,
     @SerialName("spanCount")
-    val spanCount: Int? = null
+    val spanCount: Int? = null,
+    @SerialName("clickEvent")
+    val clickEvent: ClickEvent? = null
 )
 
 @Serializable
@@ -71,6 +73,16 @@ data class Tab(
     val name: String? = null,
     @SerialName("component")
     val components: List<Component>? = null
+)
+
+@Serializable
+data class ClickEvent(
+    @SerialName("type")
+    val type: String? = null,
+    @SerialName("url")
+    val url: String? = null,
+    @SerialName("position")
+    val position: Int? = null
 )
 
 sealed interface Components {
@@ -103,6 +115,8 @@ sealed interface Components {
         val color: String? = null,
         @SerialName("style")
         val style: List<String>? = null,
+        @SerialName("clickEvent")
+        val clickEvent: ClickEvent? = null
     ) : Components
 
     @Serializable
@@ -130,7 +144,9 @@ sealed interface Components {
         @SerialName("bottomLeftRadius")
         val bottomLeftRadius: Float? = null,
         @SerialName("bottomRightRadius")
-        val bottomRightRadius: Float? = null
+        val bottomRightRadius: Float? = null,
+        @SerialName("clickEvent")
+        val clickEvent: ClickEvent? = null
     ) : Components
 
     data class TabComponent(

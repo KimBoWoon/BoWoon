@@ -2,9 +2,9 @@ package com.bowoon.component.vh
 
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.RecyclerView
 import com.bowoon.commonutils.ScreenUtils.dp
 import com.bowoon.component.adapters.TabContentAdapter
+import com.bowoon.component.base.BaseComponentVH
 import com.bowoon.component.data.Components
 import com.bowoon.component.databinding.VhTabComponentBinding
 import com.google.android.material.tabs.TabLayout
@@ -12,11 +12,17 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class TabComponentVH(
     private val binding: VhTabComponentBinding
-) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(content: Components.TabComponent?) {
-        content?.let {
+) : BaseComponentVH<Components.TabComponent>(binding) {
+    private val tabEvent: (Int) -> Unit = { position ->
+        binding.tlTabComponent.getTabAt(position)?.let {
+            binding.tlTabComponent.selectTab(it)
+        }
+    }
+
+    override fun bind(component: Components.TabComponent?) {
+        component?.let {
             binding.apply {
-                this.content = it
+                this.component = it
 
                 llTabComponentRoot.apply {
                     layoutParams.apply {
@@ -45,7 +51,7 @@ class TabComponentVH(
                 }
 
                 vpTabContent.apply {
-                    adapter = TabContentAdapter(binding.root.context as FragmentActivity, it.tabs)
+                    adapter = TabContentAdapter(binding.root.context as FragmentActivity, it.tabs, tabEvent)
                 }
 
                 TabLayoutMediator(tlTabComponent, vpTabContent) { tab, index ->

@@ -1,23 +1,29 @@
 package com.bowoon.component.vh
 
+import android.content.Intent
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
-import androidx.recyclerview.widget.RecyclerView
 import com.bowoon.commonutils.ScreenUtils.dp
+import com.bowoon.commonutils.ViewAdapter.onDebounceClickListener
+import com.bowoon.component.base.BaseComponentVH
+import com.bowoon.component.data.ComponentEvent
 import com.bowoon.component.data.Components
 import com.bowoon.component.databinding.VhImageComponentBinding
+import com.bowoon.component.ui.WebView
+
 
 class ImageComponentVH(
-    private val binding: VhImageComponentBinding
-) : RecyclerView.ViewHolder(binding.root) {
+    private val binding: VhImageComponentBinding,
+    private val tabEvent: ((Int) -> Unit)? = null
+) : BaseComponentVH<Components.ImageComponent>(binding) {
     companion object {
         private const val TAG = "component_image_component_vh"
     }
 
-    fun bind(content: Components.ImageComponent?) {
-        content?.let {
+    override fun bind(component: Components.ImageComponent?) {
+        component?.let {
             binding.apply {
-                this.content = it
+                this.component = it
 
                 ivImageComponent.apply {
                     layoutParams.apply {
@@ -38,6 +44,24 @@ class ImageComponentVH(
                         } else {
                             it.height?.dp
                         } ?: 0
+                    }
+                    it.clickEvent?.let { clickEvent ->
+                        when (ComponentEvent.valueOf(clickEvent.type ?: "")) {
+                            ComponentEvent.WEB -> {
+                                onDebounceClickListener {
+                                    binding.root.context.startActivity(
+                                        Intent(binding.root.context, WebView::class.java).apply {
+                                            putExtra("url", clickEvent.url)
+                                        }
+                                    )
+                                }
+                            }
+                            ComponentEvent.MOVE_TAB -> {
+                                clickEvent.position?.let {
+                                    tabEvent?.invoke(it)
+                                }
+                            }
+                        }
                     }
                 }
 
