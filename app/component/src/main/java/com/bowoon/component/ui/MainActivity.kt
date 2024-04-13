@@ -8,17 +8,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bowoon.commonutils.DataStatus
-import com.bowoon.commonutils.LoadMore
 import com.bowoon.commonutils.Log
-import com.bowoon.commonutils.RecyclerViewScrollEventListener
-import com.bowoon.commonutils.scrollPercent
 import com.bowoon.component.R
 import com.bowoon.component.adapters.ComponentAdapter
+import com.bowoon.component.data.Components
 import com.bowoon.component.databinding.ActivityMainBinding
+import com.bowoon.component.vh.ListComponentVH
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -46,7 +45,24 @@ class MainActivity : AppCompatActivity() {
         initFlow()
     }
 
-    private fun initBinding() {}
+    private fun initBinding() {
+        binding.rvComponentList.apply {
+            setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+                val data = (binding.rvComponentList.adapter as? ComponentAdapter)?.currentList
+                val position = data?.indexOfFirst { it is Components.ListComponent } ?: 0
+                (data?.get(position) as? Components.ListComponent)?.let {
+                    if (it.orientation == RecyclerView.VERTICAL) {
+                        val vh = binding.rvComponentList.findViewHolderForAdapterPosition(position) as? ListComponentVH
+                        (binding.rvComponentList.layoutManager as? LinearLayoutManager)?.findLastVisibleItemPosition()?.let {
+                            if (binding.rvComponentList.findViewHolderForAdapterPosition(it) !is ListComponentVH) {
+                                vh?.scrollEventListener(true)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private fun initFlow() {
         lifecycleScope.launch {

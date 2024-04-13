@@ -11,7 +11,7 @@
         "bottomMargin": 16,
         "spanCount": 2,
         "betweenMargin": 10,
-        "orientation": 0,
+        "orientation": 1,
         "url": "https://pokeapi.co/api/v2/pokemon?limit={limit}&offset={offset}",
         "listData": []
       }
@@ -168,6 +168,22 @@
           "type": "WEB",
           "url": "https://namu.wiki/w/%EB%B0%94%EB%84%A4%EC%82%AC%20%EC%BB%A4%EB%B9%84"
         }
+      }
+    },
+    {
+      "type": "LIST",
+      "content": {
+        "width": -1,
+        "height": -2,
+        "startMargin": 16,
+        "endMargin": 16,
+        "topMargin": 16,
+        "bottomMargin": 16,
+        "spanCount": 2,
+        "betweenMargin": 10,
+        "orientation": 1,
+        "url": "https://pokeapi.co/api/v2/pokemon?limit={limit}&offset={offset}",
+        "listData": []
       }
     }
   ]

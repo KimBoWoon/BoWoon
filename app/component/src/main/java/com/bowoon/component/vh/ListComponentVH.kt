@@ -6,8 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bowoon.commonutils.GridSpacingItemDecoration
-import com.bowoon.commonutils.LoadMore
-import com.bowoon.commonutils.RecyclerViewScrollEventListener
+import com.bowoon.commonutils.Log
 import com.bowoon.commonutils.ScreenUtils.dp
 import com.bowoon.component.adapters.PokemonPagingAdapter
 import com.bowoon.component.adapters.PokemonPagingAdapterTemp
@@ -21,6 +20,14 @@ class ListComponentVH(
     private val binding: VhListComponentBinding,
     private val vm: MainVM
 ) : BaseComponentVH<Components.ListComponent>(binding) {
+    companion object {
+        private const val TAG = "component_list_component_vh"
+    }
+
+    private val adapter = PokemonPagingAdapterTemp()
+    private var load = false
+    private var isEnd = false
+
     override fun bind(component: Components.ListComponent?) {
         component?.let {
             binding.apply {
@@ -46,28 +53,34 @@ class ListComponentVH(
                         addItemDecoration(GridSpacingItemDecoration((it.spanCount ?: 1).dp, (it.betweenMargin ?: 0).dp))
                     }
                     layoutManager = GridLayoutManager(binding.root.context, it.spanCount ?: 1, it.orientation ?: RecyclerView.VERTICAL, false)
-                    adapter = PokemonPagingAdapter().apply {
-                        (root.context as? FragmentActivity)?.let { fa ->
-                            fa.lifecycleScope.launch {
-                                vm.pokemonPageFlow.collect { pagingData ->
-                                    submitData(pagingData)
+                    adapter = if (it.orientation == RecyclerView.HORIZONTAL) {
+                        PokemonPagingAdapter().apply {
+                            (root.context as? FragmentActivity)?.let { fa ->
+                                fa.lifecycleScope.launch {
+                                    vm.pokemonPageFlow.collect { pagingData ->
+                                        submitData(pagingData)
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        this@ListComponentVH.adapter
                     }
-//                    adapter = PokemonPagingAdapterTemp().apply {
-//                        submitList()
-//                    }
-//                    clearOnScrollListeners()
-//                    addOnScrollListener(
-//                        RecyclerViewScrollEventListener(
-//                            object : LoadMore {
-//                                override fun loadMore() {
-//                                    (adapter as? PokemonPagingAdapterTemp)?.submitList()
-//                                }
-//                            }
-//                        )
-//                    )
+                }
+            }
+        }
+    }
+
+    fun scrollEventListener(isLoad: Boolean) {
+        if (isLoad && !load && !isEnd) {
+            load = true
+            (binding.root.context as? FragmentActivity)?.let { fa ->
+                fa.lifecycleScope.launch {
+                    val data = vm.getData()
+                    Log.d(TAG, data.toString())
+                    this@ListComponentVH.adapter.submitList(((binding.rvListComponent.adapter as? PokemonPagingAdapterTemp)?.currentList ?: emptyList()) + (data.results ?: emptyList()))
+                    load = false
+                    isEnd = data.next?.trim().isNullOrEmpty()
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.bowoon.component.ui
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,10 +10,12 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.bowoon.commonutils.DataStatus
+import com.bowoon.commonutils.replaceUriParameter
 import com.bowoon.component.apis.Apis
 import com.bowoon.component.data.ComponentData
 import com.bowoon.component.data.Components
 import com.bowoon.component.data.Pokemon
+import com.bowoon.component.data.PokemonData
 import com.bowoon.component.source.PagingSource
 import com.bowoon.component.utils.ComponentUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,6 +43,17 @@ class MainVM @Inject constructor(
         }.flow.cachedIn(viewModelScope)
     }
     private var pagingUrl = ""
+    private var count = -20
+
+    suspend fun getData(): PokemonData {
+        count += 20
+        return apis.pagingService.getListData(
+            replaceUriParameter(
+                Uri.parse(pagingUrl),
+                listOf(Pair("limit", "20"), Pair("offset", "$count"))
+            ).toString()
+        )
+    }
 
     fun fetchComponent(context: Context) {
         componentData.value = DataStatus.Loading
