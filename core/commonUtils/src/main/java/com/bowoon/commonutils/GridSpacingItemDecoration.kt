@@ -26,7 +26,8 @@ class GridSpacingItemDecoration(
                     left = spacing - spanIndex * spacing / spanCount
                     // (column + 1) * ((1f / spanCount) * spacing)
                     right = (spanIndex + 1) * spacing / spanCount
-                    if (position < spanCount) top = spacing
+//                    if (position < spanCount) top = spacing
+                    top = spacing
                     bottom = spacing
                 }
             }

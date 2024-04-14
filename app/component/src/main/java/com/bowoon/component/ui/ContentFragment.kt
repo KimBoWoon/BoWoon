@@ -39,7 +39,8 @@ class ContentFragment(
         lifecycle.addObserver(viewModel)
 
         items?.components?.map { component -> componentUtils.createComponent(component) }?.run {
-            binding?.rvComponentList?.adapter = ComponentAdapter(viewModel, tabEvent).apply {
+            binding?.rvComponentList?.adapter = ComponentAdapter(viewModel).apply {
+                tabEvent?.let { setTabMove(it) }
                 submitList(this@run)
             }
         }

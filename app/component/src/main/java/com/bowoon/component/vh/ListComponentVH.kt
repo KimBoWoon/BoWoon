@@ -50,7 +50,7 @@ class ListComponentVH(
                     }
 
                     if (itemDecorationCount == 0) {
-                        addItemDecoration(GridSpacingItemDecoration((it.spanCount ?: 1).dp, (it.betweenMargin ?: 0).dp))
+                        addItemDecoration(GridSpacingItemDecoration(it.spanCount ?: 1, (it.betweenMargin ?: 0).dp))
                     }
                     layoutManager = GridLayoutManager(binding.root.context, it.spanCount ?: 1, it.orientation ?: RecyclerView.VERTICAL, false)
                     adapter = if (it.orientation == RecyclerView.HORIZONTAL) {

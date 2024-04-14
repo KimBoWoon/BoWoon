@@ -7,20 +7,24 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bowoon.component.R
 import com.bowoon.component.data.Components
+import com.bowoon.component.data.Pokemon
 import com.bowoon.component.databinding.VhImageComponentBinding
 import com.bowoon.component.databinding.VhListComponentBinding
+import com.bowoon.component.databinding.VhPokemonBinding
 import com.bowoon.component.databinding.VhTabComponentBinding
 import com.bowoon.component.databinding.VhTextComponentBinding
 import com.bowoon.component.ui.MainVM
 import com.bowoon.component.vh.ImageComponentVH
 import com.bowoon.component.vh.ListComponentVH
+import com.bowoon.component.vh.PokemonVH
 import com.bowoon.component.vh.TabComponentVH
 import com.bowoon.component.vh.TextComponentVH
 
 class ComponentAdapter(
-    private val vm: MainVM,
-    private val tabEvent: ((Int) -> Unit)? = null
+    private val vm: MainVM
 ) : ListAdapter<Components, RecyclerView.ViewHolder>(diff) {
+    private var tabEvent: ((Int) -> Unit)? = null
+
     companion object {
         private const val NO_ID = -1
         private val diff = object : DiffUtil.ItemCallback<Components>() {
@@ -70,7 +74,23 @@ class ComponentAdapter(
         }
     } ?: NO_ID
 
-    fun loadMore() {
-
+    fun setTabMove(tabEvent: (Int) -> Unit) {
+        this@ComponentAdapter.tabEvent = tabEvent
     }
+}
+
+class VerticalListPagingAdapter : ListAdapter<Pokemon, PokemonVH>(diff) {
+    companion object {
+        val diff = object : DiffUtil.ItemCallback<Pokemon>() {
+            override fun areItemsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean = oldItem.name == newItem.name
+            override fun areContentsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean = oldItem.name == newItem.name && oldItem.url == newItem.url
+        }
+    }
+
+    override fun onBindViewHolder(holder: PokemonVH, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonVH =
+        PokemonVH(VhPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 }

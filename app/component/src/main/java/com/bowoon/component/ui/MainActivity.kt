@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bowoon.commonutils.DataStatus
 import com.bowoon.commonutils.Log
+import com.bowoon.commonutils.scrollPercent
 import com.bowoon.component.R
 import com.bowoon.component.adapters.ComponentAdapter
 import com.bowoon.component.data.Components
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         binding.rvComponentList.apply {
             setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
                 val data = (binding.rvComponentList.adapter as? ComponentAdapter)?.currentList
-                val position = data?.indexOfFirst { it is Components.ListComponent } ?: 0
+                val position = (binding.rvComponentList.layoutManager as? LinearLayoutManager)?.findLastVisibleItemPosition() ?: 0
                 (data?.get(position) as? Components.ListComponent)?.let {
                     if (it.orientation == RecyclerView.VERTICAL) {
                         val vh = binding.rvComponentList.findViewHolderForAdapterPosition(position) as? ListComponentVH
@@ -57,6 +58,10 @@ class MainActivity : AppCompatActivity() {
                             if (binding.rvComponentList.findViewHolderForAdapterPosition(it) !is ListComponentVH) {
                                 vh?.scrollEventListener(true)
                             }
+                        }
+                        Log.d(TAG, "${scrollPercent(binding.rvComponentList)}")
+                        if ((binding.rvComponentList.adapter?.itemCount ?: 0) == data.size && scrollPercent(binding.rvComponentList) > 95f) {
+                            vh?.scrollEventListener(true)
                         }
                     }
                 }
@@ -75,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         is DataStatus.Success -> {
                             binding.pbLoading.isVisible = false
+                            val adapters: MutableList<RecyclerView.Adapter<out RecyclerView.ViewHolder>> = mutableListOf()
                             binding.rvComponentList.adapter = ComponentAdapter(viewModel).apply {
                                 submitList(componentData.data)
                             }
