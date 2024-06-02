@@ -11,6 +11,8 @@ dependencies {
         libs.jetpack.paging,
         libs.jetpack.activity,
         libs.jetpack.fragment,
+        libs.coil,
+        "androidx.preference:preference-ktx:1.2.0",
         project(":core:network"),
         project(":core:commonUtils"),
         project(":core:imageLoader")

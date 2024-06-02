@@ -48,24 +48,31 @@ class MainActivity : AppCompatActivity() {
 
     private fun initBinding() {
         binding.rvComponentList.apply {
-            setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-                val data = (binding.rvComponentList.adapter as? ComponentAdapter)?.currentList
-                val position = (binding.rvComponentList.layoutManager as? LinearLayoutManager)?.findLastVisibleItemPosition() ?: 0
-                (data?.get(position) as? Components.ListComponent)?.let {
-                    if (it.orientation == RecyclerView.VERTICAL) {
-                        val vh = binding.rvComponentList.findViewHolderForAdapterPosition(position) as? ListComponentVH
-                        (binding.rvComponentList.layoutManager as? LinearLayoutManager)?.findLastVisibleItemPosition()?.let {
-                            if (binding.rvComponentList.findViewHolderForAdapterPosition(it) !is ListComponentVH) {
-                                vh?.scrollEventListener(true)
+            clearOnScrollListeners()
+            addOnScrollListener(
+                object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+
+                        val data = (binding.rvComponentList.adapter as? ComponentAdapter)?.currentList
+                        val position = (binding.rvComponentList.layoutManager as? LinearLayoutManager)?.findLastVisibleItemPosition() ?: 0
+                        (data?.get(position) as? Components.ListComponent)?.let {
+                            if (it.orientation == RecyclerView.VERTICAL) {
+                                val vh = binding.rvComponentList.findViewHolderForAdapterPosition(position) as? ListComponentVH
+                                (binding.rvComponentList.layoutManager as? LinearLayoutManager)?.findLastVisibleItemPosition()?.let {
+                                    if (binding.rvComponentList.findViewHolderForAdapterPosition(it) !is ListComponentVH) {
+                                        vh?.scrollEventListener(true)
+                                    }
+                                }
+                                Log.d(TAG, "${scrollPercent(binding.rvComponentList)}")
+                                if ((binding.rvComponentList.adapter?.itemCount ?: 0) == data.size && scrollPercent(binding.rvComponentList) > 95f) {
+                                    vh?.scrollEventListener(true)
+                                }
                             }
-                        }
-                        Log.d(TAG, "${scrollPercent(binding.rvComponentList)}")
-                        if ((binding.rvComponentList.adapter?.itemCount ?: 0) == data.size && scrollPercent(binding.rvComponentList) > 95f) {
-                            vh?.scrollEventListener(true)
                         }
                     }
                 }
-            }
+            )
         }
     }
 
@@ -80,7 +87,6 @@ class MainActivity : AppCompatActivity() {
                         }
                         is DataStatus.Success -> {
                             binding.pbLoading.isVisible = false
-                            val adapters: MutableList<RecyclerView.Adapter<out RecyclerView.ViewHolder>> = mutableListOf()
                             binding.rvComponentList.adapter = ComponentAdapter(viewModel).apply {
                                 submitList(componentData.data)
                             }
