@@ -3,9 +3,9 @@ package com.bowoon.mediastore
 import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.RawValue
 
-sealed interface MediaDataClass {
+@Parcelize
+sealed interface MediaDataClass : Parcelable {
     val uri: Uri?
     val name: String?
     val size: String?
@@ -57,8 +57,3 @@ data class FileInfo(
     val size: String? = null,
     val duration: Long? = null
 )
-
-@Parcelize
-data class ChooseItemList(
-    val list: @RawValue List<MediaDataClass>? = null
-) : Parcelable

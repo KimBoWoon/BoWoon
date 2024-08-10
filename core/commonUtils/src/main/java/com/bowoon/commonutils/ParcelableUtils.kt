@@ -34,14 +34,42 @@ inline fun <reified T : Serializable> Intent.getSafetySerializableExtra(key: Str
         else -> getSerializableExtra(key) as? T
     }
 
-inline fun <reified T : Parcelable> Intent.getSafetyParcelableArrayExtra(key: String): Array<T>? =
+//inline fun <reified T : Parcelable> Intent.getSafetyParcelableArrayExtra(key: String): Array<T>? =
+//    when {
+//        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableArrayExtra(key, T::class.java)
+//        else -> @Suppress("DEPRECATION") getParcelableArrayExtra(key) as? Array<T>
+//    }
+//
+//inline fun <reified T : Parcelable> Bundle.getSafetyParcelableArrayExtra(key: String): Array<T>? =
+//    when {
+//        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableArray(key, T::class.java)
+//        else -> @Suppress("DEPRECATION") getParcelableArray(key) as? Array<T>
+//    }
+
+@Suppress("DEPRECATION")
+inline fun <reified T : Parcelable> Intent.getSafetyParcelableArrayExtra(key: String): List<T>? =
     when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableArrayExtra(key, T::class.java)
-        else -> @Suppress("DEPRECATION") getParcelableArrayExtra(key) as? Array<T>
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableArrayExtra(key, T::class.java)?.toList()
+        else -> getParcelableArrayExtra(key)?.toList() as List<T>?
     }
 
-inline fun <reified T : Parcelable> Bundle.getSafetyParcelableArrayExtra(key: String): Array<T>? =
+@Suppress("DEPRECATION")
+inline fun <reified T : Parcelable> Intent.getSafetyParcelableArrayListExtra(key: String): List<T>? =
     when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableArray(key, T::class.java)
-        else -> @Suppress("DEPRECATION") getParcelableArray(key) as? Array<T>
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableArrayListExtra(key, T::class.java)
+        else -> getParcelableArrayListExtra<T>(key)
+    }
+
+@Suppress("DEPRECATION")
+inline fun <reified T : Parcelable> Bundle.getSafetyParcelableArrayExtra(key: String): List<T>? =
+    when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableArray(key, T::class.java)?.toList()
+        else -> getParcelableArray(key)?.toList() as List<T>?
+    }
+
+@Suppress("DEPRECATION")
+inline fun <reified T : Parcelable> Bundle.getSafetyParcelableArrayListExtra(key: String): List<T>? =
+    when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableArrayList(key, T::class.java)
+        else -> getParcelableArrayList<T>(key)
     }

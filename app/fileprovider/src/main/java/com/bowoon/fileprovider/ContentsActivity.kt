@@ -5,9 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bowoon.commonutils.getSafetyParcelableExtra
+import com.bowoon.commonutils.Log
+import com.bowoon.commonutils.getSafetyParcelableArrayExtra
 import com.bowoon.fileprovider.databinding.ActivityContentsBinding
-import com.bowoon.mediastore.ChooseItemList
+import com.bowoon.mediastore.MediaDataClass
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,10 +30,9 @@ class ContentsActivity : AppCompatActivity() {
             lifecycleOwner = this@ContentsActivity
         }
 
-        intent.getSafetyParcelableExtra<ChooseItemList>(CONTENTS)?.run {
-            this.list?.let {
-                adapter.submitList(it)
-            }
+        intent.getSafetyParcelableArrayExtra<MediaDataClass>(CONTENTS)?.run {
+            Log.d(TAG, this.toString())
+            adapter.submitList(this)
         }
 
         initBinding()

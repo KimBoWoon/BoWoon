@@ -14,7 +14,6 @@ import com.bowoon.commonutils.ContextUtils.showToast
 import com.bowoon.commonutils.Log
 import com.bowoon.commonutils.fromApi
 import com.bowoon.fileprovider.databinding.ActivityMainBinding
-import com.bowoon.mediastore.ChooseItemList
 import com.bowoon.mediastore.MediaDataClass
 import com.bowoon.mediastore.MediaManager
 import com.bowoon.permissionmanager.requestMultiplePermission
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                                 Intent(this@MainActivity, ContentsActivity::class.java).apply {
                                     putExtra(
                                         ContentsActivity.CONTENTS,
-                                        ChooseItemList(listOf(it))
+                                        listOf(it).toTypedArray()
                                     )
                                 }
                             )
@@ -82,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                                 Intent(this@MainActivity, ContentsActivity::class.java).apply {
                                     putExtra(
                                         ContentsActivity.CONTENTS,
-                                        ChooseItemList(listOf(it))
+                                        listOf(it).toTypedArray()
                                     )
                                 }
                             )
@@ -254,7 +253,7 @@ class MainActivity : AppCompatActivity() {
                     Intent(this@MainActivity, ContentsActivity::class.java).apply {
                         putExtra(
                             ContentsActivity.CONTENTS,
-                            ChooseItemList(mediaList)
+                            mediaList.toTypedArray()
                         )
                     }
                 )
