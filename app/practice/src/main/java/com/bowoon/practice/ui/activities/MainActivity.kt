@@ -19,7 +19,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // test-1
+        // test-2
 
         binding.apply {
             lifecycleOwner = this@MainActivity
