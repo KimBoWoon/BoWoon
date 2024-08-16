@@ -7,6 +7,7 @@ import android.app.NotificationManager
 import android.os.Build
 import android.provider.Settings
 import com.bowoon.commonutils.Log
+import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.HiltAndroidApp
 
@@ -17,6 +18,7 @@ class LolApplication : Application()/*, Configuration.Provider*/ {
     override fun onCreate() {
         super.onCreate()
 
+        FirebaseApp.initializeApp(this)
         createFirebaseMessageToken()
         createNotificationChannel()
     }
@@ -57,7 +59,7 @@ class LolApplication : Application()/*, Configuration.Provider*/ {
                 Log.d(data.toString())
             }
             .addOnFailureListener { e ->
-                Log.e("Fetching FCM registration token failed", e)
+                Log.printStackTrace(e)
             }
     }
 }

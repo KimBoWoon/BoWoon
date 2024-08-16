@@ -32,7 +32,7 @@ class GpsAlarmService @Inject constructor() : Service() {
         const val SETTING_INFO = "settingInfo"
     }
 
-    private var addressList: Array<Address>? = null
+    private var addressList: List<Address>? = null
     private var settingInfo: SettingInfo? = null
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
@@ -97,7 +97,7 @@ class GpsAlarmService @Inject constructor() : Service() {
         intent?.let {
             it.action?.let { action ->
                 if (action == "StartService") {
-                    addressList = intent.extras?.getSafetyParcelableArrayExtra(ADDRESS_LIST)
+                    addressList = intent.extras?.getSafetyParcelableArrayExtra<Address>(ADDRESS_LIST)
                     settingInfo = intent.extras?.getSafetyParcelable(SETTING_INFO)
                     startService()
                 } else {

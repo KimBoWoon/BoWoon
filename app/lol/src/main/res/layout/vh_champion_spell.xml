@@ -20,7 +20,7 @@
             android:layout_height="100dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:loadImage="@{spell.image.getChampionSpellImage()}"
+            app:source="@{spell.image.getChampionSpellImage()}"
             tools:background="@tools:sample/avatars" />
 
         <androidx.appcompat.widget.AppCompatTextView

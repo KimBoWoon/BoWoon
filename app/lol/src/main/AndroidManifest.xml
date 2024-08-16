@@ -51,7 +51,7 @@
             tools:node="merge">
             <!-- This entry makes ExampleLoggerInitializer discoverable. -->
             <meta-data
-                android:name="com.bowoon.rss_reader.initializer.AppInitializer"
+                android:name="com.bowoon.lol.initializer.AppInitializer"
                 android:value="androidx.startup" />
         </provider>
     </application>

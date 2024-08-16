@@ -50,10 +50,10 @@
             android:name="com.bowoon.gps_alarm.webview.AddressWebViewActivity"
             android:exported="false" />
 
-        <service
-            android:name="com.bowoon.gps_alarm.service.GpsAlarmService"
-            android:exported="false"
-            android:foregroundServiceType="location" />
+<!--        <service-->
+<!--            android:name="com.bowoon.gps_alarm.service.GpsAlarmService"-->
+<!--            android:exported="false"-->
+<!--            android:foregroundServiceType="location" />-->
 
         <!--        <service-->
         <!--            android:name="androidx.work.impl.foreground.SystemForegroundService"-->

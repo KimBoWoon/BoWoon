@@ -12,7 +12,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://naver.jfrog.io/artifactory/maven/")
+        maven("https://repository.map.naver.com/archive/maven")
     }
 }
 
@@ -34,3 +34,4 @@ include(":feat:timer")
 include(":app:fileprovider")
 include(":feat:mediaStore")
 include(":app:component")
+include(":app:language")

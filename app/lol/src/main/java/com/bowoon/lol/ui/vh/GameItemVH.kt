@@ -1,15 +1,14 @@
 package com.bowoon.lol.ui.vh
 
-import androidx.databinding.ViewDataBinding
 import com.bowoon.commonutils.Log
-import com.bowoon.lol.base.BaseFragment
 import com.bowoon.lol.base.BaseVH
 import com.bowoon.lol.data.GameItemInfo
 import com.bowoon.lol.databinding.VhGameItemBinding
+import com.bowoon.lol.ui.fragments.GameItemListFragment
 
 class GameItemVH(
     override val binding: VhGameItemBinding,
-    private val handler: BaseFragment<out ViewDataBinding>.ClickHandler? = null
+    private val handler: GameItemListFragment.ClickHandler? = null
 ) : BaseVH<VhGameItemBinding, GameItemInfo>(binding) {
     override fun bind(item: GameItemInfo?) {
         runCatching {

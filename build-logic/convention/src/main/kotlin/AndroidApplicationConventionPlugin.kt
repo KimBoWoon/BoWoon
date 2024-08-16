@@ -24,15 +24,16 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
                 when (name) {
                     Config.Application.GpsAlarm.appName,
+                    Config.Application.Lol.appName,
                     Config.Application.RssReader.appName -> {
                         apply("com.google.firebase.firebase-perf")
                         apply("com.google.firebase.crashlytics")
                         apply("com.google.gms.google-services")
                     }
-                    Config.Application.Lol.appName,
                     Config.Application.Practice.appName,
                     Config.Application.FileProvider.appName,
-                    Config.Application.Component.appName -> {}
+                    Config.Application.Component.appName,
+                    Config.Application.Language.appName -> {}
                 }
             }
 
@@ -45,6 +46,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                         Config.Application.Practice.appName -> Config.Application.Practice
                         Config.Application.FileProvider.appName -> Config.Application.FileProvider
                         Config.Application.Component.appName -> Config.Application.Component
+                        Config.Application.Language.appName -> Config.Application.Language
                         else -> throw RuntimeException("This is an undefined app. $name")
                     }.apply {
                         compileSdk = compileSdkVersion

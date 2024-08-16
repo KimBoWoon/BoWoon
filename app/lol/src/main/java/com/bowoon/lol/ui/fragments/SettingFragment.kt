@@ -6,7 +6,9 @@ import android.widget.AdapterView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.bowoon.commonutils.DataStatus
 import com.bowoon.commonutils.Log
+import com.bowoon.commonutils.ViewAdapter.onDebounceClickListener
 import com.bowoon.lol.R
 import com.bowoon.lol.base.BaseFragment
 import com.bowoon.lol.databinding.FragmentSettingBinding
@@ -14,8 +16,6 @@ import com.bowoon.lol.ui.activities.vm.MainVM
 import com.bowoon.lol.ui.adapter.VersionAdapter
 import com.bowoon.lol.ui.dialog.LolDialog
 import com.bowoon.lol.ui.fragments.vm.SettingVM
-import com.bowoon.commonutils.DataStatus
-import com.data.util.ViewAdapter.onDebounceClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

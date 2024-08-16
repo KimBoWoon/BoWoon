@@ -25,7 +25,7 @@
             android:layout_height="100dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:loadImage="@{gameItem.image.getGameItemImage()}"
+            app:source="@{gameItem.image.getGameItemImage()}"
             tools:background="@tools:sample/avatars" />
 
         <androidx.appcompat.widget.AppCompatTextView

@@ -19,9 +19,12 @@ dependencies {
         libs.glide,
         libs.firebase.message,
         libs.retrofit2,
+        libs.serialization.kotlin,
+        libs.serialization.converter,
         project(":core:dataManager"),
         project(":core:commonUtils"),
-        project(":core:network")
+        project(":core:network"),
+        project(":core:imageLoader")
     ).forEach {
         implementation(it)
     }

@@ -11,6 +11,7 @@ dependencies {
         libs.jsoup,
         libs.glide,
         libs.serialization.kotlin,
+        libs.jetpack.datastore,
         project(":core:dataManager"),
         project(":core:commonUtils"),
         project(":core:network"),

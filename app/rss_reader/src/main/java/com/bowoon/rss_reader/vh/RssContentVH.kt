@@ -37,6 +37,7 @@ class RssContentVH(
                     override fun onPageSelected(position: Int) {}
                     override fun onPageScrollStateChanged(state: Int) {
                         val listSize = (adapter?.itemCount ?: 0)
+
                         when (state) {
                             ViewPager2.SCROLL_STATE_IDLE -> {
                                 if (autoScrollJob?.isCancelled == true) {
@@ -44,7 +45,7 @@ class RssContentVH(
                                     startAutoScroll()
                                 }
                                 when (currentItem) {
-                                    listSize - 1 -> setCurrentItem(1, false)
+                                    listSize - 2 -> setCurrentItem(0, false)
                                     0 -> setCurrentItem(listSize - 2, false)
                                 }
                             }

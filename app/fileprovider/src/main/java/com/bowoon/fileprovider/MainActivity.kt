@@ -3,13 +3,18 @@ package com.bowoon.fileprovider
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.bowoon.commonutils.ContextUtils.showToast
 import com.bowoon.commonutils.Log
 import com.bowoon.commonutils.fromApi
@@ -19,6 +24,7 @@ import com.bowoon.mediastore.MediaManager
 import com.bowoon.permissionmanager.requestMultiplePermission
 import com.bowoon.permissionmanager.requestPermission
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -34,6 +40,25 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var mediaManager: MediaManager
+    private val goToSettingsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "granted")
+        } else {
+            Log.d(TAG, "denied")
+        }
+
+        if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.READ_MEDIA_VIDEO) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "granted")
+        } else {
+            Log.d(TAG, "denied")
+        }
+
+        if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.READ_MEDIA_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "granted")
+        } else {
+            Log.d(TAG, "denied")
+        }
+    }
     private val getContentLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
@@ -106,7 +131,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
     private val grantedLambda: () -> Unit = {
-        Log.d(TAG, "granted")
+        lifecycleScope.launch {
+            mediaManager.findImage(
+                projection = arrayOf(
+                    MediaStore.Images.Media._ID,
+                    MediaStore.Images.Media.DISPLAY_NAME,
+                    MediaStore.Images.Media.SIZE
+                ),
+                sortOrder = "${MediaStore.Images.Media.DISPLAY_NAME} ASC",
+            ).forEach {
+                Log.d(TAG, it.toString())
+            }
+        }
+//        Log.d(TAG, "granted")
 //        mediaManager.findImage(
 //            projection = arrayOf(
 //                MediaStore.Images.Media._ID,
@@ -131,7 +168,7 @@ class MainActivity : AppCompatActivity() {
 //                    val mime = mediaManager.getMimeType(contentUri)
 //                    val extension = mediaManager.getFileExtension(contentUri)
 //
-//                    Log.d(TAG, Image(contentUri.toString(), name, size, mime, extension).toString())
+//                    Log.d(TAG, Image(contentUri, name, size, mime, extension).toString())
 //                }
 //            }
 //        )
@@ -261,23 +298,62 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun goToSetting() {
+//        startActivity(
+//            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+//                data = Uri.parse("package:$packageName")
+//            }
+//        )
+        goToSettingsLauncher.launch(
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.parse("package:$packageName")
+            }
+        )
+    }
+
     inner class ClickHandler {
         fun getImageContent() {
-//            getContentLauncher.launch(MediaManager.MediaType.IMAGE.mimeType)
-            getMultipleContentLauncher.launch(MediaManager.MediaType.IMAGE.mimeType)
+            if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+//                getContentLauncher.launch(MediaManager.MediaType.IMAGE.mimeType)
+                getMultipleContentLauncher.launch(MediaManager.MediaType.IMAGE.mimeType)
+            } else {
+                showToast("권한을 확인하세요.")
+                goToSetting()
+            }
         }
 
         fun getVideoContent() {
-//            getContentLauncher.launch(MediaManager.MediaType.VIDEO.mimeType)
-            getMultipleContentLauncher.launch(MediaManager.MediaType.VIDEO.mimeType)
+            if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.READ_MEDIA_VIDEO) == PackageManager.PERMISSION_GRANTED) {
+//                getContentLauncher.launch(MediaManager.MediaType.VIDEO.mimeType)
+                getMultipleContentLauncher.launch(MediaManager.MediaType.VIDEO.mimeType)
+            } else {
+                showToast("권한을 확인하세요.")
+                goToSetting()
+            }
         }
 
         fun getAudioContent() {
-//            getContentLauncher.launch(MediaManager.MediaType.AUDIO.mimeType)
-            getMultipleContentLauncher.launch(MediaManager.MediaType.AUDIO.mimeType)
+            if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.READ_MEDIA_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+//                getContentLauncher.launch(MediaManager.MediaType.AUDIO.mimeType)
+                getMultipleContentLauncher.launch(MediaManager.MediaType.AUDIO.mimeType)
+            } else {
+                showToast("권한을 확인하세요.")
+                goToSetting()
+            }
         }
 
         fun getDocumentContent() {
+//            if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+//                getMultipleDocumentLauncher.launch(
+//                    arrayOf(
+//                        MediaManager.MediaType.IMAGE.mimeType,
+//                        MediaManager.MediaType.VIDEO.mimeType,
+//                        MediaManager.MediaType.AUDIO.mimeType,
+////                    MediaManager.MediaType.ALL.mimeType
+//                    )
+//                )
+//            }
+
             getMultipleDocumentLauncher.launch(
                 arrayOf(
                     MediaManager.MediaType.IMAGE.mimeType,

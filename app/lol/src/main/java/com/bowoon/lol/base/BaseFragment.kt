@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import com.bowoon.commonutils.Log
 import com.bowoon.lol.R
 import com.bowoon.lol.data.Champion
-import com.bowoon.lol.data.GameItemInfo
 
 abstract class BaseFragment<V : ViewDataBinding>(
     @LayoutRes private val layoutId: Int
@@ -45,16 +44,6 @@ abstract class BaseFragment<V : ViewDataBinding>(
                 R.id.action_championListFragment_to_championDetailFragment,
                 Bundle().apply {
                     putParcelable("championInfo", championInfo)
-                }
-            )
-        }
-
-        fun showGameItemDetail(gameItemInfo: GameItemInfo) {
-            Log.d("showChampionDetail >>>>> $gameItemInfo")
-            findNavController().navigate(
-                R.id.action_gameItemListFragment_to_gameItemDetailFragment,
-                Bundle().apply {
-                    putParcelable("gameItem", gameItemInfo)
                 }
             )
         }

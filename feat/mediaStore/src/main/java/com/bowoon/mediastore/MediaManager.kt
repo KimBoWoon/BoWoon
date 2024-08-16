@@ -25,11 +25,14 @@ import com.bowoon.commonutils.Log
 import com.bowoon.commonutils.fromApi
 import com.bowoon.commonutils.toApi
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.coroutines.resume
 
 
 class MediaManager @Inject constructor(
@@ -114,6 +117,51 @@ class MediaManager @Inject constructor(
         } ?: run {
             Log.e(TAG, "content not found...")
         }
+    }
+
+    suspend fun findImage(
+        projection: Array<String>? = null,
+        selection: String? = null,
+        selectionArgs: Array<String>? = null,
+        sortOrder: String? = null,
+    ): List<Image> = suspendCancellableCoroutine { coroutine ->
+        val errorHandler: (Throwable) -> Unit = {
+            coroutine.activeWork(emptyList())
+        }
+        runCatching {
+            context.contentResolver.query(
+                getMediaStoreUri(MediaType.IMAGE),
+                projection,
+                selection,
+                selectionArgs,
+                sortOrder
+            )?.use { cursor ->
+                val result = mutableListOf<Image>()
+                val idColumn = cursor.getColumnIndex(MediaStore.Images.Media._ID)
+                val nameColumn = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+                val sizeColumn = cursor.getColumnIndex(MediaStore.Images.Media.SIZE)
+
+                while (cursor.moveToNext()) {
+                    val id = cursor.getLongOrNull(idColumn)
+                    val name = cursor.getStringOrNull(nameColumn)
+                    val size = cursor.getIntOrNull(sizeColumn)?.run {
+                        getCapacity(this.toFloat(), listOf("KB", "MB", "GB", "TB")).run {
+                            "$first$second"
+                        }
+                    }
+                    val contentUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id ?: continue)
+                    val mime = getMimeType(contentUri)
+                    val extension = getFileExtension(contentUri)
+
+                    result.add(Image(contentUri, name, size, mime, extension))
+                }
+
+                coroutine.activeWork(result)
+            } ?: run {
+                Log.e(TAG, "content not found...")
+                coroutine.activeWork(emptyList())
+            }
+        }.onFailure(errorHandler)
     }
 
     fun findImage(
@@ -488,4 +536,8 @@ class MediaManager @Inject constructor(
     // 읽기 가능한 상태인지 체크
     fun isExternalStorageReadable(): Boolean =
         Environment.getExternalStorageState() in setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)
+}
+
+fun <T> CancellableContinuation<T>.activeWork(value: T) {
+    if (isActive) { resume(value) }
 }

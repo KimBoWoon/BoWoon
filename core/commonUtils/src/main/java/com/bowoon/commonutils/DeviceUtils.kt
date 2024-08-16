@@ -2,6 +2,7 @@ package com.bowoon.commonutils
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import android.provider.Settings
 
@@ -44,6 +45,16 @@ fun Context.getVersionCode(flags: Int = 0): Long =
             longVersionCode
         } else {
             versionCode.toLong()
+        }
+    }
+
+fun Context.isDarkMode(): Boolean =
+    (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK).let { nightModeFlags ->
+        when (nightModeFlags) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            Configuration.UI_MODE_NIGHT_NO -> false
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> false
+            else -> false
         }
     }
 
