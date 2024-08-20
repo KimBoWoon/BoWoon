@@ -34,17 +34,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                             isMinifyEnabled = false
                         }
                     }
-
-                    buildConfigField("String", "NAVER_MAPS_CLIENT_KEY", getProp("naver_maps_client_key"))
-                    buildConfigField("String", "NAVER_MAPS_CLIENT_SECRET_KEY", getProp("naver_maps_client_secret_key"))
-                    buildConfigField("String", "riotApiKey", getProp("riot_api_key"))
-
-//                    when (appName) {
-//                        Config.Application.GpsAlarm.appName -> {
-//                        }
-//                        Config.Application.Lol.appName -> {
-//                        }
-//                    }
                 }
 
                 configureKotlinAndroid(this)
@@ -61,7 +50,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         }
     }
 
-    lateinit var prop: Properties
+    private lateinit var prop: Properties
     private fun getProp(propertyKey: String): String =
         runCatching {
             if (!this::prop.isInitialized) {

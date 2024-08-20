@@ -1,4 +1,4 @@
-package com.bowoon.gps_alarm.ui.alarm
+package com.bowoon.gps_alarm.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bowoon.gpsAlarm.databinding.VhAlarmBinding
 import com.bowoon.gps_alarm.data.Address
+import com.bowoon.gps_alarm.ui.fragments.AlarmFragment
 
 class AlarmAdapter(
     private val handler: AlarmFragment.ClickHandler
@@ -22,7 +23,7 @@ class AlarmAdapter(
         AlarmVH(VhAlarmBinding.inflate(LayoutInflater.from(parent.context), parent, false), handler)
 
     override fun onBindViewHolder(holder: AlarmVH, position: Int) {
-        currentList[position]?.let {
+        getItem(position)?.let {
             holder.bind(it)
         }
     }

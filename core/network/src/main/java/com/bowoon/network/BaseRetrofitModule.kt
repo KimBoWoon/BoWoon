@@ -25,7 +25,6 @@ object BaseRetrofitModule {
         readTimeout(30, TimeUnit.SECONDS)
         writeTimeout(15, TimeUnit.SECONDS)
         addNetworkInterceptor(interceptor)
-        addInterceptor(AppInterceptor())
         if (BuildConfig.DEBUG) {
             addInterceptor(OkHttpProfilerInterceptor())
             addInterceptor(NetworkLogInterceptor())

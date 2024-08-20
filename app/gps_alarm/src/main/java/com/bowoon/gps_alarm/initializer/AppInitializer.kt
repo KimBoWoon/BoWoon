@@ -7,7 +7,7 @@ class AppInitializer : Initializer<AppInitializer.Works> {
     override fun create(context: Context): Works = Works(context)
 
     override fun dependencies(): List<Class<out Initializer<*>>> =
-        listOf(AlarmInitializer::class.java)
+        listOf()
 
     class Works(context: Context)
 }

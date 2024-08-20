@@ -1,4 +1,4 @@
-package com.bowoon.gps_alarm.ui.alarm
+package com.bowoon.gps_alarm.ui.fragments
 
 import android.graphics.Rect
 import android.os.Bundle
@@ -20,16 +20,22 @@ import com.bowoon.gpsAlarm.R
 import com.bowoon.gpsAlarm.databinding.AlarmFragmentBinding
 import com.bowoon.gps_alarm.base.BaseFragment
 import com.bowoon.gps_alarm.data.Address
+import com.bowoon.gps_alarm.ui.adapters.AlarmAdapter
 import com.bowoon.gps_alarm.ui.util.setFadeAnimation
-import com.bowoon.gps_alarm.ui.viewmodel.AlarmVM
+import com.bowoon.gps_alarm.ui.fragments.vm.AlarmVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class AlarmFragment : BaseFragment() {
+class AlarmFragment @Inject constructor(
+
+) : BaseFragment() {
     companion object {
         private const val TAG = "#AlarmFragment"
+
+        fun newInstance(): AlarmFragment = AlarmFragment()
     }
 
     private lateinit var binding: AlarmFragmentBinding

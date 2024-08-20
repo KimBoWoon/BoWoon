@@ -1,4 +1,4 @@
-package com.bowoon.gps_alarm.ui.map
+package com.bowoon.gps_alarm.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
@@ -15,7 +15,7 @@ import com.bowoon.gpsAlarm.R
 import com.bowoon.gpsAlarm.databinding.MapsFragmentBinding
 import com.bowoon.gps_alarm.base.BaseFragment
 import com.bowoon.gps_alarm.data.SettingInfo
-import com.bowoon.gps_alarm.ui.viewmodel.MapVM
+import com.bowoon.gps_alarm.ui.fragments.vm.MapVM
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.overlay.CircleOverlay
@@ -23,11 +23,16 @@ import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MapsFragment : BaseFragment() {
+class MapsFragment @Inject constructor(
+
+) : BaseFragment() {
     companion object {
         private const val TAG = "#MapsFragment"
+
+        fun newInstance(): MapsFragment = MapsFragment()
     }
 
     private lateinit var binding: MapsFragmentBinding

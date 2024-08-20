@@ -1,4 +1,4 @@
-package com.bowoon.gps_alarm.ui.alarm
+package com.bowoon.gps_alarm.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,10 +10,17 @@ import com.bowoon.gpsAlarm.R
 import com.bowoon.gpsAlarm.databinding.FragmentAlarmDetailBinding
 import com.bowoon.gps_alarm.base.BaseFragment
 import com.bowoon.gps_alarm.data.Week
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class AlarmDetailFragment : BaseFragment() {
+@AndroidEntryPoint
+class AlarmDetailFragment @Inject constructor(
+
+) : BaseFragment() {
     companion object {
         private const val TAG = "#AlarmDetailFragment"
+
+        fun newInstance(): AlarmDetailFragment = AlarmDetailFragment()
     }
 
     private lateinit var binding: FragmentAlarmDetailBinding

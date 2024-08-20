@@ -1,4 +1,4 @@
-package com.bowoon.gps_alarm.ui.viewmodel
+package com.bowoon.gps_alarm.ui.fragments.vm
 
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.viewModelScope

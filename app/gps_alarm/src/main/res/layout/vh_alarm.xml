@@ -7,7 +7,7 @@
 
         <variable
             name="vh"
-            type="com.bowoon.gps_alarm.ui.alarm.AlarmVH" />
+            type="com.bowoon.gps_alarm.ui.adapters.AlarmVH" />
 
         <variable
             name="item"

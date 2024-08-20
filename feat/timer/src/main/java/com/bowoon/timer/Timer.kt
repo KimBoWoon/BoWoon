@@ -8,8 +8,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class Timer {
+class Timer @Inject constructor(
+
+) {
     companion object {
         private const val TAG = "feat_module_timer"
     }

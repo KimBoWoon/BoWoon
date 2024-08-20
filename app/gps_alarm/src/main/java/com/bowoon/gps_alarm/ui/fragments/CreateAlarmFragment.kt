@@ -1,4 +1,4 @@
-package com.bowoon.gps_alarm.ui.alarm
+package com.bowoon.gps_alarm.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,17 +19,22 @@ import com.bowoon.gpsAlarm.databinding.CreateAlarmFragmentBinding
 import com.bowoon.gps_alarm.base.BaseFragment
 import com.bowoon.gps_alarm.data.Geocode
 import com.bowoon.gps_alarm.data.Week
-import com.bowoon.gps_alarm.ui.viewmodel.AlarmVM
+import com.bowoon.gps_alarm.ui.fragments.vm.AlarmVM
 import com.bowoon.gps_alarm.webview.AddressWebViewActivity
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class CreateAlarmFragment : BaseFragment() {
+class CreateAlarmFragment @Inject constructor(
+
+) : BaseFragment() {
     companion object {
         private const val TAG = "#CreateAlarmFragment"
 
         const val RESULT_ADDRESS = "ADDRESS"
         const val ADDRESS_DATA_RESULT_CODE = 1000
+
+        fun newInstance(): CreateAlarmFragment = CreateAlarmFragment()
     }
 
     private lateinit var binding: CreateAlarmFragmentBinding

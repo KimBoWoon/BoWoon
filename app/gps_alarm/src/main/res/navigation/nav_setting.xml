@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.bowoon.gps_alarm.ui.setting.SettingFragment"
+        android:name="com.bowoon.gps_alarm.ui.fragments.SettingFragment"
         android:label="SettingFragment"
         tools:layout="@layout/setting_fragment" />
 </navigation>

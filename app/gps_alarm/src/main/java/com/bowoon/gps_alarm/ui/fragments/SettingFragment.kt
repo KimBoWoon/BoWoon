@@ -1,4 +1,4 @@
-package com.bowoon.gps_alarm.ui.setting
+package com.bowoon.gps_alarm.ui.fragments
 
 import android.Manifest
 import android.content.Intent
@@ -20,15 +20,20 @@ import com.bowoon.gpsAlarm.R
 import com.bowoon.gpsAlarm.databinding.SettingFragmentBinding
 import com.bowoon.gps_alarm.base.BaseFragment
 import com.bowoon.gps_alarm.data.SettingInfo
-import com.bowoon.gps_alarm.ui.viewmodel.SettingVM
+import com.bowoon.gps_alarm.ui.fragments.vm.SettingVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class SettingFragment : BaseFragment() {
+class SettingFragment @Inject constructor(
+
+) : BaseFragment() {
     companion object {
         private const val TAG = "#SettingFragment"
+
+        fun newInstance(): SettingFragment = SettingFragment()
     }
 
     private lateinit var binding: SettingFragmentBinding

@@ -1,4 +1,4 @@
-package com.bowoon.gps_alarm.ui.viewmodel
+package com.bowoon.gps_alarm.ui.fragments.vm
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -40,45 +40,45 @@ class AlarmVM @Inject constructor(
     val alarmList = MutableStateFlow<DataStatus<List<Address>?>>(DataStatus.Loading)
 
     init {
-        if (BuildConfig.DEBUG) {
-            mutableListOf(
-                Address(
-                    "스타벅스 석촌호수점",
-                    true,
-                    0.0,
-                    null,
-                    "서울 송파구 송파동 7-4",
-                    "서울 송파구 석촌호수로 262",
-                    127.10533937925041,
-                    37.50952059479555,
-                    listOf(Week.MONDAY, Week.TUESDAY, Week.WEDNESDAY, Week.THURSDAY, Week.FRIDAY)
-                ),
-                Address(
-                    "회사",
-                    true,
-                    0.0,
-                    null,
-                    "역삼동 648-9",
-                    "서울 강남구 테헤란로 129",
-                    127.03235203576953,
-                    37.49982101372995,
-                    listOf(Week.MONDAY, Week.TUESDAY, Week.WEDNESDAY, Week.THURSDAY, Week.FRIDAY)
-                ),
-                Address(
-                    "시청",
-                    true,
-                    0.0,
-                    null,
-                    "서울 중구 정동 5-5",
-                    "서울 중구 세종대로 101",
-                    126.9770417,
-                    37.5657193,
-                    listOf(Week.MONDAY, Week.TUESDAY, Week.WEDNESDAY, Week.THURSDAY, Week.FRIDAY)
-                )
-            ).forEach {
-                viewModelScope.launch { manager.add(it) }
-            }
-        }
+//        if (BuildConfig.DEBUG) {
+//            mutableListOf(
+//                Address(
+//                    "스타벅스 석촌호수점",
+//                    true,
+//                    0.0,
+//                    null,
+//                    "서울 송파구 송파동 7-4",
+//                    "서울 송파구 석촌호수로 262",
+//                    127.10533937925041,
+//                    37.50952059479555,
+//                    listOf(Week.MONDAY, Week.TUESDAY, Week.WEDNESDAY, Week.THURSDAY, Week.FRIDAY)
+//                ),
+//                Address(
+//                    "회사",
+//                    true,
+//                    0.0,
+//                    null,
+//                    "역삼동 648-9",
+//                    "서울 강남구 테헤란로 129",
+//                    127.03235203576953,
+//                    37.49982101372995,
+//                    listOf(Week.MONDAY, Week.TUESDAY, Week.WEDNESDAY, Week.THURSDAY, Week.FRIDAY)
+//                ),
+//                Address(
+//                    "시청",
+//                    true,
+//                    0.0,
+//                    null,
+//                    "서울 중구 정동 5-5",
+//                    "서울 중구 세종대로 101",
+//                    126.9770417,
+//                    37.5657193,
+//                    listOf(Week.MONDAY, Week.TUESDAY, Week.WEDNESDAY, Week.THURSDAY, Week.FRIDAY)
+//                )
+//            ).forEach {
+//                viewModelScope.launch { manager.add(it) }
+//            }
+//        }
     }
 
     fun fetchAlarmList() {

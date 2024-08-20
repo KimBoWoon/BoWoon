@@ -9,8 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import com.bowoon.commonutils.Log
 import com.bowoon.gpsAlarm.R
 import com.bowoon.gpsAlarm.databinding.AddressWebViewActivityBinding
-import com.bowoon.gps_alarm.ui.alarm.CreateAlarmFragment
-import com.bowoon.gps_alarm.ui.viewmodel.AlarmVM
+import com.bowoon.gps_alarm.ui.fragments.CreateAlarmFragment
+import com.bowoon.gps_alarm.ui.fragments.vm.AlarmVM
 import com.bowoon.gps_alarm.webview.javascript.GpsAlarmInterface
 import com.bowoon.gps_alarm.webview.javascript.GpsAlarmInterfaceImpl
 import com.bowoon.gps_alarm.webview.settings.WebViewChromeClient
@@ -61,7 +61,7 @@ class AddressWebViewActivity : AppCompatActivity() {
 
             addJavascriptInterface(GpsAlarmInterfaceImpl(executeCallback), GpsAlarmInterface.INTERFACE_NAME)
 
-            loadUrl("http:///172.30.50.183/address.html")
+            loadUrl("http:///192.168.35.56/address.html")
         }
 
         initFlow()
