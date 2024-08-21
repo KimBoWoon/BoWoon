@@ -35,7 +35,7 @@ class SettingVM @Inject constructor(
         fetchSetting()
     }
 
-    fun fetchSetting() {
+    private fun fetchSetting() {
         flow {
             dataStoreRepository.getData(
                 DataStoreRepository.GPS_ALARM_DATA_STORE_NAME,

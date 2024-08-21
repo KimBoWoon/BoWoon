@@ -11,7 +11,6 @@ import com.bowoon.gps_alarm.data.SettingInfo
 import com.bowoon.gps_alarm.ui.util.AlarmManager
 import com.bowoon.gps_alarm.ui.util.decode
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -19,7 +18,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
@@ -32,20 +30,17 @@ class MapVM @Inject constructor(
     val alarmList = MutableStateFlow<DataStatus<List<Address>?>>(DataStatus.Loading)
     val setting = MutableStateFlow<DataStatus<SettingInfo?>>(DataStatus.Loading)
 
-    fun fetchAlarmList() {
-        viewModelScope.launch(Dispatchers.IO) {
-            flow {
-                emit(manager.getList())
-            }.onStart { alarmList.value = DataStatus.Loading }
-                .catch { e -> alarmList.value = DataStatus.Failure(e) }
-                .onEach {
-                    if (it.isEmpty()) {
-                        alarmList.value = DataStatus.Success(emptyList())
-                    } else {
-                        alarmList.value = DataStatus.Success(it)
-                    }
-                }.launchIn(viewModelScope)
-        }
+    private fun fetchAlarmList() {
+        manager.getFlow()
+            .onStart { alarmList.value = DataStatus.Loading }
+            .catch { e -> alarmList.value = DataStatus.Failure(e) }
+            .onEach {
+                if (it.isEmpty()) {
+                    alarmList.value = DataStatus.Success(emptyList())
+                } else {
+                    alarmList.value = DataStatus.Success(it)
+                }
+            }.launchIn(viewModelScope)
     }
 
     fun fetchSetting() {

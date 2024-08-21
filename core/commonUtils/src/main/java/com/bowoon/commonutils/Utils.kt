@@ -24,6 +24,10 @@ object ContextUtils {
         Toast.makeText(this, message, duration).show()
     }
 
+    fun Context?.showToast(@StringRes message: Int, duration: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(this, message, duration).show()
+    }
+
     fun Context?.showSnackBar(
         view: View,
         message: String,

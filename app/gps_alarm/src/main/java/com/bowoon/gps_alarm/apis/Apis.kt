@@ -9,9 +9,14 @@ import javax.inject.Singleton
 @Singleton
 class Apis @Inject constructor(
     @JsonConverterRetrofit private val retrofit: Retrofit,
-    private val httpClient: OkHttpClient
+    private val httpClient: OkHttpClient,
+    private val interceptor: AppInterceptor
 ) {
     val mapsApi = retrofit.newBuilder()
-        .client(httpClient.newBuilder().addInterceptor(AppInterceptor()).build())
+        .client(
+            httpClient.newBuilder()
+                .addInterceptor(interceptor)
+                .build()
+        )
         .build().create(MapsApiService::class.java)
 }

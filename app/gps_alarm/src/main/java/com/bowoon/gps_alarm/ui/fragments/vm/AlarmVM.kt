@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.bowoon.commonutils.DataStatus
 import com.bowoon.commonutils.Log
-import com.bowoon.gpsAlarm.BuildConfig
 import com.bowoon.gps_alarm.apis.Apis
 import com.bowoon.gps_alarm.base.BaseVM
 import com.bowoon.gps_alarm.data.Address
@@ -82,19 +81,16 @@ class AlarmVM @Inject constructor(
     }
 
     fun fetchAlarmList() {
-        viewModelScope.launch(Dispatchers.IO) {
-            flow {
-                emit(manager.getList())
-            }.onStart { alarmList.value = DataStatus.Loading }
-                .catch { e -> alarmList.value = DataStatus.Failure(e) }
-                .onEach {
-                    if (it.isEmpty()) {
-                        alarmList.value = DataStatus.Success(emptyList())
-                    } else {
-                        alarmList.value = DataStatus.Success(it)
-                    }
-                }.launchIn(viewModelScope)
-        }
+        manager.getFlow()
+            .onStart { alarmList.value = DataStatus.Loading }
+            .catch { e -> alarmList.value = DataStatus.Failure(e) }
+            .onEach {
+                if (it.isEmpty()) {
+                    alarmList.value = DataStatus.Success(emptyList())
+                } else {
+                    alarmList.value = DataStatus.Success(it)
+                }
+            }.launchIn(viewModelScope)
     }
 
     fun removeAlarm(address: Address) {

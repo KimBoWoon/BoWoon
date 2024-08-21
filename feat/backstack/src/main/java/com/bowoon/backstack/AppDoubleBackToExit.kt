@@ -1,31 +1,27 @@
 package com.bowoon.backstack
 
-import android.content.Context
-import android.widget.Toast
-import androidx.annotation.StringRes
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class AppDoubleBackToExit @AssistedInject constructor(
-    @Assisted("exitMsg") @StringRes private val exitMsg: Int,
+//    @Assisted("exitMsg") @StringRes private val exitMsg: Int,
     @Assisted("exitTime") private val exitTime: Long,
-    @ActivityContext private val context: Context
+//    @ActivityContext private val context: Context
 ) {
     @AssistedFactory
     interface AppDoubleBackToExitFactory {
         fun create(
-            @Assisted("exitMsg") @StringRes exitMsg: Int,
+//            @Assisted("exitMsg") @StringRes exitMsg: Int,
             @Assisted("exitTime") exitTime: Long
         ): AppDoubleBackToExit
     }
 
     val event = MutableStateFlow<AppDoubleBackToExitEvent>(AppDoubleBackToExitEvent.One)
 //    private var exitFlag = false
-
+//
 //    fun onBackPressed(
 //        callback: () -> Unit
 //    ) {
@@ -44,13 +40,12 @@ class AppDoubleBackToExit @AssistedInject constructor(
 
     suspend fun onBackPressed() {
         when (event.value) {
-            AppDoubleBackToExitEvent.One -> event.emit(AppDoubleBackToExitEvent.Two)
-            AppDoubleBackToExitEvent.Two -> {
-                Toast.makeText(context, exitMsg, Toast.LENGTH_SHORT).show()
-                event.emit(AppDoubleBackToExitEvent.Exit)
+            AppDoubleBackToExitEvent.One -> {
+                event.emit(AppDoubleBackToExitEvent.Two)
                 delay(exitTime)
                 event.emit(AppDoubleBackToExitEvent.One)
             }
+            AppDoubleBackToExitEvent.Two -> event.emit(AppDoubleBackToExitEvent.Exit)
             AppDoubleBackToExitEvent.Exit -> {}
         }
     }

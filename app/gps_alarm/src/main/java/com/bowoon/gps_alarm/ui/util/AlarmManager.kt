@@ -5,8 +5,9 @@ import com.bowoon.datamanager.DataStoreRepository
 import com.bowoon.gps_alarm.data.Address
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
@@ -57,6 +58,8 @@ class AlarmManager @Inject constructor(
     }
 
     fun getList(): List<Address> = alarmList
+
+    fun getFlow(): Flow<List<Address>> = flowOf(alarmList)
 
     suspend fun clear() {
         alarmList.clear()

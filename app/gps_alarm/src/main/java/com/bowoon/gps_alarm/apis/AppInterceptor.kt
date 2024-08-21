@@ -3,8 +3,11 @@ package com.bowoon.gps_alarm.apis
 import com.bowoon.gpsAlarm.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
 
-class AppInterceptor : Interceptor {
+class AppInterceptor @Inject constructor(
+
+) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
         proceed(
             request().newBuilder()

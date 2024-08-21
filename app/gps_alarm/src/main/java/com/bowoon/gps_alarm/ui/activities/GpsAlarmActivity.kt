@@ -13,6 +13,7 @@ import androidx.navigation.ui.NavigationUI
 import com.bowoon.backstack.AppDoubleBackToExit
 import com.bowoon.backstack.AppDoubleBackToExitEvent
 import com.bowoon.backstack.Backstack
+import com.bowoon.commonutils.ContextUtils.showToast
 import com.bowoon.commonutils.Log
 import com.bowoon.gpsAlarm.R
 import com.bowoon.gpsAlarm.databinding.GpsAlarmActivityBinding
@@ -44,7 +45,7 @@ class GpsAlarmActivity : BaseActivity() {
     lateinit var appDoubleBackToExitFactory: AppDoubleBackToExit.AppDoubleBackToExitFactory
     private val appDoubleBackToExit by lazy {
         appDoubleBackToExitFactory.create(
-            R.string.app_double_back_to_exit_msg,
+//            R.string.app_double_back_to_exit_msg,
             1500
         )
     }
@@ -57,16 +58,6 @@ class GpsAlarmActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        lifecycleScope.launch {
-            appDoubleBackToExit.event.collect { event ->
-                when (event) {
-                    AppDoubleBackToExitEvent.One -> Log.d(TAG, "onBackPressed one")
-                    AppDoubleBackToExitEvent.Two -> Log.d(TAG, "onBackPressed two")
-                    AppDoubleBackToExitEvent.Exit -> finish()
-                }
-            }
-        }
 
         onBackPressedDispatcher.addCallback(
             this,
@@ -93,12 +84,8 @@ class GpsAlarmActivity : BaseActivity() {
         }
 
         initNavigation()
-
-        binding.bnvGpsAlarmNavigation.setOnItemSelectedListener {
-            backstack.add(it.itemId)
-            changeFragment(getFragment(it.itemId))
-            true
-        }
+        initBinding()
+        initFlow()
 
         requestMultiplePermission(
             { Log.d(TAG, "all granted") },
@@ -107,9 +94,32 @@ class GpsAlarmActivity : BaseActivity() {
     }
 
     private fun initNavigation() {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fcv_content) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(binding.fcvContent.id) as NavHostFragment
         val navController = navHostFragment.navController
         NavigationUI.setupWithNavController(binding.bnvGpsAlarmNavigation, navController)
+    }
+
+    private fun initBinding() {
+        binding.bnvGpsAlarmNavigation.setOnItemSelectedListener {
+            backstack.add(it.itemId)
+            changeFragment(getFragment(it.itemId))
+            true
+        }
+    }
+
+    private fun initFlow() {
+        lifecycleScope.launch {
+            appDoubleBackToExit.event.collect { event ->
+                when (event) {
+                    AppDoubleBackToExitEvent.One -> Log.d(TAG, "appDoubleBackToExit One")
+                    AppDoubleBackToExitEvent.Two -> {
+                        Log.d(TAG, "appDoubleBackToExit Two")
+                        showToast(R.string.app_double_back_to_exit_msg)
+                    }
+                    AppDoubleBackToExitEvent.Exit -> finish()
+                }
+            }
+        }
     }
 
     private fun needPermission(): Array<String> {
@@ -135,13 +145,14 @@ class GpsAlarmActivity : BaseActivity() {
         return requestPermissionList.toTypedArray()
     }
 
-    fun changeFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fcv_content, fragment)
-            .commitAllowingStateLoss()
+    private fun changeFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().let { transaction ->
+            transaction.replace(R.id.fcv_content, fragment)
+            transaction.commitAllowingStateLoss()
+        }
     }
 
-    fun getFragment(id: Int): Fragment =
+    private fun getFragment(id: Int): Fragment =
         when (id) {
             R.id.nav_alarm -> alarmFragment
             R.id.nav_maps -> mapsFragment
