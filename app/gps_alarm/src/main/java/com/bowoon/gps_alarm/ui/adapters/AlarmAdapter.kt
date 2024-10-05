@@ -14,7 +14,7 @@ class AlarmAdapter(
 ) : ListAdapter<Address, AlarmVH>(diff) {
     companion object {
         private val diff = object : DiffUtil.ItemCallback<Address>() {
-            override fun areItemsTheSame(oldItem: Address, newItem: Address): Boolean = oldItem == newItem
+            override fun areItemsTheSame(oldItem: Address, newItem: Address): Boolean = oldItem === newItem
             override fun areContentsTheSame(oldItem: Address, newItem: Address): Boolean = oldItem.longitude == newItem.longitude && oldItem.latitude == newItem.latitude
         }
     }
@@ -23,9 +23,7 @@ class AlarmAdapter(
         AlarmVH(VhAlarmBinding.inflate(LayoutInflater.from(parent.context), parent, false), handler)
 
     override fun onBindViewHolder(holder: AlarmVH, position: Int) {
-        getItem(position)?.let {
-            holder.bind(it)
-        }
+        getItem(position)?.let { holder.bind(it) }
     }
 }
 

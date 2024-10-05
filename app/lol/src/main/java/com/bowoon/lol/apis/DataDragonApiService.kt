@@ -3,6 +3,7 @@ package com.bowoon.lol.apis
 import com.bowoon.lol.data.ChampionData
 import com.bowoon.lol.data.ChampionDetailData
 import com.bowoon.lol.data.GameItemData
+import com.bowoon.network.ApiResponse
 import retrofit2.http.GET
 import retrofit2.http.Url
 
@@ -25,5 +26,5 @@ interface DataDragonApiService {
     @GET
     suspend fun getAllGameItem(
         @Url url: String
-    ): GameItemData
+    ): ApiResponse<GameItemData>
 }

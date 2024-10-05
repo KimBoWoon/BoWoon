@@ -35,6 +35,6 @@ dependencies {
         libs.hilt.compiler,
         libs.glide.compiler
     ).forEach {
-        kapt(it)
+        ksp(it)
     }
 }

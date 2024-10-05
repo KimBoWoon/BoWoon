@@ -4,6 +4,7 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.net.toFile
+import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -117,6 +118,7 @@ class ContentsAdapter : ListAdapter<MediaDataClass, RecyclerView.ViewHolder>(dif
         fun bind(content: Video?) {
             content?.let {
                 this@VideoContentVH.content = content.uri
+//                this@VideoContentVH.content = "https://www.youtube.com/watch?v=66hlb1cOmnA".toUri()
 
                 binding.apply {
                     exoplayer.apply {

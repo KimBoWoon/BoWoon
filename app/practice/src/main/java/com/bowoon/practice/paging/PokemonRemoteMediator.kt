@@ -4,6 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
+import com.bowoon.network.ApiResponse
 import com.bowoon.practice.apis.Apis
 import com.bowoon.practice.data.PokemonDataConstant
 import com.bowoon.practice.data.RoomPokemon
@@ -50,63 +51,112 @@ class PokemonRemoteMediator @Inject constructor(
     /**
      * 새로고침
      */
-    private suspend fun refresh(): MediatorResult {
-        return try {
-            val response = api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", limit, offset)
-            if (response.results?.isNotEmpty() == true) {
-                roomDataBase.transactionExecutor.execute {
+    private suspend fun refresh(): MediatorResult =
+        when (val response = api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", limit, offset)) {
+            is ApiResponse.Success -> {
+                if (response.data.results?.isNotEmpty() == true) {
+                    roomDataBase.transactionExecutor.execute {
 //                    roomDataBase.roomPokemonDao().deleteAll()
 //                    roomDataBase.roomPokemonDao().insertAll(response.results.map {
 //                        Pokemon(name = it.name ?: "", url = it.url ?: "")
 //                    })
+                    }
                 }
+                offset = 100
+                MediatorResult.Success(endOfPaginationReached = false)
             }
-            offset = 100
-            MediatorResult.Success(endOfPaginationReached = false)
-        } catch (e: Exception) {
-            MediatorResult.Error(e)
+            is ApiResponse.Failure -> {
+                MediatorResult.Error(response.throwable ?: Throwable("Something wrong..."))
+            }
         }
-    }
+//        return try {
+//            val response = api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", limit, offset)
+//            if (response.results?.isNotEmpty() == true) {
+//                roomDataBase.transactionExecutor.execute {
+////                    roomDataBase.roomPokemonDao().deleteAll()
+////                    roomDataBase.roomPokemonDao().insertAll(response.results.map {
+////                        Pokemon(name = it.name ?: "", url = it.url ?: "")
+////                    })
+//                }
+//            }
+//            offset = 100
+//            MediatorResult.Success(endOfPaginationReached = false)
+//        } catch (e: Exception) {
+//            MediatorResult.Error(e)
+//        }
 
     /**
      * 이전 아이템
      */
     private suspend fun loadBefore(): MediatorResult {
         offset -= 100 // 이전 아이템의 offset 설정
-        return try {
-            val response = api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", limit, offset)
-            if (response.results?.isNotEmpty() == true) {
-                roomDataBase.transactionExecutor.execute {
+        return when (val response = api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", limit, offset)) {
+            is ApiResponse.Success -> {
+                if (response.data.results?.isNotEmpty() == true) {
+                    roomDataBase.transactionExecutor.execute {
 //                    roomDataBase.roomPokemonDao().insertAll(response.results.map {
 //                        Pokemon(name = it.name ?: "", url = it.url ?: "")
 //                    })
+                    }
                 }
+                // 로드가 성공했고 받은 아이템 목록이 비어있지 않다면, 아이템 목록을 데이터베이스에 저장하고 false를 반환
+                MediatorResult.Success(endOfPaginationReached = false)
             }
-            // 로드가 성공했고 받은 아이템 목록이 비어있지 않다면, 아이템 목록을 데이터베이스에 저장하고 false를 반환
-            MediatorResult.Success(endOfPaginationReached = false)
-        } catch (e: Exception) {
-            MediatorResult.Error(e)
+            is ApiResponse.Failure -> {
+                MediatorResult.Error(response.throwable ?: Throwable("Something wrong..."))
+            }
         }
+//        offset -= 100 // 이전 아이템의 offset 설정
+//        return try {
+//            val response = api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", limit, offset)
+//            if (response.results?.isNotEmpty() == true) {
+//                roomDataBase.transactionExecutor.execute {
+////                    roomDataBase.roomPokemonDao().insertAll(response.results.map {
+////                        Pokemon(name = it.name ?: "", url = it.url ?: "")
+////                    })
+//                }
+//            }
+//            // 로드가 성공했고 받은 아이템 목록이 비어있지 않다면, 아이템 목록을 데이터베이스에 저장하고 false를 반환
+//            MediatorResult.Success(endOfPaginationReached = false)
+//        } catch (e: Exception) {
+//            MediatorResult.Error(e)
+//        }
     }
 
     /**
      * 다음 아이템
      */
-    private suspend fun loadAfter(): MediatorResult {
-        return try {
-            val response = api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", limit, offset)
-            if (response.results?.isNotEmpty() == true) {
-                roomDataBase.transactionExecutor.execute {
+    private suspend fun loadAfter(): MediatorResult =
+        when (val response = api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", limit, offset)) {
+            is ApiResponse.Success -> {
+                if (response.data.results?.isNotEmpty() == true) {
+                    roomDataBase.transactionExecutor.execute {
 //                    roomDataBase.roomPokemonDao().insertAll(response.results.map {
 //                        Pokemon(name = it.name ?: "", url = it.url ?: "")
 //                    })
+                    }
                 }
+                offset += 100 // 다음 받아올 아이템의 offset 설정
+                // 로드가 성공했고 받은 아이템 목록이 비어있지 않다면, 아이템 목록을 데이터베이스에 저장하고 false를 반환
+                MediatorResult.Success(endOfPaginationReached = false)
             }
-            offset += 100 // 다음 받아올 아이템의 offset 설정
-            // 로드가 성공했고 받은 아이템 목록이 비어있지 않다면, 아이템 목록을 데이터베이스에 저장하고 false를 반환
-            MediatorResult.Success(endOfPaginationReached = false)
-        } catch (e: Exception) {
-            MediatorResult.Error(e)
+            is ApiResponse.Failure -> {
+                MediatorResult.Error(response.throwable ?: Throwable("Something wrong..."))
+            }
         }
-    }
+//        return try {
+//            val response = api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", limit, offset)
+//            if (response.results?.isNotEmpty() == true) {
+//                roomDataBase.transactionExecutor.execute {
+////                    roomDataBase.roomPokemonDao().insertAll(response.results.map {
+////                        Pokemon(name = it.name ?: "", url = it.url ?: "")
+////                    })
+//                }
+//            }
+//            offset += 100 // 다음 받아올 아이템의 offset 설정
+//            // 로드가 성공했고 받은 아이템 목록이 비어있지 않다면, 아이템 목록을 데이터베이스에 저장하고 false를 반환
+//            MediatorResult.Success(endOfPaginationReached = false)
+//        } catch (e: Exception) {
+//            MediatorResult.Error(e)
+//        }
 }

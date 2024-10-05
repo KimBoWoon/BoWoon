@@ -7,11 +7,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.bowoon.commonutils.DataStatus
 import com.bowoon.commonutils.Log
 import com.bowoon.commonutils.ViewAdapter.onDebounceClickListener
 import com.bowoon.lol.R
 import com.bowoon.lol.base.BaseFragment
+import com.bowoon.lol.data.GameItemData
 import com.bowoon.lol.data.GameItemInfo
 import com.bowoon.lol.databinding.FragmentGameItemBinding
 import com.bowoon.lol.ui.activities.vm.MainVM
@@ -53,6 +53,7 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
         binding.apply {
             rvGameItemList.apply {
                 itemAnimator = null
+                rvGameItemList.adapter = gameAdapter
             }
         }
     }
@@ -61,15 +62,12 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
         lifecycleScope.launch {
             activityVM.allGameItem.collect {
                 when (it) {
-                    is DataStatus.Loading -> {
-                        Log.d("data loading...")
-                    }
-                    is DataStatus.Success -> {
+                    is GameItemData -> {
                         Log.d(it.data.toString())
-                        it.data?.data?.let { gameItemList ->
+                        it.data?.let { gameItemList ->
                             val sortedGameItemList = gameItemList.values.filter { item -> item.inStore != false }.sortedBy { item -> item.name }
                             gameItemList.values.forEach { item ->
-                                item.image?.version = it.data?.version ?: ""
+                                item.image?.version = it.version ?: ""
                                 item.tags?.let { tagList ->
                                     tagList.forEach { tag ->
                                         tag?.let {
@@ -78,9 +76,7 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
                                     }
                                 }
                             }
-                            binding.rvGameItemList.adapter = gameAdapter.apply {
-                                submitList(sortedGameItemList)
-                            }
+                            gameAdapter.submitList(sortedGameItemList)
                             binding.cgGameItemCategoryGroup.apply {
                                 tags.distinct().sorted().forEach { tag ->
                                     addView(Chip(requireContext()).apply {
@@ -97,8 +93,7 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
                         }
                         binding.pbLoading.isVisible = false
                     }
-                    is DataStatus.Failure -> {
-                        Log.printStackTrace(it.throwable)
+                    null -> {
                         binding.pbLoading.isVisible = false
                     }
                 }
@@ -108,9 +103,19 @@ class GameItemListFragment : BaseFragment<FragmentGameItemBinding>(
 
     inner class ClickHandler {
         fun clickCategory(category: String) {
-            val filteredList = (activityVM.allGameItem.value as? DataStatus.Success)?.data?.data?.values?.filter { it.tags?.contains(category) == true }
-            gameAdapter.submitList(filteredList) {
-                binding.rvGameItemList.scrollToPosition(0)
+            Log.d("lol_", binding.cgGameItemCategoryGroup.checkedChipId.toString())
+            when (binding.cgGameItemCategoryGroup.checkedChipId) {
+                View.NO_ID -> {
+                    gameAdapter.submitList(activityVM.allGameItem.value?.data?.values?.filter { item -> item.inStore != false }?.sortedBy { item -> item.name }) {
+                        binding.rvGameItemList.scrollToPosition(0)
+                    }
+                }
+                else -> {
+                    val filteredList = activityVM.allGameItem.value?.data?.values?.filter { it.tags?.contains(category) == true }
+                    gameAdapter.submitList(filteredList) {
+                        binding.rvGameItemList.scrollToPosition(0)
+                    }
+                }
             }
         }
 

@@ -3,61 +3,49 @@ package com.bowoon.commonutils
 import android.graphics.Canvas
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 
 class StickyHeaderItemDecoration(
     private val sectionCallback: SectionCallback
 ) : RecyclerView.ItemDecoration() {
+    private lateinit var header: View
+
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDrawOver(c, parent, state)
 
         val topChild = parent.getChildAt(0) ?: return
-
         val topChildPosition = parent.getChildAdapterPosition(topChild)
-        if (topChildPosition == RecyclerView.NO_POSITION) {
-            return
-        }
+
+        if (topChildPosition == RecyclerView.NO_POSITION) return
 
         /* 헤더 */
-        val currentHeader: View =
-            sectionCallback.getHeaderLayoutView(parent, topChildPosition) ?: return
+        val currentHeader = sectionCallback.getHeaderLayoutView(parent, topChildPosition) ?: return
+//        val currentHeader = when (sectionCallback.isHeader(topChildPosition)) {
+//            true -> {
+//                header = sectionCallback.getHeaderLayoutView(parent, topChildPosition) ?: return
+//                header
+//            }
+//            else -> header
+//        }
 
         /* View의 레이아웃 설정 */
         fixLayoutSize(parent, currentHeader, topChild.measuredHeight)
 
         val contactPoint = currentHeader.bottom
-
-        val childInContact: View = getChildInContact(parent, contactPoint) ?: return
-
+        val childInContact = getChildInContact(parent, contactPoint) ?: return
         val childAdapterPosition = parent.getChildAdapterPosition(childInContact)
-        if (childAdapterPosition == -1) {
-            return
-        }
 
-        when {
-            sectionCallback.isHeader(childAdapterPosition) -> moveHeader(
-                c,
-                currentHeader,
-                childInContact
-            )
+        if (childAdapterPosition == RecyclerView.NO_POSITION) return
 
+        when (sectionCallback.isHeader(childAdapterPosition)) {
+            true -> moveHeader(c, currentHeader, childInContact)
             else -> drawHeader(c, currentHeader)
         }
     }
 
-    private fun getChildInContact(parent: RecyclerView, contactPoint: Int): View? {
-        var childInContact: View? = null
-        for (i in 0 until parent.childCount) {
-            val child = parent.getChildAt(i)
-            if (child.bottom > contactPoint) {
-                if (child.top <= contactPoint) {
-                    childInContact = child
-                    break
-                }
-            }
-        }
-        return childInContact
-    }
+    private fun getChildInContact(parent: RecyclerView, contactPoint: Int): View? =
+        parent.children.find { child -> child.bottom > contactPoint && child.top <= contactPoint }
 
     private fun moveHeader(c: Canvas, currentHeader: View, nextHeader: View) {
         c.save()
@@ -86,12 +74,12 @@ class StickyHeaderItemDecoration(
             parent.height,
             View.MeasureSpec.EXACTLY
         )
-        val childWidth: Int = ViewGroup.getChildMeasureSpec(
+        val childWidth = ViewGroup.getChildMeasureSpec(
             widthSpec,
             parent.paddingLeft + parent.paddingRight,
             view.layoutParams.width
         )
-        val childHeight: Int = ViewGroup.getChildMeasureSpec(
+        val childHeight = ViewGroup.getChildMeasureSpec(
             heightSpec,
             parent.paddingTop + parent.paddingBottom,
             view.layoutParams.height

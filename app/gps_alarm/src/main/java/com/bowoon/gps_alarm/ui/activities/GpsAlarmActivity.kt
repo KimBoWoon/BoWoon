@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.bowoon.backstack.AppDoubleBackToExit
@@ -63,17 +64,23 @@ class GpsAlarmActivity : BaseActivity() {
             this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (backstack.isEmpty()) {
-                        if (binding.bnvGpsAlarmNavigation.selectedItemId != R.id.nav_alarm) {
-                            backstack.clear()
-                            binding.bnvGpsAlarmNavigation.selectedItemId = R.id.nav_alarm
-                        } else {
-//                            appDoubleBackToExit.onBackPressed { finish() }
-                            lifecycleScope.launch { appDoubleBackToExit.onBackPressed() }
-                        }
+                    val navHostFragment = supportFragmentManager.findFragmentById(binding.fcvContent.id) as NavHostFragment
+
+                    if (navHostFragment.childFragmentManager.backStackEntryCount > 0) {
+                        navHostFragment.childFragmentManager.popBackStack()
                     } else {
-                        backstack.remove()
-                        binding.bnvGpsAlarmNavigation.selectedItemId = backstack.peek()
+                        if (backstack.isEmpty()) {
+                            if (binding.bnvGpsAlarmNavigation.selectedItemId != R.id.nav_alarm) {
+                                backstack.clear()
+                                binding.bnvGpsAlarmNavigation.selectedItemId = R.id.nav_alarm
+                            } else {
+//                            appDoubleBackToExit.onBackPressed { finish() }
+                                lifecycleScope.launch { appDoubleBackToExit.onBackPressed() }
+                            }
+                        } else {
+                            backstack.remove()
+                            binding.bnvGpsAlarmNavigation.selectedItemId = backstack.peek()
+                        }
                     }
                 }
             }

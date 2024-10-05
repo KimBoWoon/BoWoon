@@ -2,13 +2,15 @@ package com.bowoon.lol.ui.activities.vm
 
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.viewModelScope
+import com.bowoon.commonutils.DataStatus
+import com.bowoon.commonutils.Log
 import com.bowoon.datamanager.DataStoreRepository
 import com.bowoon.lol.apis.Apis
 import com.bowoon.lol.base.BaseVM
 import com.bowoon.lol.data.ChampionData
 import com.bowoon.lol.data.GameItemData
 import com.bowoon.lol.data.LolDataConstant
-import com.bowoon.commonutils.DataStatus
+import com.bowoon.network.ApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -22,7 +24,8 @@ class MainVM @Inject constructor(
     val lolVersion = MutableStateFlow<DataStatus<String?>>(DataStatus.Loading)
     val lolVersionList = MutableStateFlow<DataStatus<List<String>>>(DataStatus.Loading)
     val allChampion = MutableStateFlow<DataStatus<ChampionData?>>(DataStatus.Loading)
-    val allGameItem = MutableStateFlow<DataStatus<GameItemData?>>(DataStatus.Loading)
+//    val allGameItem = MutableStateFlow<DataStatus<GameItemData?>>(DataStatus.Loading)
+    val allGameItem = MutableStateFlow<GameItemData?>(null)
 
     init {
         viewModelScope.launch {
@@ -56,12 +59,14 @@ class MainVM @Inject constructor(
 
     fun getAllGameItem(version: String, language: String = "ko_KR") {
         viewModelScope.launch {
-            runCatching {
-                apis.dataDragonApi.getAllGameItem("${LolDataConstant.DATA_DRAGON_API_URL}/cdn/$version/data/$language/item.json")
-            }.onSuccess { gameItem ->
-                allGameItem.value = DataStatus.Success(gameItem)
-            }.onFailure { e ->
-                allGameItem.value = DataStatus.Failure(e)
+            when (val response = apis.dataDragonApi.getAllGameItem("${LolDataConstant.DATA_DRAGON_API_URL}/cdn/$version/data/$language/item.json")) {
+                is ApiResponse.Success -> {
+                    allGameItem.emit(response.data)
+                }
+                is ApiResponse.Failure -> {
+                    Log.printStackTrace(response.throwable)
+                    allGameItem.emit(null)
+                }
             }
         }
     }

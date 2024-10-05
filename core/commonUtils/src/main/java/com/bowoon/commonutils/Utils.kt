@@ -1,13 +1,17 @@
 package com.bowoon.commonutils
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Rect
 import android.os.Build
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.StringRes
 import com.google.android.material.snackbar.Snackbar
@@ -206,10 +210,86 @@ object ViewUtils {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.showSoftInput(this, 0)
     }
+
+    fun hideIME(et: EditText?) {
+        et ?: return
+        (et.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+            et.windowToken,
+            0
+        )
+    }
+
+    fun showIME(et: EditText?, flag: Int = 0) {
+        et ?: return
+        if (et.requestFocus()) {
+            (et.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(
+                et,
+                flag
+            )
+        }
+    }
 }
 
 fun <A, B, R> ifNotNull(obj1: A?, obj2: B?, action: (A, B) -> R) {
     if (obj1 != null && obj2 != null) {
         action.invoke(obj1, obj2)
     }
+}
+
+private fun resizeBitmap(context: Context, bitmap: Bitmap): Bitmap? {
+    val rate: Float
+    val bitmapWidth = bitmap.width.toFloat()
+    val bitmapHeight = bitmap.height.toFloat()
+    var newWidth = bitmapWidth
+    var newHeight = bitmapHeight
+    val clientHeight = getClientHeight(context).toFloat()
+
+    if (bitmapWidth == 0f || bitmapHeight == 0f || newWidth == 0f || newHeight == 0f || clientHeight == 0f) {
+        return null
+    }
+
+    if (bitmapWidth >= bitmapHeight) {
+        if (bitmapWidth > clientHeight) {
+            rate = clientHeight / bitmapWidth
+            newHeight = bitmapHeight * rate
+            newWidth = clientHeight
+        }
+    } else {
+        if (bitmapHeight > clientHeight) {
+            rate = clientHeight / bitmapHeight
+            newWidth = bitmapWidth * rate
+            newHeight = clientHeight
+        }
+    }
+
+    return Bitmap.createScaledBitmap(bitmap, newWidth.toInt(), newHeight.toInt(), true)
+}
+
+fun getClientHeight(context: Context?): Int {
+    context ?: return -1
+    try {
+        return if (context is Activity) {
+            val rect = Rect()
+            context.window.decorView.getWindowVisibleDisplayFrame(rect)
+            // 인디케이터 영역 높이
+            getScreenHeight(context) - rect.top
+        } else {
+            getScreenHeight(context)
+        }
+    } catch (e: java.lang.Exception) {
+        Log.printStackTrace(e)
+    }
+    return -1
+}
+
+fun getScreenHeight(context: Context): Int {
+    val height: Int = try {
+        context.resources.displayMetrics.heightPixels
+    } catch (e: java.lang.Exception) {
+        val displayMetrics = DisplayMetrics()
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
+        wm?.defaultDisplay?.getMetrics(displayMetrics)
+        displayMetrics.heightPixels
+    }
+    return height
 }

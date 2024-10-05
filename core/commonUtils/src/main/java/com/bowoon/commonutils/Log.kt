@@ -3,14 +3,14 @@ package com.bowoon.commonutils
 import android.util.Log
 
 object Log {
-    private const val showLog = true
+    private const val IS_SHOWING = true
 
     fun i(tag: String, msg: String) {
-        if (showLog) Log.i(tag, getMessageWithLineNumber(msg))
+        if (IS_SHOWING) Log.i("bowoon_$tag", getMessageWithLineNumber(msg))
     }
 
     fun i(msg: String) {
-        if (showLog) Log.i(tag(), getMessageWithLineNumber(msg))
+        if (IS_SHOWING) Log.i("bowoon_${tag()}", getMessageWithLineNumber(msg))
     }
 
 //    fun i(msg: String, tr: Throwable? = null) {
@@ -18,11 +18,11 @@ object Log {
 //    }
 
     fun v(tag: String, msg: String) {
-        if (showLog) Log.v(tag, getMessageWithLineNumber(msg))
+        if (IS_SHOWING) Log.v("bowoon_$tag", getMessageWithLineNumber(msg))
     }
 
     fun v(msg: String) {
-        if (showLog) Log.v(tag(), getMessageWithLineNumber(msg))
+        if (IS_SHOWING) Log.v("bowoon_${tag()}", getMessageWithLineNumber(msg))
     }
 
 //    fun v(msg: String, tr: Throwable? = null) {
@@ -30,11 +30,11 @@ object Log {
 //    }
 
     fun d(tag: String, msg: String) {
-        if (showLog) Log.d(tag, getMessageWithLineNumber(msg))
+        if (IS_SHOWING) Log.d("bowoon_$tag", getMessageWithLineNumber(msg))
     }
 
     fun d(msg: String) {
-        if (showLog) Log.d(tag(), getMessageWithLineNumber(msg))
+        if (IS_SHOWING) Log.d("bowoon_${tag()}", getMessageWithLineNumber(msg))
     }
 
 //    fun d(msg: String, tr: Throwable? = null) {
@@ -42,11 +42,11 @@ object Log {
 //    }
 
     fun w(tag: String, msg: String) {
-        if (showLog) Log.d(tag, getMessageWithLineNumber(msg))
+        if (IS_SHOWING) Log.d("bowoon_$tag", getMessageWithLineNumber(msg))
     }
 
     fun w(msg: String) {
-        if (showLog) Log.w(tag(), getMessageWithLineNumber(msg))
+        if (IS_SHOWING) Log.w("bowoon_${tag()}", getMessageWithLineNumber(msg))
     }
 
 //    fun w(msg: String, tr: Throwable? = null) {
@@ -54,11 +54,11 @@ object Log {
 //    }
 
     fun e(tag: String, msg: String) {
-        if (showLog) Log.d(tag, getMessageWithLineNumber(msg))
+        if (IS_SHOWING) Log.d("bowoon_$tag", getMessageWithLineNumber(msg))
     }
 
     fun e(msg: String) {
-        if (showLog) Log.e(tag(), getMessageWithLineNumber(msg))
+        if (IS_SHOWING) Log.e("bowoon_${tag()}", getMessageWithLineNumber(msg))
     }
 
 //    fun e(msg: String, tr: Throwable? = null) {
@@ -66,7 +66,7 @@ object Log {
 //    }
 
     fun printStackTrace(tr: Throwable? = null) {
-        if (showLog) tr?.printStackTrace()
+        if (IS_SHOWING) tr?.printStackTrace()
     }
 
     private fun tag(): String =

@@ -7,9 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -21,8 +19,8 @@ import com.bowoon.gpsAlarm.databinding.AlarmFragmentBinding
 import com.bowoon.gps_alarm.base.BaseFragment
 import com.bowoon.gps_alarm.data.Address
 import com.bowoon.gps_alarm.ui.adapters.AlarmAdapter
-import com.bowoon.gps_alarm.ui.util.setFadeAnimation
 import com.bowoon.gps_alarm.ui.fragments.vm.AlarmVM
+import com.bowoon.gps_alarm.ui.util.setFadeAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -40,8 +38,8 @@ class AlarmFragment @Inject constructor(
 
     private lateinit var binding: AlarmFragmentBinding
     private val viewModel by viewModels<AlarmVM>()
-    private val alarmAdapter by lazy { AlarmAdapter(handler) }
     private val handler by lazy { ClickHandler() }
+    private val alarmAdapter = AlarmAdapter(handler)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,6 +64,7 @@ class AlarmFragment @Inject constructor(
 
     override fun onResume() {
         super.onResume()
+
         viewModel.fetchAlarmList()
     }
 
@@ -105,22 +104,18 @@ class AlarmFragment @Inject constructor(
 
     override fun initFlow() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.alarmList.collectLatest {
-                    when (it) {
-                        is DataStatus.Loading -> {
-                            binding.pbLoading.isVisible = true
-                        }
-                        is DataStatus.Success -> {
-                            binding.pbLoading.isVisible = false
-                            binding.srlAlarmFragmentRoot.isRefreshing = false
-                            alarmAdapter.submitList(it.data)
-                        }
-                        is DataStatus.Failure -> {
-                            binding.pbLoading.isVisible = false
-                            binding.srlAlarmFragmentRoot.isRefreshing = false
-                            Log.printStackTrace(it.throwable)
-                        }
+            viewModel.alarmList.collect {
+                when (it) {
+                    is DataStatus.Loading -> binding.pbLoading.isVisible = true
+                    is DataStatus.Success -> {
+                        binding.pbLoading.isVisible = false
+                        binding.srlAlarmFragmentRoot.isRefreshing = false
+                        alarmAdapter.submitList(it.data)
+                    }
+                    is DataStatus.Failure -> {
+                        binding.pbLoading.isVisible = false
+                        binding.srlAlarmFragmentRoot.isRefreshing = false
+                        Log.printStackTrace(it.throwable)
                     }
                 }
             }
@@ -140,8 +135,9 @@ class AlarmFragment @Inject constructor(
 
         fun removeAlarm(address: Address?) {
             address?.let {
+                alarmAdapter.notifyItemRemoved(alarmAdapter.currentList.indexOf(it))
                 viewModel.removeAlarm(it)
-                viewModel.fetchAlarmList()
+//                viewModel.fetchAlarmList()
             }
         }
 

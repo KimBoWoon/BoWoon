@@ -2,6 +2,9 @@ package com.bowoon.practice.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.bowoon.commonutils.Log
+import com.bowoon.network.onFailure
+import com.bowoon.network.onSuccess
 import com.bowoon.practice.apis.Apis
 import com.bowoon.practice.data.Pokemon
 import com.bowoon.practice.data.PokemonDataConstant
@@ -11,21 +14,49 @@ class PokemonApiSource @Inject constructor(
     private val api: Apis
 ) : PagingSource<Int, Pokemon>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Pokemon> {
-        runCatching {
-            api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", params.loadSize, params.key ?: 0)
-        }.onSuccess{ response ->
-            return LoadResult.Page(
-                data = response.results ?: listOf(),
-                prevKey = null, // Only paging forward.
-                nextKey = if (response.next != null) params.loadSize + (params.key ?: 0) else null
-            )
-        }.onFailure { e ->
-            e.printStackTrace()
-            return LoadResult.Error(e)
-        }
+        api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", params.loadSize, params.key ?: 0)
+            .onSuccess { response ->
+                return LoadResult.Page(
+                    data = response.results ?: listOf(),
+                    prevKey = null, // Only paging forward.
+                    nextKey = if (response.next != null) params.loadSize + (params.key ?: 0) else null
+                )
+            }
+            .onFailure { e ->
+                Log.printStackTrace(e.throwable)
+                return LoadResult.Error(e.throwable ?: Throwable("Something wrong..."))
+            }
 
-        return LoadResult.Error(Throwable("Paging error"))
+        return LoadResult.Error(Throwable("Something wrong..."))
     }
+//    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Pokemon> =
+//        when (val response = api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", params.loadSize, params.key ?: 0)) {
+//            is ApiResponse.Success -> {
+//                LoadResult.Page(
+//                    data = response.data.results ?: listOf(),
+//                    prevKey = null, // Only paging forward.
+//                    nextKey = if (response.data.next != null) params.loadSize + (params.key ?: 0) else null
+//                )
+//            }
+//            is ApiResponse.Failure -> {
+//                Log.printStackTrace(response.throwable)
+//                LoadResult.Error(response.throwable ?: Throwable("Something wrong..."))
+//            }
+//        }
+//        runCatching {
+//            api.pokemonApi.getAllPokemon("${PokemonDataConstant.POKEMON_API_URL}/pokemon", params.loadSize, params.key ?: 0)
+//        }.onSuccess{ response ->
+//            return LoadResult.Page(
+//                data = response.results ?: listOf(),
+//                prevKey = null, // Only paging forward.
+//                nextKey = if (response.next != null) params.loadSize + (params.key ?: 0) else null
+//            )
+//        }.onFailure { e ->
+//            e.printStackTrace()
+//            return LoadResult.Error(e)
+//        }
+//
+//        return LoadResult.Error(Throwable("Paging error"))
 
     override fun getRefreshKey(state: PagingState<Int, Pokemon>): Int? {
         // prevKet == null -> 첫 번째 페이지

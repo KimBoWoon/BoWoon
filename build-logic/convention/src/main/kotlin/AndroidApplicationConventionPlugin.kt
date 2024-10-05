@@ -16,7 +16,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("com.android.application")
-                apply("org.jetbrains.kotlin.kapt")
+//                apply("org.jetbrains.kotlin.kapt")
+                apply("com.google.devtools.ksp")
                 apply("org.jetbrains.kotlin.android")
                 apply("org.jetbrains.kotlin.plugin.serialization")
                 apply("org.jetbrains.kotlin.plugin.parcelize")
@@ -33,7 +34,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     Config.Application.Practice.appName,
                     Config.Application.FileProvider.appName,
                     Config.Application.Component.appName,
-                    Config.Application.Language.appName -> {}
+                    Config.Application.Language.appName,
+                    Config.Application.Dictionary.appName -> {}
                 }
             }
 
@@ -47,6 +49,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                         Config.Application.FileProvider.appName -> Config.Application.FileProvider
                         Config.Application.Component.appName -> Config.Application.Component
                         Config.Application.Language.appName -> Config.Application.Language
+                        Config.Application.Dictionary.appName -> Config.Application.Dictionary
+                        Config.Application.Compose.appName -> Config.Application.Compose
                         else -> throw RuntimeException("This is an undefined app. $name")
                     }.apply {
                         compileSdk = compileSdkVersion
@@ -129,6 +133,20 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                                             storePassword = getProp(Config.Application.Component.Sign.Debug.storePassword)
                                             keyAlias = getProp(Config.Application.Component.Sign.Debug.keyAlias)
                                             keyPassword = getProp(Config.Application.Component.Sign.Debug.keyPassword)
+                                        }
+                                    }
+                                    Config.Application.Compose.appName -> {
+                                        create(Config.Application.Compose.Sign.Release.name) {
+                                            storeFile = file(getProp(Config.Application.Compose.Sign.Release.storeFile))
+                                            storePassword = getProp(Config.Application.Compose.Sign.Release.storePassword)
+                                            keyAlias = getProp(Config.Application.Compose.Sign.Release.keyAlias)
+                                            keyPassword = getProp(Config.Application.Compose.Sign.Release.keyPassword)
+                                        }
+                                        getByName(Config.Application.Compose.Sign.Debug.name) {
+                                            storeFile = file(getProp(Config.Application.Compose.Sign.Debug.storeFile))
+                                            storePassword = getProp(Config.Application.Compose.Sign.Debug.storePassword)
+                                            keyAlias = getProp(Config.Application.Compose.Sign.Debug.keyAlias)
+                                            keyPassword = getProp(Config.Application.Compose.Sign.Debug.keyPassword)
                                         }
                                     }
                                 }

@@ -1,5 +1,8 @@
 [versions]
-kotlin = "2.0.0"
+accompanistPager = "0.20.1"
+coilCompose = "2.7.0"
+kotlin = "2.0.20"
+ksp = "2.0.20-1.0.25"
 android-gradle = "8.5.2"
 android-plugin = "1.6.0"
 google-material = "1.12.0"
@@ -8,21 +11,21 @@ firebase-google-service = "4.4.2"
 firebase-gradle = "3.4.3"
 firebase-crashlytics-plugin = "3.0.2"
 firebase-performance-plugin = "1.4.2"
-firebase-bom = "33.1.2"
+firebase-bom = "33.3.0"
 jetpack-core = "1.13.1"
 jetpack-appcompat = "1.7.0"
-jetpack-lifecycle = "2.8.4"
-jetpack-activity = "1.9.1"
-jetpack-fragment = "1.8.2"
-jetpack-navigation = "2.7.7"
-jetpack-navigation-safeArgs = "2.7.7"
+jetpack-lifecycle = "2.8.6"
+jetpack-activity = "1.9.2"
+jetpack-fragment = "1.8.3"
+jetpack-navigation = "2.8.1"
+jetpack-navigation-safeArgs = "2.8.1"
 jetpack-datastore = "1.1.1"
 jetpack-paging = "3.3.2"
 jetpack-room = "2.6.1"
 jetpack-work-manager = "2.9.1"
 jetpack-splash = "1.0.1"
-jetpack-startup = "1.1.1"
-jetpack-media3 = "1.4.0"
+jetpack-startup = "1.2.0"
+jetpack-media3 = "1.4.1"
 jetpack-biometric = "1.1.0"
 constraint-layout = "2.1.4"
 swiperefresh-layout = "1.1.0"
@@ -38,18 +41,18 @@ hilt-compiler = "1.2.0"
 hilt-navigation = "1.2.0"
 hilt-work-manager = "1.2.0"
 orbit = "4.6.1"
-compose-bom = "2024.06.00"
+compose-bom = "2024.09.02"
 compose-compiler = "1.4.5"
 compose-compose = "1.4.3"
-compose-activity = "1.9.1"
-compose-view-model = "2.8.4"
-compose-navigation = "2.7.7"
+compose-activity = "1.9.2"
+compose-view-model = "2.8.6"
+compose-navigation = "2.8.1"
 compose-hilt-navigation = "1.2.0"
 compose-paging = "3.3.2"
-compose-view-binding = "1.6.8"
-compose-icon-extended = "1.6.8"
+compose-view-binding = "1.7.2"
+compose-icon-extended = "1.7.2"
 compose-lottie = "6.1.0"
-compose-material3-window-size = "1.2.1"
+compose-material3-window-size = "1.3.0"
 accompanist-webview = "0.28.0"
 accompanist-pullToRefresh = "0.28.0"
 coroutine-core = "1.7.3"
@@ -67,8 +70,11 @@ test-espresso = "3.6.1"
 activity = "1.9.1"
 
 [libraries]
+accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
+accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "accompanistPager" }
 android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
 android-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 jetpack-navigation-safeArgs = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "jetpack-navigation-safeArgs" }
 google-material = { module = "com.google.android.material:material", version.ref = "google-material" }
 google-location = { module = "com.google.android.gms:play-services-location", version.ref = "google-location" }
@@ -168,7 +174,8 @@ viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpag
 test-junit = { module = "junit:junit", version.ref = "test-junit" }
 test-junit-ext = { module = "androidx.test.ext:junit", version.ref = "test-junit-ext" }
 test-espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "test-espresso" }
-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+ui = { group = "androidx.compose.ui", name = "ui" }
+ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 
 [bundles]
 orbit = ["orbit-core", "orbit-viewModel", "orbit-test"]
@@ -185,3 +192,5 @@ firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "
 firebase-performance = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-performance-plugin" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 firebase-app-distribution = { id = "com.google.firebase.appdistribution", version.ref = "firebase-app-distribution" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

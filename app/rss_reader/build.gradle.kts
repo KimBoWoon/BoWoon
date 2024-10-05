@@ -25,6 +25,6 @@ dependencies {
     arrayOf(
         libs.tikxml.processor
     ).forEach {
-        kapt(it)
+        ksp(it)
     }
 }

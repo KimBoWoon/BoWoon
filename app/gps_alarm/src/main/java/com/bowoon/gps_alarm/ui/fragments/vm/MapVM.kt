@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
@@ -31,16 +32,11 @@ class MapVM @Inject constructor(
     val setting = MutableStateFlow<DataStatus<SettingInfo?>>(DataStatus.Loading)
 
     private fun fetchAlarmList() {
-        manager.getFlow()
+        flowOf(manager.getList())
             .onStart { alarmList.value = DataStatus.Loading }
             .catch { e -> alarmList.value = DataStatus.Failure(e) }
-            .onEach {
-                if (it.isEmpty()) {
-                    alarmList.value = DataStatus.Success(emptyList())
-                } else {
-                    alarmList.value = DataStatus.Success(it)
-                }
-            }.launchIn(viewModelScope)
+            .onEach { alarmList.value = DataStatus.Success(it) }
+            .launchIn(viewModelScope)
     }
 
     fun fetchSetting() {

@@ -23,6 +23,6 @@ dependencies {
     arrayOf(
         libs.glide.compiler
     ).forEach {
-        kapt(it)
+        ksp(it)
     }
 }

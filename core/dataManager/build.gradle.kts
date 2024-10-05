@@ -15,10 +15,10 @@ dependencies {
         implementation(it)
     }
 
-    arrayOf(
-        libs.hilt.android.compiler,
-        libs.hilt.compiler,
-    ).forEach {
-        kapt(it)
-    }
+//    arrayOf(
+//        libs.hilt.android.compiler,
+//        libs.hilt.compiler,
+//    ).forEach {
+//        ksp(it)
+//    }
 }

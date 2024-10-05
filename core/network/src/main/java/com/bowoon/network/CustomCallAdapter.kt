@@ -13,6 +13,10 @@ class CustomCallAdapter @Inject constructor() : CallAdapter.Factory() {
         annotations: Array<out Annotation>,
         retrofit: Retrofit
     ): CallAdapter<*, *>? {
+        /**
+         * getRawType 제네릭 파라메터가 생략된 타입을 반환
+         * List<? extends Runnable> -> List 반환
+         */
         if (getRawType(returnType) != Call::class.java) return null
         check(returnType is ParameterizedType) {
             "Return 타입은 ApiResponse<Foo> 또는 ApiResponse<out Foo>로 정의되어야 합니다."

@@ -40,6 +40,29 @@ class SharedPreferenceRepository @Inject constructor(
         else -> context.getSharedPreferences(name, Context.MODE_PRIVATE).getString(key, defValue.toString()) as T
     }
 
+    fun <T> setData(key: String, value: T) {
+        when (value) {
+            is Int -> context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE).edit().putInt(key, value)
+            is Long -> context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE).edit().putLong(key, value)
+            is Float -> context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE).edit().putFloat(key, value)
+            is String -> context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE).edit().putString(key, value)
+            is Boolean -> context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE).edit().putBoolean(key, value)
+            else -> context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE).edit().putString(key, value.toString())
+        }.apply()
+    }
+
+    fun <T> getData(
+        key: String,
+        defValue: T?
+    ): T? = when (defValue) {
+        is Int -> context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE).getInt(key, defValue) as T
+        is Long -> context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE).getLong(key, defValue) as T
+        is Float -> context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE).getFloat(key, defValue) as T
+        is String -> context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE).getString(key, defValue) as T
+        is Boolean -> context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE).getBoolean(key, defValue) as T
+        else -> context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE).getString(key, defValue.toString()) as T
+    }
+
     suspend fun getDataFlow(
         name: String,
         key: String,

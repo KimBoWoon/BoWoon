@@ -27,6 +27,6 @@ dependencies {
         libs.hilt.compiler,
         libs.jetpack.room.compiler
     ).forEach {
-        kapt(it)
+        ksp(it)
     }
 }

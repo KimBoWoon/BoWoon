@@ -13,7 +13,6 @@ import com.bowoon.commonutils.DataStatus
 import com.bowoon.commonutils.Log
 import com.bowoon.commonutils.StickyHeaderItemDecoration
 import com.bowoon.commonutils.ViewAdapter.onDebounceClickListener
-import com.bowoon.commonutils.ViewUtils.hideSoftKeyboard
 import com.bowoon.rss_reader.R
 import com.bowoon.rss_reader.activities.vm.SearchVM
 import com.bowoon.rss_reader.adapter.SearchArticleAdapter

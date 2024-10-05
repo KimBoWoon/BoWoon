@@ -10,11 +10,15 @@ class AndroidApplicationComposeConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             pluginManager.apply("com.android.application")
+            pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
+
             val extension = extensions.getByType<ApplicationExtension>()
             configureAndroidCompose(extension)
 
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
             dependencies {
+                "implementation"(libs.findLibrary("jetpack.appcompat").get())
+                "implementation"(libs.findLibrary("jetpack.core").get())
             }
         }
     }

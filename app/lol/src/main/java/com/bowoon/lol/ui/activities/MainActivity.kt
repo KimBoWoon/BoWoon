@@ -6,13 +6,13 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.bowoon.commonutils.ContextUtils.showToast
+import com.bowoon.commonutils.DataStatus
 import com.bowoon.commonutils.Log
 import com.bowoon.lol.R
 import com.bowoon.lol.base.BaseActivity
 import com.bowoon.lol.databinding.ActivityMainBinding
 import com.bowoon.lol.ui.activities.vm.MainVM
-import com.bowoon.commonutils.ContextUtils.showToast
-import com.bowoon.commonutils.DataStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -25,7 +25,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.hide()
         binding.apply {
             lifecycleOwner = this@MainActivity
         }

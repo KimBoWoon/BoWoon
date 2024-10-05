@@ -24,7 +24,8 @@ dependencies {
         project(":core:dataManager"),
         project(":core:commonUtils"),
         project(":core:network"),
-        project(":core:imageLoader")
+        project(":core:imageLoader"),
+        project(":core:ui")
     ).forEach {
         implementation(it)
     }
@@ -34,6 +35,6 @@ dependencies {
         libs.hilt.compiler,
         libs.glide.compiler
     ).forEach {
-        kapt(it)
+        ksp(it)
     }
 }
